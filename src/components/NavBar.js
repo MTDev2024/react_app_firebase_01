@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function NavBar() {
   return (
@@ -11,18 +12,10 @@ export default function NavBar() {
 
         {/* Navigation links */}
         <nav className="hidden md:flex space-x-8">
-          <a href="index.html" className="text-gray-700 hover:text-blue-800">
-            Accueil
-          </a>
-          <a href="blog.html" className="text-gray-700 hover:text-blue-800">
-            Blog
-          </a>
-          <a href="#about" className="text-gray-700 hover:text-blue-800">
-            À propos
-          </a>
-          <a href="contact.html" className="text-gray-700 hover:text-blue-800">
-            Contact
-          </a>
+          <Link to="/home" className="text-gray-700 hover:text-blue-800">Accueil</Link>
+          <Link to="/blog" className="text-gray-700 hover:text-blue-800">Blog</Link>
+          <Link to="/apropos" className="text-gray-700 hover:text-blue-800">A propos</Link>
+          <Link to="/contact" className="text-gray-700 hover:text-blue-800">Contact</Link>
         </nav>
 
         {/* Auth button */}

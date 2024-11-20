@@ -1,10 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function ContactSection() {
+export default function Contact() {
+  const [isSubmitting, setIsSubmitting] = useState(false); // Gestion de l'état d'envoi
+  const [error, setError] = useState(""); // Gestion des erreurs
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError(""); // Réinitialiser les erreurs
+
+    const data = new FormData(e.target);
+    const formValues = Object.fromEntries(data);
+
+    // Validation côté utilisateur
+    if (!formValues.name || !formValues.email || !formValues.subject || !formValues.message) {
+      setError("Tous les champs sont obligatoires.");
+      return;
+    }
+
+    if (!formValues.email.includes("@")) {
+      setError("Veuillez entrer une adresse email valide.");
+      return;
+    }
+
+    setIsSubmitting(true); // Indiquer que le formulaire est en cours d'envoi
+
+    // Simuler l'envoi du formulaire
+    setTimeout(() => {
+      alert("Votre message a été envoyé avec succès !");
+      e.target.reset(); // Réinitialiser le formulaire après envoi
+      setIsSubmitting(false); // Terminer l'état d'envoi
+    }, 2000);
+  };
+
   return (
     <main className="flex-grow">
       <section id="contact-section" className="py-10 px-4 max-w-5xl mx-auto">
-        {/* Titre principal */}
         <h1 className="text-4xl font-bold text-blue-600 mt-6 text-center">
           Contactez-nous
         </h1>
@@ -16,7 +46,17 @@ export default function ContactSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-8">
           {/* Formulaire de Contact */}
-          <form className="bg-white p-8 shadow-lg mt-4">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white p-8 shadow-lg mt-4"
+          >
+            {/* Message d'erreur */}
+            {error && (
+              <div className="mb-6 bg-red-100 text-red-700 border border-red-400 p-4 rounded">
+                {error}
+              </div>
+            )}
+
             <div className="mb-6">
               <label
                 htmlFor="name"
@@ -28,6 +68,8 @@ export default function ContactSection() {
                 type="text"
                 id="name"
                 name="name"
+                aria-label="Nom"
+                placeholder="Entrez votre nom"
                 className="w-full border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 required
               />
@@ -43,6 +85,8 @@ export default function ContactSection() {
                 type="email"
                 id="email"
                 name="email"
+                aria-label="Email"
+                placeholder="Entrez votre email"
                 className="w-full border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 required
               />
@@ -58,6 +102,8 @@ export default function ContactSection() {
                 type="text"
                 id="subject"
                 name="subject"
+                aria-label="Objet"
+                placeholder="Entrez l'objet de votre message"
                 className="w-full border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 required
               />
@@ -72,6 +118,8 @@ export default function ContactSection() {
               <textarea
                 id="message"
                 name="message"
+                aria-label="Message"
+                placeholder="Tapez votre message ici"
                 rows="6"
                 className="w-full border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 required
@@ -79,9 +127,12 @@ export default function ContactSection() {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-semibold py-3 hover:bg-blue-700 transition duration-300"
+              disabled={isSubmitting} // Désactiver pendant l'envoi
+              className={`w-full bg-blue-600 text-white font-semibold py-3 ${
+                isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+              } transition duration-300`}
             >
-              Envoyer
+              {isSubmitting ? "Envoi en cours..." : "Envoyer"}
             </button>
           </form>
 
@@ -95,7 +146,10 @@ export default function ContactSection() {
             </p>
             <p className="text-gray-600 mb-4">
               <strong>Téléphone :</strong>
-              <a href="tel:+33123456789" className="text-blue-600 hover:underline">
+              <a
+                href="tel:+33123456789"
+                className="text-blue-600 hover:underline"
+              >
                 +33 1 23 45 67 89
               </a>
             </p>

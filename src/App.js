@@ -1,18 +1,30 @@
-import React from 'react';
-import NavBar from './components/NavBar'; // Chemin vers votre composant
-import Footer from './components/Footer';
+import React from "react";
+import { Routes, Route } from "react-router-dom"; 
+import NavBar from "./components/NavBar"; 
+import Footer from "./components/Footer"; 
 
+
+import Home from "./pages/Home";
+import Blog from "./pages/Blog";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
-<div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
+      {/* Navbar */}
       <NavBar />
+
+      {/* Contenu principal */}
       <main className="flex-grow">
-        {/* Contenu principal */}
-        <h1 className="text-center mt-10 text-blue-800 text-3xl font-bold">
-          Trotticomp
-        </h1>
+        <Routes>
+          {/* Définition des routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
       </main>
+
+      {/* Footer */}
       <Footer />
     </div>
   );
