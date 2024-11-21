@@ -24,7 +24,7 @@ export default function Blog() {
 
 
       {/* Search Bar */}
-      <div className="max-w-7xl mx-auto px-4 mb-8">
+      <div className="max-w-7xl mx-auto  p-8 mb-8">
         <input
           type="text"
           id="search-bar"
@@ -34,7 +34,7 @@ export default function Blog() {
       </div>
 
       {/* Articles Section */}
-      <section id="articles" className="py-12">
+      <section id="articles" className="py-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Replace these with dynamic components later */}

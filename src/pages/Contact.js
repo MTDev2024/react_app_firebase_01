@@ -145,12 +145,11 @@ export default function Contact() {
               <strong>Adresse :</strong> 123 Rue de la Mobilité, Paris, France
             </p>
             <p className="text-gray-600 mb-4">
-              <strong>Téléphone :</strong>
+              <strong> Téléphone :</strong>
               <a
-                href="tel:+33123456789"
+                href=" tel:+33123456789"
                 className="text-blue-600 hover:underline"
-              >
-                +33 1 23 45 67 89
+              > +33 1 23 45 67 89
               </a>
             </p>
             <p className="text-gray-600 mb-4">
@@ -158,8 +157,7 @@ export default function Contact() {
               <a
                 href="mailto:contact@trotticompv3.com"
                 className="text-blue-600 hover:underline"
-              >
-                contact@trotticompv3.com
+              > contact@trotticompv3.com
               </a>
             </p>
             <div className="mt-6">
