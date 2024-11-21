@@ -10,8 +10,8 @@ import Question8 from "./Question8";
 import Question9 from "./Question9";
 import Results from "./Results";
 
-const Questionnaire = () => {
-  const [step, setStep] = useState(1); // Suivi de l'étape actuelle
+const Questionnaire = ({ onRestart }) => {
+  const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState({
     distance: null,
     weight: null,
@@ -25,8 +25,8 @@ const Questionnaire = () => {
   });
 
   const handleNext = (newData) => {
-    setAnswers({ ...answers, ...newData }); // Met à jour les réponses
-    setStep(step + 1); // Passe à l'étape suivante
+    setAnswers({ ...answers, ...newData });
+    setStep(step + 1);
   };
 
   return (
@@ -40,7 +40,26 @@ const Questionnaire = () => {
       {step === 7 && <Question7 onNext={handleNext} />}
       {step === 8 && <Question8 onNext={handleNext} />}
       {step === 9 && <Question9 onNext={handleNext} />}
-      {step === 10 && <Results answers={answers} />}
+      {step === 10 && (
+        <Results
+          answers={answers}
+          onRestart={() => {
+            setStep(1);
+            setAnswers({
+              distance: null,
+              weight: null,
+              height: null,
+              type_trajet: [],
+              relief: [],
+              price: null,
+              meteo: null,
+              usage: null,
+              mobilite: null,
+            });
+            onRestart(); // Réinitialise pour revenir à l'intro
+          }}
+        />
+      )}
     </div>
   );
 };

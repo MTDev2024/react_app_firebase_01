@@ -1,7 +1,5 @@
 import React from "react";
 
-
-
 const IntroSection = ({ onLaunch }) => {
   return (
     <section
@@ -43,23 +41,22 @@ const IntroSection = ({ onLaunch }) => {
           </p>
         </div>
 
-    {/* Bouton "Commencer" */}
-<div className="relative z-10 mt-8 text-gray-800 flex items-center justify-center">
-  <button
-    className="bg-black/10 text-white font-mono font-semibold mt-4 py-2 px-4 min-w-[150px] h-[50px] shadow-lg border-2 border-transparent hover:border-white transition-all duration-500 ease-in-out mx-auto flex items-center justify-center group"
-    aria-label="Commencer le questionnaire"
-    onClick={onLaunch}
-  >
-    <ion-icon
-      name="caret-forward"
-      className="text-2xl group-hover:hidden"
-    ></ion-icon>
-    <span className="hidden group-hover:inline-block text-sm font-semibold">
-      Commencer
-    </span>
-  </button>
-</div>
-
+        {/* Bouton "Commencer" */}
+        <div className="relative z-10 mt-8 text-gray-800 flex items-center justify-center">
+          <button
+            className="bg-black/10 text-white font-mono font-semibold mt-4 py-2 px-4 min-w-[150px] h-[50px] shadow-lg border-2 border-transparent hover:border-white transition-all duration-500 ease-in-out mx-auto flex items-center justify-center group"
+            aria-label="Commencer le questionnaire"
+            onClick={onLaunch}
+          >
+            <ion-icon
+              name="caret-forward"
+              className="text-2xl group-hover:hidden"
+            ></ion-icon>
+            <span className="hidden group-hover:inline-block text-sm font-semibold">
+              Commencer
+            </span>
+          </button>
+        </div>
       </div>
     </section>
   );
