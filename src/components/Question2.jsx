@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+
+
 const Question2 = ({ onNext }) => {
   const [weight, setWeight] = useState(70); // Valeur par défaut
 

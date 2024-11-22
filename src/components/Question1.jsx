@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+
+
 const Question1 = ({ onNext }) => {
   const [distance, setDistance] = useState(50); // Distance par défaut
 
@@ -10,13 +12,16 @@ const Question1 = ({ onNext }) => {
   return (
     <section className="min-h-screen flex items-center justify-center">
       <div className="flex flex-col md:flex-row items-center max-w-3xl w-full px-6 md:px-12 space-y-8 md:space-y-0 md:space-x-8">
+        {/* Image */}
         <div className="w-full md:w-1/2 h-64 md:h-80">
-          <img
-            src="/assets/images/dist-mohammed-saif.jpg"
-            alt="distance"
-            className="h-full w-full object-cover shadow-lg"
-          />
+        <img
+  src="/assets/images/dist-mohammed-saif.jpg"
+  alt="Distance"
+  className="h-full w-full object-cover shadow-lg"
+/>
+
         </div>
+        {/* Contenu texte et slider */}
         <div className="flex flex-col items-center md:items-start w-full md:w-1/2 text-center md:text-left space-y-6">
           <h2 className="text-2xl md:text-3xl font-bold text-blue-800">
             Quelle distance parcourez-vous au quotidien ?
