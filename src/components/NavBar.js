@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // Importer Firebase Auth
 import ModaleAuth from "./ModaleAuth"; // Assurez-vous que ModaleAuth est dans le bon dossier
 
 export default function NavBar() {
   const [showModal, setShowModal] = useState(false); // Gestion de l'état de la modale
+  const [user, setUser] = useState(null); // État pour savoir si un utilisateur est connecté
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // Mettre à jour l'utilisateur lorsqu'il se connecte ou se déconnecte
+    });
+
+    return () => unsubscribe(); // Nettoyer l'écouteur
+  }, []);
 
   return (
     <header className="bg-white shadow-lg w-full">
@@ -29,14 +40,25 @@ export default function NavBar() {
           </Link>
         </nav>
 
-        {/* Bouton pour la modale */}
+        {/* Bouton d'authentification ou Mon profil */}
         <div className="hidden md:flex items-center space-x-4">
-          <button
-            onClick={() => setShowModal(true)} // Ouvrir la modale
-            className="font-mono bg-blue-800 text-white py-2 px-4 hover:bg-gray-700 transition duration-300"
-          >
-            Inscription / Connexion
-          </button>
+          {user ? (
+            // Si l'utilisateur est connecté, afficher "Mon profil"
+            <Link
+              to="/profil"
+              className="font-mono bg-blue-800 text-white py-2 px-4 hover:bg-gray-700 transition duration-300"
+            >
+              Mon profil
+            </Link>
+          ) : (
+            // Si aucun utilisateur connecté, afficher "Inscription / Connexion"
+            <button
+              onClick={() => setShowModal(true)} // Ouvrir la modale
+              className="font-mono bg-blue-800 text-white py-2 px-4 hover:bg-gray-700 transition duration-300"
+            >
+              Inscription / Connexion
+            </button>
+          )}
         </div>
       </div>
 
