@@ -1,47 +1,83 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
-import { updateProfile } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore"; // Pour récupérer les favoris
+import { useNavigate } from "react-router-dom";
 
 const Profil = () => {
   const [user, setUser] = useState(null);
-  const [displayName, setDisplayName] = useState("");
+  const [favorites, setFavorites] = useState([]); // État pour les favoris
+  const [loading, setLoading] = useState(true); // État pour gérer le chargement
+  const navigate = useNavigate();
 
+  // Récupérer l'utilisateur actuellement connecté
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUser(currentUser);
-      setDisplayName(currentUser.displayName || "");
+      fetchFavorites(currentUser.uid); // Récupérer les favoris lorsque l'utilisateur est connecté
+    } else {
+      navigate("/"); // Rediriger vers la page d'accueil si l'utilisateur n'est pas connecté
     }
-  }, []);
+    setLoading(false);
+  }, [navigate]);
 
-  const handleUpdate = async () => {
+  // Fonction pour récupérer les favoris de Firestore
+  const fetchFavorites = async (userId) => {
     try {
-      await updateProfile(auth.currentUser, { displayName });
-      alert("Profil mis à jour !");
+      const db = getFirestore();
+      const docRef = doc(db, "users", userId); // On suppose que les favoris sont dans la collection 'users' document par utilisateur
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setFavorites(docSnap.data().favorites || []);
+      } else {
+        console.log("Aucun favori trouvé.");
+      }
     } catch (err) {
-      alert("Erreur lors de la mise à jour : " + err.message);
+      console.error("Erreur lors de la récupération des favoris :", err);
     }
   };
 
+  // Affichage en fonction de l'état de chargement
+  if (loading) {
+    return <p className="text-center">Chargement des informations...</p>;
+  }
+
+  // Si l'utilisateur n'est pas connecté, afficher un message
   if (!user) {
-    return <p className="text-center" >Veuillez vous connecter pour accéder à votre profil.</p>;
+    return <p className="text-center">Veuillez vous connecter pour accéder à votre profil.</p>;
   }
 
   return (
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Mon Profil</h1>
-      <div className="mb-6">
-        <label className="block font-semibold mb-2">Nom d'utilisateur :</label>
-        <input
-          type="text"
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          className="w-full border p-2"
+      <div className="mb-6 flex items-center gap-4">
+        <img
+          src="/assets/icons/male_female_users.svg"
+          alt="Icone de profil"
+          className="h-20 w-20 object-cover shadow-lg rounded-full"
         />
+        <div>
+          <label className="block font-semibold mb-2">Adresse Email :</label>
+          <p className="w-full border p-2 bg-gray-100 rounded">{user.email}</p>
+        </div>
       </div>
-      <button className="bg-blue-600 text-white py-2 px-4" onClick={handleUpdate}>
-        Mettre à jour
-      </button>
+
+      {/* Affichage des favoris */}
+      <div className="mb-6">
+        <h2 className="text-xl font-bold mb-4">Mes Favoris</h2>
+        {favorites.length > 0 ? (
+          <ul className="list-disc pl-5 space-y-2">
+            {favorites.map((favorite, index) => (
+              <li key={index} className="text-gray-700">
+                {favorite}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600">Vous n'avez pas encore de favoris.</p>
+        )}
+      </div>
     </div>
   );
 };
