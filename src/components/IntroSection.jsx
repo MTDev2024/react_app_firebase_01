@@ -18,7 +18,7 @@ const IntroSection = ({ onLaunch }) => {
           src="/assets/videos/1109581_1080p_Healthy-lifestyle_1920x1080.m4v"
           type="video/mp4"
         />
-        Votre navigateur ne supporte pas les vidéos HTML5.
+        Votre navigateur ne supporte pas ce type de vidéos.
       </video>
 
       {/* Paragraphe et bouton */}
@@ -42,7 +42,7 @@ const IntroSection = ({ onLaunch }) => {
         </div>
 
         {/* Bouton "Commencer" */}
-        <div className="relative z-10 mt-8 text-gray-800 flex items-center justify-center">
+        <div className=" z-10 mt-8 text-gray-800 flex items-center justify-center">
           <button
             className="bg-black/10 text-white font-mono font-semibold mt-4 py-2 px-4 min-w-[150px] h-[50px] shadow-lg border-2 border-transparent hover:border-white transition-all duration-500 ease-in-out mx-auto flex items-center justify-center group"
             aria-label="Commencer le questionnaire"
@@ -52,7 +52,7 @@ const IntroSection = ({ onLaunch }) => {
               name="caret-forward"
               className="text-2xl group-hover:hidden"
             ></ion-icon>
-            <span className="hidden group-hover:inline-block text-sm font-semibold">
+            <span className="group-hover:inline-block text-sm font-semibold">
               Commencer
             </span>
           </button>

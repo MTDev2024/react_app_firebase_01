@@ -1,12 +1,16 @@
 import React, { useState } from "react";
+import { db } from "../firebase"; // Import Firestore
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"; // Import des fonctions nécessaires
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false); // Gestion de l'état d'envoi
   const [error, setError] = useState(""); // Gestion des erreurs
+  const [success, setSuccess] = useState(""); // Gestion des messages de succès
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Réinitialiser les erreurs
+    setSuccess(""); // Réinitialiser les messages de succès
 
     const data = new FormData(e.target);
     const formValues = Object.fromEntries(data);
@@ -17,19 +21,34 @@ export default function Contact() {
       return;
     }
 
-    if (!formValues.email.includes("@")) {
+    // Validation rigoureuse de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formValues.email)) {
       setError("Veuillez entrer une adresse email valide.");
       return;
     }
 
     setIsSubmitting(true); // Indiquer que le formulaire est en cours d'envoi
 
-    // Simuler l'envoi du formulaire
-    setTimeout(() => {
-      alert("Votre message a été envoyé avec succès !");
+    try {
+      // Ajouter le message dans Firestore
+      const docRef = await addDoc(collection(db, "messages"), {
+        name: formValues.name,
+        email: formValues.email,
+        subject: formValues.subject,
+        message: formValues.message,
+        timestamp: serverTimestamp(), // Horodatage côté serveur
+      });
+
+      console.log("Document ajouté avec ID :", docRef.id);
+      setSuccess("Votre message a été envoyé avec succès !");
       e.target.reset(); // Réinitialiser le formulaire après envoi
+    } catch (err) {
+      console.error("Erreur lors de l'envoi :", err);
+      setError("Une erreur est survenue. Veuillez réessayer plus tard.");
+    } finally {
       setIsSubmitting(false); // Terminer l'état d'envoi
-    }, 2000);
+    }
   };
 
   return (
@@ -46,10 +65,7 @@ export default function Contact() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-8">
           {/* Formulaire de Contact */}
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white p-8 shadow-lg mt-4"
-          >
+          <form onSubmit={handleSubmit} className="bg-white p-8 shadow-lg mt-4">
             {/* Message d'erreur */}
             {error && (
               <div className="mb-6 bg-red-100 text-red-700 border border-red-400 p-4 rounded">
@@ -57,11 +73,15 @@ export default function Contact() {
               </div>
             )}
 
+            {/* Message de succès */}
+            {success && (
+              <div className="mb-6 bg-green-100 text-green-700 border border-green-400 p-4 rounded">
+                {success}
+              </div>
+            )}
+
             <div className="mb-6">
-              <label
-                htmlFor="name"
-                className="block text-blue-600 font-semibold mb-2"
-              >
+              <label htmlFor="name" className="block text-blue-600 font-semibold mb-2">
                 Nom :
               </label>
               <input
@@ -75,10 +95,7 @@ export default function Contact() {
               />
             </div>
             <div className="mb-6">
-              <label
-                htmlFor="email"
-                className="block text-blue-600 font-semibold mb-2"
-              >
+              <label htmlFor="email" className="block text-blue-600 font-semibold mb-2">
                 Email :
               </label>
               <input
@@ -92,10 +109,7 @@ export default function Contact() {
               />
             </div>
             <div className="mb-6">
-              <label
-                htmlFor="subject"
-                className="block text-blue-600 font-semibold mb-2"
-              >
+              <label htmlFor="subject" className="block text-blue-600 font-semibold mb-2">
                 Objet :
               </label>
               <input
@@ -109,10 +123,7 @@ export default function Contact() {
               />
             </div>
             <div className="mb-6">
-              <label
-                htmlFor="message"
-                className="block text-blue-600 font-semibold mb-2"
-              >
+              <label htmlFor="message" className="block text-blue-600 font-semibold mb-2">
                 Message :
               </label>
               <textarea
@@ -160,19 +171,6 @@ export default function Contact() {
               > contact@trotticompv3.com
               </a>
             </p>
-            <div className="mt-6">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9990937428826!2d2.292292315674804!3d48.85884407928785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66fdf00000001%3A0x2b2b4c9e4b4c84a6!2sEiffel%20Tower!5e0!3m2!1sen!2sfr!4v1605554103583!5m2!1sen!2sfr"
-                width="100%"
-                height="250"
-                frameBorder="0"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                aria-hidden="false"
-                tabIndex="0"
-                title="Carte Google Maps"
-              ></iframe>
-            </div>
           </div>
         </div>
       </section>
