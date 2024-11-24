@@ -49,27 +49,36 @@ const Profil = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Mon Profil</h1>
-      <div className="mb-6 flex items-center gap-4">
+    <div className="max-w-4xl my-10 mx-auto p-6 bg-white shadow-md rounded-lg ">
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-800">Mon Profil</h1>
+      
+      
+      
+
+      {/* Conteneur de profil responsive */}
+      <div>
         <img
           src="/assets/icons/male_female_users.svg"
           alt="Icone de profil"
-          className="h-20 w-20 object-cover shadow-lg rounded-full"
+          className="h-24 w-24 object-cover shadow-lg rounded-full"
         />
-        <div>
-          <label className="block font-semibold mb-2">Adresse Email :</label>
-          <p className="w-full border p-2 bg-gray-100 rounded">{user.email}</p>
+        <p className="border w- p-3 bg-gray-100 rounded">{user.email}</p>
+        
         </div>
-      </div>
+          
+        
+      
 
       {/* Affichage des favoris */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold mb-4">Mes Favoris</h2>
+      <div>
+        <h2 className="text-2xl font-bold mb-4 text-center text-blue-800">Mes Favoris</h2>
         {favorites.length > 0 ? (
-          <ul className="list-disc pl-5 space-y-2">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {favorites.map((favorite, index) => (
-              <li key={index} className="text-gray-700">
+              <li
+                key={index}
+                className="p-4 bg-gray-50 rounded shadow hover:bg-gray-100 transition"
+              >
                 {favorite}
               </li>
             ))}
@@ -78,6 +87,9 @@ const Profil = () => {
           <p className="text-gray-600">Vous n'avez pas encore de favoris.</p>
         )}
       </div>
+      
+
+
     </div>
   );
 };
