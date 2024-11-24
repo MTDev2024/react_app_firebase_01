@@ -1,27 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link de react-router-dom
+import NewsletterSignup from "../components/NewsletterSignup"; // Importe le composant d'inscription à la newsletter
 
 export default function Blog() {
   return (
     <main className="flex-grow mt-4">
       {/* Hero Section */}
       <section
-  className="flex flex-col justify-center lg:flex-row max-w-7xl mx-auto py-12 px-4 lg:space-x-16 space-y-8 lg:space-y-0 bg-cover bg-center bg-no-repeat"
-  style={{
-    backgroundImage:
-      "url('/assets/backgrounds/Slide-ZT3-Pro-Launch-banner-FINAL-2.jpg')",
-  }}
->
-  <div className="w-full bg-black/20 text-white space-y-4 lg:w-1/2 text-center lg:text-left p-8 mx-auto">
-    <h1 className="text-4xl font-bold mb-4">Nos conseils de professionnels</h1>
-    <h2 className="text-2xl font-semibold mb-2">Retrouvez ici tous nos guides</h2>
-    <p className="text-base md:text-xl leading-relaxed text-justify mb-4">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore fugit
-      sit ipsa dicta quam...
-    </p>
-  </div>
-</section>
-
+        className="flex flex-col justify-center lg:flex-row max-w-7xl mx-auto py-12 px-4 lg:space-x-16 space-y-8 lg:space-y-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage:
+            "url('/assets/backgrounds/Slide-ZT3-Pro-Launch-banner-FINAL-2.jpg')",
+        }}
+      >
+        <div className="w-full bg-black/20 text-white space-y-4 lg:w-1/2 text-center lg:text-left p-8 mx-auto">
+          <h1 className="text-4xl font-bold mb-4">Nos conseils de professionnels</h1>
+          <h2 className="text-2xl font-semibold mb-2">Retrouvez ici tous nos guides</h2>
+          <p className="text-base md:text-xl leading-relaxed text-justify mb-4">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore fugit
+            sit ipsa dicta quam...
+          </p>
+        </div>
+      </section>
 
       {/* Search Bar */}
       <div className="max-w-7xl mx-auto  p-8 mb-8">
@@ -68,6 +68,11 @@ export default function Blog() {
           </nav>
         </div>
       </section>
+
+      {/* Newsletter Signup Section */}
+      <section className="mt-16">
+        <NewsletterSignup />
+      </section>
     </main>
   );
 }
@@ -75,9 +80,9 @@ export default function Blog() {
 // Example article data
 const articleData = [
   {
-    title: "Comment choisir une trottinette électrique en fonction de son usage",
+    title: "Choisir une trottinette en fonction de son usage",
     description:
-      "Guide détaillé pour aider les consommateurs à choisir entre les modèles dédiés aux trajets urbains, aux loisirs, et au transport quotidien.",
+      "Guide détaillé pour aider les consommateurs à choisir.",
     image: "/assets/images/Trottinette_Electrique_Wolf_Warrior_King_GTR_Kaabo_or_et_noir.webp",
     link: "/article01", // Utilisez des chemins relatifs ou dynamiques
   },
