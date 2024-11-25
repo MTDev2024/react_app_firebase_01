@@ -15,7 +15,7 @@ const Question1 = ({ onNext }) => {
         {/* Image */}
         <div className="w-full md:w-1/2 h-64 md:h-80">
         <img
-  src="/assets/images/dist-mohammed-saif.jpg"
+  src="../assets/images/img01.jpg"
   alt="Distance"
   className="h-full w-full object-cover shadow-lg"
 />

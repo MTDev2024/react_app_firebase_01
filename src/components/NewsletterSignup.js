@@ -49,7 +49,7 @@ export default function NewsletterSignup() {
               </div>
               <dt className="mt-4 text-base font-semibold text-white">Articles hebdomadaires</dt>
               <dd className="mt-2 text-base/7 text-gray-400">
-                Profitez de contenus de qualité envoyés directement dans votre boîte mail.
+                Profitez de contenus de qualité envoyés  directement dans votre boîte mail.
               </dd>
             </div>
             <div className="flex flex-col items-start">
