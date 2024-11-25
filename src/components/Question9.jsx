@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import img15 from '../assets/images/img15.jpg';
+import img16 from '../assets/images/img16.jpg';
 
 const Question9 = ({ onNext }) => {
   const [selectedUsage, setSelectedUsage] = useState(null);
@@ -22,12 +24,12 @@ const Question9 = ({ onNext }) => {
             {
               label: "Loisir",
               value: "loisir",
-              img: "/assets/images/ywelectricscooter.jpg",
+              img: img15,
             },
             {
               label: "Professionnel",
               value: "pro",
-              img: "/assets/images/pexels-norma-mortenson-4392887.jpg",
+              img: img16,
             },
           ].map((option) => (
             <button

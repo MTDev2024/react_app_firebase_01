@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import img04 from '../assets/images/img04.jpg'
+import img05 from '../assets/images/img05.jpg'
 
 const Question4 = ({ onNext }) => {
   const [selectedTrajets, setSelectedTrajets] = useState([]);
@@ -33,7 +35,7 @@ const Question4 = ({ onNext }) => {
             onClick={() => toggleTrajet("route")}
           >
             <img
-              src="/assets/images/road-Max-Vakhtbovycn.jpg"
+              src={img04}
               alt="Route"
               className="w-full h-48 object-cover"
             />
@@ -50,7 +52,7 @@ const Question4 = ({ onNext }) => {
             onClick={() => toggleTrajet("chemin")}
           >
             <img
-              src="/assets/images/dirt-road.jpg"
+              src={img05}
               alt="Chemin"
               className="w-full h-48 object-cover"
             />

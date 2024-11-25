@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import img13 from '../assets/images/img13.jpg';
+import img14 from '../assets/images/img14.jpg';
 
 const Question8 = ({ onNext }) => {
   const [selectedMobility, setSelectedMobility] = useState(null);
@@ -22,12 +24,12 @@ const Question8 = ({ onNext }) => {
             {
               label: "Non",
               value: "Non",
-              img: "/assets/images/no-transp-pexels-denniz-futalan-339724-1379374.jpg",
+              img: img13, // Correction : Ne pas utiliser les accolades
             },
             {
               label: "Oui",
               value: "Oui",
-              img: "/assets/images/tram-aoi-yxV0sSwhWgw-unsplash.jpg",
+              img: img14, // Correction : Ne pas utiliser les accolades
             },
           ].map((option) => (
             <button

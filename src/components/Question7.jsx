@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import img11 from '../assets/images/img11.jpg';
+import img12 from '../assets/images/img12.jpg';
 
 const Question7 = ({ onNext }) => {
   const [selectedWeather, setSelectedWeather] = useState(null);
@@ -19,8 +21,8 @@ const Question7 = ({ onNext }) => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
           {[
-            { label: "Non", value: "Non", img: "/assets/images/sun-shape-drawn-sand.jpg" },
-            { label: "Oui", value: "Oui", img: "/assets/images/craig-whitehead-y9uWW3uZ-bk-unsplash.jpg" },
+            { label: "Non", value: "Non", img: img11 },
+            { label: "Oui", value: "Oui", img: img12 },
           ].map((option) => (
             <button
               key={option.value}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import img09 from '../assets/images/img09.jpg'
 
 const Question6 = ({ onNext }) => {
   const [budget, setBudget] = useState(5000); // Valeur par défaut
@@ -11,9 +12,7 @@ const Question6 = ({ onNext }) => {
     <section className="min-h-screen flex items-center justify-center">
       <div className="flex flex-col md:flex-row items-center max-w-3xl w-full px-6 md:px-12 space-y-8 md:space-y-0 md:space-x-8">
         <div className="w-full md:w-1/2 h-64 md:h-80">
-          <img
-            src="/assets/images/close-up-education-economy-objects.jpg"
-            alt="budget"
+          <img src={img09} alt="budget"
             className="h-full w-full object-cover shadow-lg"
           />
         </div>

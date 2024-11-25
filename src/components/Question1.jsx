@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import img01 from '../assets/images/img01.jpg'
 
 
 
@@ -14,9 +15,7 @@ const Question1 = ({ onNext }) => {
       <div className="flex flex-col md:flex-row items-center max-w-3xl w-full px-6 md:px-12 space-y-8 md:space-y-0 md:space-x-8">
         {/* Image */}
         <div className="w-full md:w-1/2 h-64 md:h-80">
-        <img
-  src="../assets/images/img01.jpg"
-  alt="Distance"
+        <img src={img01} alt="Distance"
   className="h-full w-full object-cover shadow-lg"
 />
 

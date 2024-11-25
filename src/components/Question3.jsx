@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import img03 from '../assets/images/img03.jpg'
 
 const Question3 = ({ onNext }) => {
   const [height, setHeight] = useState(170); // Valeur par défaut
@@ -12,8 +13,7 @@ const Question3 = ({ onNext }) => {
       <div className="flex flex-col md:flex-row items-center max-w-3xl w-full px-6 md:px-12 space-y-8 md:space-y-0 md:space-x-8">
         <div className="w-full md:w-1/2 h-64 md:h-80">
           <img
-            src="/assets/images/handsome-smiling-young-bearded-man-posing.jpg"
-            alt="height"
+            src={img03} alt="height"
             className="h-full w-full object-cover shadow-lg"
           />
         </div>

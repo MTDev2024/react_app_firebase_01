@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import img02 from '../assets/images/img02.jpg'
 
 
 
@@ -14,8 +15,7 @@ const Question2 = ({ onNext }) => {
       <div className="flex flex-col md:flex-row items-center max-w-3xl w-full px-6 md:px-12 space-y-8 md:space-y-0 md:space-x-8">
         <div className="w-full md:w-1/2 h-64 md:h-80">
           <img
-            src="/assets/images/fitness-man-holding-weight-scales-showing-thumbs-up.jpg"
-            alt="balance"
+            src={img02} alt="balance"
             className="h-full w-full object-cover shadow-lg"
           />
         </div>

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import img04 from '../assets/images/img04.jpg'
+import img05 from '../assets/images/img05.jpg'
 
 const Question5 = ({ onNext }) => {
   const [selectedReliefs, setSelectedReliefs] = useState([]);
@@ -35,7 +37,7 @@ const Question5 = ({ onNext }) => {
               onClick={() => toggleRelief(relief)}
             >
               <img
-                src={`/assets/images/dirt-road.jpg`}
+                src={img04}
                 alt={relief}
                 className="w-full h-48 object-cover"
               />
