@@ -1,88 +1,120 @@
-<section class="bg-gray-50 dark:bg-gray-900 h-screen flex items-center">
-  <div class="max-w-screen-xl px-4 mx-auto lg:px-12 w-full">
-    <!-- Start coding here -->
-    <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-      <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-        <div class="w-full md:w-1/2">
-          <form class="flex items-center">
-            <label for="simple-search" class="sr-only">Search</label>
-            <div class="relative w-full">
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <input type="text" id="simple-search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
-            </div>
-          </form>
-        </div>
-        <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+import React, { useState } from "react";
+import trottinettes from "../data/trottinettes";
+import Card from "./Card";
+import ResultsFilter from "./ResultsFilter";
 
-          <div class="flex items-center w-full space-x-3 md:w-auto">
-            <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-              <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-              </svg>
-              Actions
-            </button>
-            <div id="actionsDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-              <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actionsDropdownButton">
-                <li>
-                  <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass Edit</a>
-                </li>
-              </ul>
-              <div class="py-1">
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete all</a>
-              </div>
-            </div>
-            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-              </svg>
-              Filtres
-              <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-              </svg>
-            </button>
-            <!-- Dropdown menu -->
-            <div id="filterDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-              <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-                Brand
-              </h6>
-              <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
-                <li class="flex items-center">
-                  <input id="apple" type="checkbox" value=""
-                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Xiaomi (56)
-                  </label>
-                </li>
-                <li class="flex items-center">
-                  <input id="fitbit" type="checkbox" value=""
-                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Ninebot (56)
-                  </label>
-                </li>
-                <li class="flex items-center">
-                  <input id="dell" type="checkbox" value=""
-                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="dell" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Dualtron (56)
-                  </label>
-                </li>
-                <li class="flex items-center">
-                  <input id="asus" type="checkbox" value="" checked
-                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="asus" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Kaboo (97)
-                  </label>
-                </li>
-              </ul>
-            </div>
-          </div>
+const Results = ({ answers, onRestart }) => {
+  const [filters, setFilters] = useState({
+    price: 5000,
+    puissance: 100,
+    poids: 50,
+    autonomie: 10,
+    search: "",
+    sortBy: "",
+    sortOrder: "asc",
+  });
+
+  // Mettre à jour les filtres
+  const handleFilterChange = (newFilters) => {
+    setFilters({ ...filters, ...newFilters });
+  };
+
+  // Filtrer les résultats en fonction des réponses et des filtres
+  let filteredResults = trottinettes.filter((trottinette) => {
+    const priceMatch = trottinette.prix <= filters.price;
+    const puissanceMatch = trottinette.puissance >= filters.puissance;
+    const poidsMatch = trottinette.poids <= filters.poids;
+    const autonomieMatch = trottinette.distance_max >= filters.autonomie;
+    const searchMatch =
+      filters.search === "" ||
+      trottinette.modele.toLowerCase().includes(filters.search.toLowerCase()) ||
+      trottinette.marque.toLowerCase().includes(filters.search.toLowerCase());
+
+    // Vérifier les autres critères existants (par exemple distance, etc.)
+    const distanceMatch =
+      answers.distance === null || trottinette.distance_max >= answers.distance;
+    const weightMatch =
+      answers.weight === null || trottinette.poids_max >= answers.weight;
+
+    // Vérifier si toutes les conditions sont remplies
+    return (
+      priceMatch &&
+      puissanceMatch &&
+      poidsMatch &&
+      autonomieMatch &&
+      searchMatch &&
+      distanceMatch &&
+      weightMatch
+    );
+  });
+
+  // Trier les résultats en fonction des filtres
+  if (filters.sortBy) {
+    filteredResults.sort((a, b) => {
+      if (filters.sortOrder === "asc") {
+        return a[filters.sortBy] - b[filters.sortBy];
+      } else {
+        return b[filters.sortBy] - a[filters.sortBy];
+      }
+    });
+  }
+
+  return (
+    <div className="p-8">
+      <h2 className="text-2xl font-bold">Résultats</h2>
+      {/* Intégrer le composant ResultsFilter */}
+      <ResultsFilter onFilterChange={handleFilterChange} />
+      <div className="flex justify-between items-center my-4">
+        <input
+          type="text"
+          placeholder="Rechercher par marque ou modèle..."
+          value={filters.search}
+          onChange={(e) => handleFilterChange({ search: e.target.value })}
+          className="p-2 border border-gray-300 rounded-lg"
+        />
+        <div className="flex items-center space-x-4">
+          <label className="font-bold">Trier par :</label>
+          <select
+            value={filters.sortBy}
+            onChange={(e) => handleFilterChange({ sortBy: e.target.value })}
+            className="p-2 border border-gray-300 rounded-lg"
+          >
+            <option value="">Aucun</option>
+            <option value="autonomie">Autonomie</option>
+            <option value="prix">Prix</option>
+            <option value="puissance">Puissance</option>
+            <option value="poids">Poids</option>
+          </select>
+          <select
+            value={filters.sortOrder}
+            onChange={(e) => handleFilterChange({ sortOrder: e.target.value })}
+            className="p-2 border border-gray-300 rounded-lg"
+          >
+            <option value="asc">Ascendant</option>
+            <option value="desc">Descendant</option>
+          </select>
         </div>
       </div>
+      {filteredResults.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {filteredResults.map((trottinette, index) => (
+            <Card key={index} trottinette={trottinette} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-red-600 font-bold">
+          Aucun modèle ne correspond à vos critères. Veuillez essayer à nouveau
+          avec des critères différents.
+        </p>
+      )}
+      <button
+        className="mt-4 bg-blue-600 text-white py-2 px-4"
+        onClick={onRestart}
+      >
+        Recommencer
+      </button>
     </div>
-  </div>
-</section>
+  );
+};
+
+export default Results;

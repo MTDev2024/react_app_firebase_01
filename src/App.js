@@ -31,26 +31,25 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Barre de navigation */}
-      <NavBar />
+  <div className="min-h-screen flex flex-col">
+    {/* Barre de navigation */}
+    <NavBar />
 
-      {/* Contenu principal */}
-      <main className="flex-grow">
-        <Routes>
-          {/* Routes vers les pages */}
-          <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/profil" element={<Profil />} />
+    {/* Contenu principal */}
+    <main className="flex-grow flex">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/profil" element={<Profil />} />
+      </Routes>
+    </main>
 
-        </Routes>
-      </main>
+    {/* Pied de page */}
+    <Footer />
+  </div>
+);
 
-      {/* Pied de page */}
-      <Footer />
-    </div>
-  );
 }
 
 export default App;

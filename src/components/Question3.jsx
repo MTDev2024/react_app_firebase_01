@@ -9,7 +9,7 @@ const Question3 = ({ onNext }) => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center">
+    <section className="flex flex-1 items-center justify-center min-h-[calc(100vh-128px)]">
       <div className="flex flex-col md:flex-row items-center max-w-3xl w-full px-6 md:px-12 space-y-8 md:space-y-0 md:space-x-8">
         <div className="w-full md:w-1/2 h-64 md:h-80">
           <img

@@ -14,7 +14,7 @@ const Question9 = ({ onNext }) => {
   };
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center">
+    <section className="flex flex-1 items-center justify-center min-h-[calc(100vh-128px)]">
       <div className="flex flex-col items-center max-w-3xl w-full px-6 md:px-12 space-y-8">
         <h2 className="text-2xl md:text-3xl font-bold text-blue-800 text-center">
           Pour quel usage ?
