@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { HeartIcon } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 
 const Card = ({ trottinette }) => {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
+
   return (
     <div className="flex border rounded-lg shadow-md bg-gray-800 text-white p-6">
       {/* Colonne de gauche : Informations */}
       <div className="flex-1 flex flex-col justify-between">
         <div>
-          <span className="block mb-2 text-primary-100 font-medium">Sélection de la rédaction</span>
+          <span className="block mb-1 text-yellow-400 italic font-medium">Sélection de la rédaction</span>
+          <h3 className="text-2xl font-bold mb-2">{trottinette.marque}</h3>
           <h3 className="text-xl font-bold mb-4">{trottinette.modele}</h3>
           <div className="flex items-center mb-4">
             {/* Notation étoiles */}
@@ -28,18 +37,24 @@ const Card = ({ trottinette }) => {
           </div>
           {/* Caractéristiques */}
           <p><strong>Autonomie :</strong> {trottinette.distance_max} km</p>
-          <p><strong>Poids max :</strong> {trottinette.poids_max} kg</p>
+          <p><strong>Poids max utilisateur :</strong> {trottinette.poids_max} kg</p>
+          <p><strong>Poids trottinette :</strong> {trottinette.poids_trottinette} kg</p>
+          <p><strong>Guidon :</strong> {trottinette.taille_guidon}</p>
           <p className="text-2xl font-bold mt-4">{trottinette.prix} €</p>
         </div>
         {/* Boutons d'action */}
-        <div className="flex mt-4 gap-4">
-          <button className="bg-primary-700 hover:bg-primary-800 text-white px-4 py-2 rounded-lg">
+        <div className="flex mt-4 justify-around">
+          <button className="bg-primary-700 hover:bg-primary-800 text-yellow-400 px-4 py-2 rounded-lg">
             Comparer
           </button>
-          <button className="bg-secondary-700 hover:bg-secondary-800 text-white px-4 py-2 rounded-lg">
-            Ajouter aux favoris
+          <button onClick={toggleFavorite} className="focus:outline-none">
+            {isFavorite ? (
+              <HeartIconSolid className="h-8 w-8 text-red-500" />
+            ) : (
+              <HeartIcon className="h-8 w-8 text-gray-500" />
+            )}
           </button>
-          <button className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg">
+          <button className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg mr-4">
             Voir la fiche détaillée
           </button>
         </div>
