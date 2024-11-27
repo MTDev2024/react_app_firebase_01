@@ -1,14 +1,27 @@
 import React from 'react'
 import { CalendarDaysIcon, HandRaisedIcon } from '@heroicons/react/24/outline'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
 
 export default function NewsletterSignup() {
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const email = event.target.email.value
-    console.log('Email submitted:', email)
+  const db = getFirestore(); // Initialise Firestore
 
-    // Ajouter une logique pour envoyer l'email à une API ou Firebase
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const email = event.target.email.value;
+    console.log('Email submitted:', email);
+
+    try {
+      // Ajouter l'email dans la collection "newsletter" de Firestore
+      await addDoc(collection(db, "newsletter"), {
+        email: email,
+        createdAt: new Date(),
+      });
+      alert('Inscription à la newsletter réussie !');
+    } catch (error) {
+      console.error("Erreur lors de l'inscription à la newsletter:", error);
+      alert("Une erreur est survenue. Veuillez réessayer.");
+    }
+  };
 
   return (
     <div className="relative isolate overflow-hidden bg-gray-900 py-16 sm:py-24 lg:py-32">
@@ -49,7 +62,7 @@ export default function NewsletterSignup() {
               </div>
               <dt className="mt-4 text-base font-semibold text-white">Articles hebdomadaires</dt>
               <dd className="mt-2 text-base/7 text-gray-400">
-                Profitez de contenus de qualité envoyés  directement dans votre boîte mail.
+                Profitez de contenus de qualité envoyés directement dans votre boîte mail.
               </dd>
             </div>
             <div className="flex flex-col items-start">
