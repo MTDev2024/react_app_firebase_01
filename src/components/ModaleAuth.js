@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 
 export default function ModaleAuth({ show, onClose }) {
   const [isSignup, setIsSignup] = useState(false); // Basculer entre inscription/connexion
@@ -17,6 +18,7 @@ export default function ModaleAuth({ show, onClose }) {
 
   const auth = getAuth();
   const googleProvider = new GoogleAuthProvider();
+  const db = getFirestore();
 
   const handleSignup = async () => {
     try {
@@ -24,7 +26,18 @@ export default function ModaleAuth({ show, onClose }) {
         setMessage("Veuillez définir un mot de passe pour vous inscrire.");
         return;
       }
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Ajouter l'utilisateur à Firestore avec un champ favorites vide
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid, // Ajout de l'ID unique de l'utilisateur
+        email: user.email,
+        favoritesArticles: [], // Ajouter un champ pour les articles favoris
+        favoritesTrottinettes: [], // Ajouter un champ pour les trottinettes favorites
+        createdAt: new Date(),
+      });
+
       alert("Compte créé avec succès !");
       onClose(); // Fermer la modale
     } catch (error) {
@@ -44,7 +57,19 @@ export default function ModaleAuth({ show, onClose }) {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const user = userCredential.user;
+
+      // Ajouter l'utilisateur à Firestore avec un champ favorites vide s'il n'existe pas
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        uid: user.uid, // Ajout de l'ID unique de l'utilisateur
+        email: user.email,
+        favoritesArticles: [],
+        favoritesTrottinettes: [],
+        createdAt: new Date(),
+      }, { merge: true });
+
       alert("Connexion via Google réussie !");
       onClose(); // Fermer la modale
     } catch (error) {

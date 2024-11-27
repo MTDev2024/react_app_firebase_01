@@ -1,12 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 
 const Card = ({ trottinette }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
+  const db = getFirestore();
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+  useEffect(() => {
+    // Surveiller les changements d'état de l'utilisateur connecté
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      console.log("Utilisateur mis à jour : ", currentUser);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  useEffect(() => {
+    // Vérifiez si la trottinette est déjà en favoris quand le composant est monté
+    const checkIfFavorite = async () => {
+      if (user && trottinette?.itemID) {
+        console.log("Vérification des favoris pour l'utilisateur : ", user.uid);
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userRef);
+          if (userDoc.exists()) {
+            console.log("Données utilisateur récupérées : ", userDoc.data());
+            if (userDoc.data().favoritesTrottinettes?.includes(trottinette.itemID)) {
+              setIsFavorite(true);
+            }
+          } else {
+            console.log("Le document utilisateur n'existe pas.");
+          }
+        } catch (error) {
+          console.error("Erreur lors de la vérification des favoris :", error);
+        }
+      }
+    };
+
+    checkIfFavorite();
+  }, [user, db, trottinette]);
+
+  const toggleFavorite = async () => {
+    if (!user) {
+      alert("Veuillez vous connecter pour ajouter aux favoris.");
+      return;
+    }
+
+    const userRef = doc(db, "users", user.uid);
+
+    try {
+      if (isFavorite) {
+        // Supprimer des favoris
+        console.log("Suppression de la trottinette des favoris...");
+        await updateDoc(userRef, {
+          favoritesTrottinettes: arrayRemove(trottinette.itemID)
+        });
+        console.log("Trottinette supprimée des favoris.");
+        setIsFavorite(false);
+      } else {
+        // Ajouter aux favoris
+        console.log("Ajout de la trottinette aux favoris...");
+        await updateDoc(userRef, {
+          favoritesTrottinettes: arrayUnion(trottinette.itemID)
+        });
+        console.log("Trottinette ajoutée aux favoris.");
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des favoris :", error);
+    }
   };
 
   return (
