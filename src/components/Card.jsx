@@ -68,13 +68,6 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
       {/* Colonne de gauche : Informations */}
       <div className="flex-1 flex flex-col justify-between">
         <div>
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={() => onSelect(trottinette.itemID)}
-            className="form-checkbox h-5 w-5 text-primary-600 mb-4"
-            disabled={disableSelect}
-          />
           <span className="block mb-1 text-yellow-400 italic font-medium">Sélection de la rédaction</span>
           <h3 className="text-2xl font-bold mb-2">{trottinette.marque}</h3>
           <h3 className="text-xl font-bold mb-4">{trottinette.modele}</h3>
@@ -101,18 +94,26 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
           <p><strong>Guidon :</strong> {trottinette.taille_guidon}</p>
           <p className="text-2xl font-bold mt-4">{trottinette.prix} €</p>
         </div>
-        <div className="flex mt-4 justify-around">
-          <button onClick={toggleFavorite} className="focus:outline-none">
-            {isFavorite ? (
-              <HeartIconSolid className="h-8 w-8 text-red-500" />
-            ) : (
-              <HeartIcon className="h-8 w-8 text-gray-500" />
-            )}
-          </button>
-          <button className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg mr-4">
-            Voir la fiche détaillée
-          </button>
-        </div>
+        <div className="flex mt-4 justify-around items-center">
+  <input
+    type="checkbox"
+    checked={isSelected}
+    onChange={() => onSelect(trottinette.itemID)}
+    className="form-checkbox h-5 w-5"
+    disabled={disableSelect}
+  />
+  <button onClick={toggleFavorite} className="focus:outline-none">
+    {isFavorite ? (
+      <HeartIconSolid className="h-8 w-8 text-red-500" />
+    ) : (
+      <HeartIcon className="h-8 w-8 text-gray-500" />
+    )}
+  </button>
+  <button className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg mr-4">
+    Voir la fiche détaillée
+  </button>
+</div>
+
       </div>
       <div className="flex-1">
         <img
