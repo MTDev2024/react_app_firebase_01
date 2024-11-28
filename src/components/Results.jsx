@@ -24,8 +24,8 @@ const Results = ({ answers, onRestart }) => {
   console.log("Résultats filtrés :", filteredResults);
 
   return (
-    <div className="p-8">
-      <h2 className="text-3xl text-blue-800 my-6 font-bold">Résultats</h2>
+    <div className="px-4 mx-30">
+      <h2 className="text-4xl text-center mb-8 text-blue-800 my-6 font-bold">Résultats</h2>
       {filteredResults.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {filteredResults.map((trottinette, index) => (
