@@ -65,7 +65,7 @@ export default function ComparisonPage() {
       <div className="mt-8 text-center">
         <button
           onClick={() => navigate(-1)} // Retourne à la page précédente (les résultats)
-          className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg"
+          className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2"
         >
           Retour aux résultats
         </button>

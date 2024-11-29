@@ -14,6 +14,7 @@ import Profil from "./pages/Profil";
 import ComparisonPage from "./pages/ComparisonPage";
 
 
+
 // Import de Firebase
 import { auth } from "./firebase"; // Chemin vers firebase.js
 import { onAuthStateChanged } from "firebase/auth"; // Gestion de l'état d'authentification
