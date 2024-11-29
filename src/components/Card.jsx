@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; // Styles par défaut
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 
@@ -95,13 +97,15 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
           <p className="text-2xl font-bold mt-4">{trottinette.prix} €</p>
         </div>
         <div className="flex mt-4 justify-around items-center">
+              <Tippy content="Comparer">
   <input
     type="checkbox"
     checked={isSelected}
     onChange={() => onSelect(trottinette.itemID)}
     className="form-checkbox h-5 w-5"
     disabled={disableSelect}
-  />
+  /></Tippy>
+  <Tippy content="Ajouter aux favoris">
   <button onClick={toggleFavorite} className="focus:outline-none">
     {isFavorite ? (
       <HeartIconSolid className="h-8 w-8 text-red-500" />
@@ -109,6 +113,7 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
       <HeartIcon className="h-8 w-8 text-gray-500" />
     )}
   </button>
+  </Tippy>
   <button className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg mr-4">
     Voir la fiche détaillée
   </button>
