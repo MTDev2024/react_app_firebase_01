@@ -158,9 +158,10 @@ export default function Contact() {
             <p className="text-gray-600 mb-4">
               <strong> Téléphone :</strong>
               <a
-                href=" tel:+33123456789"
+                href="tel:+33123456789"
                 className="text-blue-600 hover:underline"
-              > +33 1 23 45 67 89
+              >
+                +33 1 23 45 67 89
               </a>
             </p>
             <p className="text-gray-600 mb-4">
@@ -168,9 +169,24 @@ export default function Contact() {
               <a
                 href="mailto:contact@trotticompv3.com"
                 className="text-blue-600 hover:underline"
-              > contact@trotticompv3.com
+              >
+                contact@trotticompv3.com
               </a>
             </p>
+            {/* Google Maps Integration */}
+            <div className="mt-6">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9990937428826!2d2.292292315674804!3d48.85884407928785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66fdf00000001%3A0x2b2b4c9e4b4c84a6!2sEiffel%20Tower!5e0!3m2!1sen!2sfr!4v1605554103583!5m2!1sen!2sfr"
+                width="100%"
+                height="250"
+                frameBorder="0"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                aria-hidden="false"
+                tabIndex="0"
+                title="Google Maps - Eiffel Tower"
+              ></iframe>
+            </div>
           </div>
         </div>
       </section>
