@@ -12,8 +12,7 @@ import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import Profil from "./pages/Profil";
 import ComparisonPage from "./pages/ComparisonPage";
-
-
+import Favorites from "./pages/Favorites";
 
 // Import de Firebase
 import { auth } from "./firebase"; // Chemin vers firebase.js
@@ -35,27 +34,27 @@ function App() {
   }, []);
 
   return (
-  <div className="min-h-screen flex flex-col">
-    {/* Barre de navigation */}
-    <NavBar />
+    <div className="min-h-screen flex flex-col">
+      {/* Barre de navigation */}
+      <NavBar />
 
-    {/* Contenu principal */}
-    <main className="flex-grow flex">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/profil" element={<Profil />} />
-        <Route path="/results" element={<Results />} />
-        <Route path="/compare" element={<ComparisonPage />} />
-      </Routes>
-    </main>
+      {/* Contenu principal */}
+      <main className="flex-grow flex">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/profil" element={<Profil />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/compare" element={<ComparisonPage />} />
+          <Route path="/favorites" element={<Favorites />} /> {/* Nouvelle route */}
+        </Routes>
+      </main>
 
-    {/* Pied de page */}
-    <Footer />
-  </div>
-);
-
+      {/* Pied de page */}
+      <Footer />
+    </div>
+  );
 }
 
 export default App;
