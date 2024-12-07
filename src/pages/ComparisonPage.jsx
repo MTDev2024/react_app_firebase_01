@@ -4,18 +4,16 @@ import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid"; // Icô
 import Tippy from "@tippyjs/react"; // Librairie pour les tooltips
 import "tippy.js/dist/tippy.css"; // Styles par défaut de Tippy.js
 import { useLocation, useNavigate } from "react-router-dom"; // Pour naviguer entre les pages et accéder aux données de l'état
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Firebase Auth pour gérer la connexion utilisateur
-import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; // Firestore pour gérer les favoris
+
+// Import centralisé des services Firebase
+import { auth, db } from "../firebase.js";
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore"; // Firestore pour gérer les favoris
 
 export default function ComparisonPage() {
   // Récupération des données envoyées depuis la page précédente (par exemple, la liste des trottinettes sélectionnées)
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedScooters } = location.state || { selectedScooters: [] }; // Défaut : tableau vide si aucune donnée n'est reçue
-
-  // Initialisation des services Firebase (Auth et Firestore)
-  const auth = getAuth();
-  const db = getFirestore();
 
   // État pour stocker l'utilisateur connecté
   const [user, setUser] = useState(null);
@@ -26,7 +24,7 @@ export default function ComparisonPage() {
   // Effet pour vérifier si un utilisateur est connecté et récupérer ses favoris depuis Firestore
   useEffect(() => {
     // Surveille les changements d'état de connexion de l'utilisateur
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser); // Met à jour l'utilisateur connecté
         try {
@@ -48,7 +46,7 @@ export default function ComparisonPage() {
     });
 
     return () => unsubscribe(); // Nettoie l'abonnement à onAuthStateChanged
-  }, [auth, db]);
+  }, []);
 
   // Fonction pour ajouter ou retirer une trottinette des favoris
   const toggleFavorite = async (scooterID) => {

@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Firebase Auth
-import ModaleAuth from "./ModaleAuth"; // Modale d'authentification
+
+// Import centralisé des services Firebase
+import { auth } from "../firebase.js";
+import { onAuthStateChanged } from "firebase/auth";
+
+// Import du composant ModaleAuth
+import ModaleAuth from "./ModaleAuth.jsx"; // Modale d'authentification
 
 export default function NavBar() {
   const [showModal, setShowModal] = useState(false); // État pour afficher/masquer la modale
@@ -12,7 +17,6 @@ export default function NavBar() {
 
   // 1. Gestion de l'état d'authentification
   useEffect(() => {
-    const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser); // Met à jour l'utilisateur lorsque son état change
     });
@@ -22,12 +26,14 @@ export default function NavBar() {
   }, []);
 
   // 2. Fonction de déconnexion
-  const handleLogout = () => {
-    const auth = getAuth();
-    auth.signOut().then(() => {
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
       setIsDropdownOpen(false); // Ferme le dropdown après la déconnexion
       navigate("/"); // Redirige vers la page d'accueil
-    });
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion :", error);
+    }
   };
 
   // 3. Fermer le dropdown si l'utilisateur clique en dehors
@@ -46,7 +52,6 @@ export default function NavBar() {
     <header className="bg-white shadow-lg w-full">
       {/* Conteneur principal pour la navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-        
         {/* Logo du site */}
         <Link to="/" className="text-2xl font-bold text-blue-800">
           Trotticompv3

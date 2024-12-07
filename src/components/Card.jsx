@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { HeartIcon } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
-import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css'; // Styles par défaut
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css"; // Styles par défaut
+
+// Import centralisé des services Firebase
+import { auth, db } from "../firebase.js";
+
+// Import des fonctions nécessaires pour Firestore et Auth
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 
 const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [user, setUser] = useState(null);
-  const auth = getAuth();
-  const db = getFirestore();
 
+  // Gestion de l'état utilisateur
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
+  // Vérification des favoris
   useEffect(() => {
     const checkIfFavorite = async () => {
       if (user && trottinette?.itemID) {
@@ -38,8 +43,9 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
     };
 
     checkIfFavorite();
-  }, [user, db, trottinette]);
+  }, [user, trottinette]);
 
+  // Ajout ou suppression des favoris
   const toggleFavorite = async () => {
     if (!user) {
       alert("Veuillez vous connecter pour ajouter aux favoris.");
@@ -51,12 +57,12 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
     try {
       if (isFavorite) {
         await updateDoc(userRef, {
-          favoritesTrottinettes: arrayRemove(trottinette.itemID)
+          favoritesTrottinettes: arrayRemove(trottinette.itemID),
         });
         setIsFavorite(false);
       } else {
         await updateDoc(userRef, {
-          favoritesTrottinettes: arrayUnion(trottinette.itemID)
+          favoritesTrottinettes: arrayUnion(trottinette.itemID),
         });
         setIsFavorite(true);
       }
@@ -107,8 +113,8 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
             />
           </Tippy>
           <Tippy content="Ajouter aux favoris">
-            <button 
-              onClick={toggleFavorite} 
+            <button
+              onClick={toggleFavorite}
               className="focus:outline-none transform transition-transform duration-200 hover:scale-110"
             >
               {isFavorite ? (

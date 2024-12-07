@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link de react-router-dom
-import NewsletterSignup from "../components/NewsletterSignup"; // Importe le composant d'inscription à la newsletter
+import NewsletterSignup from "../components/NewsletterSignup.jsx";
+
 
 export default function Blog() {
   return (

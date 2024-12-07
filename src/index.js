@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client"; // Import de react-dom/client pour React 18
 import { BrowserRouter } from "react-router-dom"; // Import de BrowserRouter
 import "./index.css"; // Styles globaux
-import App from "./App"; // Composant principal
+import App from './App.jsx'; // Composant principal
 
 // Sélectionnez l'élément racine
 const rootElement = document.getElementById("root");

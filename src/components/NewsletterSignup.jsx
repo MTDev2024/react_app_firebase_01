@@ -1,14 +1,17 @@
-import React from 'react'
-import { CalendarDaysIcon, HandRaisedIcon } from '@heroicons/react/24/outline'
-import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import React from 'react';
+import { CalendarDaysIcon, HandRaisedIcon } from '@heroicons/react/24/outline';
+
+// Import centralisé des services Firebase
+import { db } from "../firebase.js";
+
+// Import des fonctions nécessaires pour Firestore
+import { collection, addDoc } from "firebase/firestore";
 
 export default function NewsletterSignup() {
-  const db = getFirestore(); // Initialise Firestore
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const email = event.target.email.value;
-    console.log('Email submitted:', email);
+    console.log("Email submitted:", email);
 
     try {
       // Ajouter l'email dans la collection "newsletter" de Firestore
@@ -16,9 +19,9 @@ export default function NewsletterSignup() {
         email: email,
         createdAt: new Date(),
       });
-      alert('Inscription à la newsletter réussie !');
+      alert("Inscription à la newsletter réussie !");
     } catch (error) {
-      console.error("Erreur lors de l'inscription à la newsletter:", error);
+      console.error("Erreur lors de l'inscription à la newsletter :", error);
       alert("Une erreur est survenue. Veuillez réessayer.");
     }
   };
@@ -87,5 +90,5 @@ export default function NewsletterSignup() {
         />
       </div>
     </div>
-  )
+  );
 }

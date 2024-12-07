@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import { auth, db } from "../firebase"; // Firebase centralisé
+import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import Card from "../components/Card"; // Import du composant Card
 
 export default function Favorites() {
@@ -9,9 +10,6 @@ export default function Favorites() {
   const [favoriteScooters, setFavoriteScooters] = useState([]); // Détails des trottinettes favorites
   const [loading, setLoading] = useState(true); // État de chargement
   const [error, setError] = useState(null); // État des erreurs
-
-  const auth = getAuth();
-  const db = getFirestore();
 
   // Récupérer l'utilisateur connecté et ses favoris
   useEffect(() => {
@@ -40,7 +38,7 @@ export default function Favorites() {
     });
 
     return () => unsubscribe();
-  }, [auth, db]);
+  }, []);
 
   // Charger les détails des trottinettes favorites
   useEffect(() => {
@@ -74,7 +72,7 @@ export default function Favorites() {
       setFavoriteScooters([]);
       setLoading(false);
     }
-  }, [favoriteIDs, db]);
+  }, [favoriteIDs]);
 
   // Retirer une trottinette des favoris
   const removeFavorite = async (scooterID) => {

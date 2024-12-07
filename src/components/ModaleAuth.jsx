@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+
+// Import centralisé des services Firebase
+import { auth, db } from "../firebase.js";
+
+// Import des fonctions nécessaires pour l'authentification et Firestore
 import {
-  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 
 export default function ModaleAuth({ show, onClose }) {
   const [isSignup, setIsSignup] = useState(false); // Basculer entre inscription/connexion
@@ -16,9 +20,7 @@ export default function ModaleAuth({ show, onClose }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(""); // Messages d'information (succès/erreur)
 
-  const auth = getAuth();
   const googleProvider = new GoogleAuthProvider();
-  const db = getFirestore();
 
   const handleSignup = async () => {
     try {
@@ -31,10 +33,10 @@ export default function ModaleAuth({ show, onClose }) {
 
       // Ajouter l'utilisateur à Firestore avec un champ favorites vide
       await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid, // Ajout de l'ID unique de l'utilisateur
+        uid: user.uid,
         email: user.email,
-        favoritesArticles: [], // Ajouter un champ pour les articles favoris
-        favoritesTrottinettes: [], // Ajouter un champ pour les trottinettes favorites
+        favoritesArticles: [],
+        favoritesTrottinettes: [],
         createdAt: new Date(),
       });
 
@@ -62,13 +64,17 @@ export default function ModaleAuth({ show, onClose }) {
 
       // Ajouter l'utilisateur à Firestore avec un champ favorites vide s'il n'existe pas
       const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        uid: user.uid, // Ajout de l'ID unique de l'utilisateur
-        email: user.email,
-        favoritesArticles: [],
-        favoritesTrottinettes: [],
-        createdAt: new Date(),
-      }, { merge: true });
+      await setDoc(
+        userRef,
+        {
+          uid: user.uid,
+          email: user.email,
+          favoritesArticles: [],
+          favoritesTrottinettes: [],
+          createdAt: new Date(),
+        },
+        { merge: true }
+      );
 
       alert("Connexion via Google réussie !");
       onClose(); // Fermer la modale
@@ -90,7 +96,7 @@ export default function ModaleAuth({ show, onClose }) {
     }
   };
 
-  if (!show) return null; // Si `show` est false, on n'affiche pas la modale
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
@@ -103,12 +109,8 @@ export default function ModaleAuth({ show, onClose }) {
             : "Connexion"}
         </h2>
 
-        {/* Afficher les messages d'erreur ou de succès */}
-        {message && (
-          <p className="text-center text-red-500 mb-4">{message}</p>
-        )}
+        {message && <p className="text-center text-red-500 mb-4">{message}</p>}
 
-        {/* Si "Mot de passe oublié" est activé */}
         {isPasswordReset ? (
           <>
             <input
