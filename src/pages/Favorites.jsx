@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase"; // Firebase centralisé
 import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import Card from "../components/Card"; // Import du composant Card
+import Card from "../components/Card.jsx"; // Import du composant Card
 
 export default function Favorites() {
   const [user, setUser] = useState(null); // Utilisateur connecté

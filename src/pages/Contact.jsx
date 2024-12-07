@@ -96,7 +96,7 @@ export default function Contact() {
             </div>
             <div className="mb-6">
               <label htmlFor="email" className="block text-blue-600 font-semibold mb-2">
-                Email :
+                Email : 
               </label>
               <input
                 type="email"
@@ -156,7 +156,7 @@ export default function Contact() {
               <strong>Adresse :</strong> 123 Rue de la Mobilité, Paris, France
             </p>
             <p className="text-gray-600 mb-4">
-              <strong> Téléphone :</strong>
+              <strong> Téléphone : </strong>
               <a
                 href="tel:+33123456789"
                 className="text-blue-600 hover:underline"
@@ -165,12 +165,12 @@ export default function Contact() {
               </a>
             </p>
             <p className="text-gray-600 mb-4">
-              <strong>Email :</strong>
+              <strong>Email : </strong>
               <a
                 href="mailto:contact@trotticompv3.com"
                 className="text-blue-600 hover:underline"
               >
-                contact@trotticompv3.com
+                 contact@trotticompv3.com
               </a>
             </p>
             {/* Google Maps Integration */}
