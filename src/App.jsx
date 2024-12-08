@@ -13,6 +13,7 @@ import Contact from "./pages/Contact.jsx"; // Page de contact
 import Profil from "./pages/Profil.jsx"; // Page du profil utilisateur
 import ComparisonPage from "./pages/ComparisonPage.jsx"; // Page de comparaison
 import Favorites from "./pages/Favorites.jsx"; // Page des favoris
+import Apropos from "./pages/Apropos.jsx"
 
 // Import des fonctionnalités Firebase
 import { auth } from "./firebase"; // Import de Firebase Auth
@@ -48,6 +49,7 @@ function App() {
           <Route path="/results" element={<Results />} /> {/* Route pour les résultats */}
           <Route path="/compare" element={<ComparisonPage />} /> {/* Route pour la page de comparaison */}
           <Route path="/favorites" element={<Favorites />} /> {/* Route protégée pour les favoris */}
+          <Route path="/apropos" element={<Apropos />} /> {/* Route pour la page "A propos" */}
         </Routes>
       </main>
 
