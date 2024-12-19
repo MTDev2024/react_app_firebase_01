@@ -1,9 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom"; // Import Link de react-router-dom
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import NewsletterSignup from "../components/NewsletterSignup.jsx";
-
+import ArticleCard from "../components/ArticleCard.jsx"; // Import du composant ArticleCard
 
 export default function Blog() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredArticles = articleData.filter((article) =>
+    article.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <main className="flex-grow mt-4">
       {/* Hero Section */}
@@ -25,12 +31,14 @@ export default function Blog() {
       </section>
 
       {/* Search Bar */}
-      <div className="max-w-7xl mx-auto  p-8 mb-8">
+      <div className="max-w-7xl mx-auto p-8 mb-8">
         <input
           type="text"
           id="search-bar"
           placeholder="Rechercher un article..."
           className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -38,10 +46,15 @@ export default function Blog() {
       <section id="articles" className="py-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Replace these with dynamic components later */}
-            {articleData.map((article, index) => (
-              <ArticleCard key={index} {...article} />
-            ))}
+            {filteredArticles.length > 0 ? (
+              filteredArticles.map((article, index) => (
+                <ArticleCard key={index} {...article} />
+              ))
+            ) : (
+              <p className="col-span-full text-center text-gray-600">
+                Aucun article ne correspond à votre recherche.
+              </p>
+            )}
           </div>
         </div>
 
@@ -78,44 +91,13 @@ export default function Blog() {
   );
 }
 
-// Example article data
+// Exemple des données des articles
 const articleData = [
   {
     title: "Choisir une trottinette en fonction de son usage",
-    description:
-      "Guide détaillé pour aider les consommateurs à choisir.",
+    description: "Guide détaillé pour aider les consommateurs à choisir.",
     image: "/assets/images/Trottinette_Electrique_Wolf_Warrior_King_GTR_Kaabo_or_et_noir.webp",
-    link: "/article01", // Utilisez des chemins relatifs ou dynamiques
+    link: "/article01",
   },
-  {
-    title: "Sécurité : Comment bien s'équiper ?",
-    description:
-      "Nos conseils pour rouler en toute sécurité avec votre trottinette électrique.",
-    image: "/assets/images/article2.jpg",
-    link: "/article02",
-  },
-  {
-    title: "Comment entretenir sa trottinette ?",
-    description:
-      "Un guide complet pour prolonger la durée de vie de votre trottinette électrique.",
-    image: "/assets/images/article3.jpg",
-    link: "/article03",
-  },
-  // Add more articles here
+  // Ajoutez d'autres articles ici
 ];
-
-// Component for Article Cards
-function ArticleCard({ title, description, image, link }) {
-  return (
-    <article className="article-card bg-white shadow-lg overflow-hidden hover:scale-105 hover:border-2 hover:border-blue-200 md:transform-none cursor-pointer">
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
-        <p className="text-gray-600 mb-4">{description}</p>
-        <Link to={link} className="text-blue-600 font-semibold hover:underline">
-          Lire la suite
-        </Link>
-      </div>
-    </article>
-  );
-}
