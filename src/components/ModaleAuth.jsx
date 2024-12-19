@@ -61,27 +61,31 @@ export default function ModaleAuth({ show, onClose }) {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
-
-      // Ajouter l'utilisateur à Firestore avec un champ favorites vide s'il n'existe pas
+  
+      // Référence à l'utilisateur dans Firestore
       const userRef = doc(db, "users", user.uid);
-      await setDoc(
-        userRef,
-        {
+  
+      // Vérifier si l'utilisateur existe déjà dans Firestore
+      const userSnapshot = await userRef.get();
+  
+      if (!userSnapshot.exists()) {
+        // Si l'utilisateur n'existe pas, créer un nouveau document
+        await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
           favoritesArticles: [],
           favoritesTrottinettes: [],
           createdAt: new Date(),
-        },
-        { merge: true }
-      );
-
+        });
+      }
+  
       alert("Connexion via Google réussie !");
       onClose(); // Fermer la modale
     } catch (error) {
       setMessage(`Erreur : ${error.message}`);
     }
   };
+  
 
   const handlePasswordReset = async () => {
     if (!email) {

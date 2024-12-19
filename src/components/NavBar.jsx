@@ -54,7 +54,7 @@ export default function NavBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo du site */}
         <Link to="/" className="text-2xl font-bold text-blue-800">
-          Trotticompv3
+        Compv3
         </Link>
 
         {/* Navigation Desktop */}
