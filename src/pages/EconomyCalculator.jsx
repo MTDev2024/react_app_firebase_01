@@ -48,28 +48,29 @@ const EconomyCalculator = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center  max-w-7xl mx-auto">
+    <div className="flex flex-col max-w-7xl mx-auto">
+
       {/* Texte SEO */}
-      <div className="shadow-md text-center">
-        <h2 className="text-xl font-bold mb-4">Pourquoi passer à la trottinette électrique ?</h2>
-        <p className="mb-4">
+      <div className="shadow-md pt-36 pb-8">
+        <h2 className="text-xl text-center font-bold mb-4">Quels avantages à réduire nos déplacements en voiture pour favoriser les mobilités douces ?</h2>
+        <p className="mb-4 max-w-6xl w-full">
           Le temps passé dans les embouteillages dans les grandes villes est une réalité bien trop courante. Ce temps perdu, ajouté aux coûts liés au carburant et à l'entretien de la voiture, en fait une solution peu efficace pour les trajets quotidiens.
         </p>
-        <p className="mb-4">
+        <p className="mb-4 max-w-6xl w-full">
           La trottinette électrique est une alternative pratique et économique pour les trajets courts. Elle permet non seulement de gagner du temps en évitant les bouchons, mais aussi de réduire les coûts mensuels, surtout pour les trajets quotidiens en ville.
         </p>
-        <p className="mb-4">
+        <p className="mb-4 max-w-6xl w-full">
           De plus, en évitant l'usage de la voiture pour les trajets en solo, vous contribuez à réduire l'empreinte carbone et à alléger les rues. Un geste simple mais efficace pour votre porte-monnaie et pour l'environnement !
         </p>
       </div>
   
       
       {/* Section calculateur et image */}
-      <section className="flex justify-center shadow-md max-w-6xl w-full">
+      <section className="flex justify-center shadow-md max-w-6xl w-full  py-8">
         {/* Calculateur */}
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center w-full lg:w-1/2 p-8">
           
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="text-center space-y-4">
             <div>
               <label className="block mb-1 font-medium">Distance parcourue par jour (en km) :</label>
               <input
@@ -77,7 +78,7 @@ const EconomyCalculator = () => {
                 name="dailyDistance"
                 value={formData.dailyDistance}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md"
+                className="w-full text-center border-gray-300 rounded-md"
                 placeholder="Ex : 15"
                 required
               />
@@ -90,7 +91,7 @@ const EconomyCalculator = () => {
                 name="fuelConsumption"
                 value={formData.fuelConsumption}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md"
+                className="w-full text-center border-gray-300 rounded-md"
                 placeholder="Ex : 7"
                 required
               />
@@ -103,7 +104,7 @@ const EconomyCalculator = () => {
                 name="fuelPrice"
                 value={formData.fuelPrice}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md"
+                className="w-full text-center border-gray-300 rounded-md"
                 placeholder="Ex : 1.8"
                 required
               />
@@ -116,7 +117,7 @@ const EconomyCalculator = () => {
                 name="wearCostPerKm"
                 value={formData.wearCostPerKm}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md"
+                className="w-full text-center border-gray-300 rounded-md"
                 placeholder="Ex : 0.10"
                 required
               />
@@ -124,7 +125,7 @@ const EconomyCalculator = () => {
   
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+              className="w-80 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
             >
               Calculer
             </button>
@@ -148,7 +149,7 @@ const EconomyCalculator = () => {
 
         {/* Résultats */}
         {results && (
-            <section className="flex flex-col items-center">
+            <section className="flex flex-col items-center py-8">
               <h3 className="text-lg font-bold">Résultats :</h3>
               <p>
                 <strong>Coût mensuel avec votre voiture :</strong> {results.totalCarCost} €
