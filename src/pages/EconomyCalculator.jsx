@@ -1,0 +1,162 @@
+import React, { useState } from "react";
+
+const EconomyCalculator = () => {
+  const [formData, setFormData] = useState({
+    dailyDistance: "",
+    fuelConsumption: "",
+    fuelPrice: "",
+    wearCostPerKm: "", 
+  });
+
+  const [results, setResults] = useState(null);
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const { dailyDistance, fuelConsumption, fuelPrice, wearCostPerKm } = formData;
+
+    if (!dailyDistance || !fuelConsumption || !fuelPrice || !wearCostPerKm) {
+      alert("Veuillez remplir tous les champs.");
+      return;
+    }
+
+    const dailyDistanceNum = parseFloat(dailyDistance);
+    const fuelConsumptionNum = parseFloat(fuelConsumption);
+    const fuelPriceNum = parseFloat(fuelPrice);
+    const wearCostNum = parseFloat(wearCostPerKm);
+
+    const monthlyDistance = dailyDistanceNum * 30;
+
+    const fuelCost =
+      (fuelConsumptionNum / 100) * dailyDistanceNum * 30 * fuelPriceNum;
+    const wearCost = monthlyDistance * wearCostNum;
+    const totalCarCost = fuelCost + wearCost;
+
+    const scooterCostPerKm = 0.05;
+    const scooterCost = monthlyDistance * scooterCostPerKm;
+    const savings = totalCarCost - scooterCost;
+
+    setResults({
+      totalCarCost: totalCarCost.toFixed(2),
+      scooterCost: scooterCost.toFixed(2),
+      savings: savings.toFixed(2),
+    });
+  };
+
+  return (
+    <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
+      <div className="bg-white shadow-md rounded-lg p-6 max-w-lg w-full mb-8">
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Calculateur d'économie
+        </h1>
+
+        {/* Formulaire */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block mb-1 font-medium">Distance parcourue par jour (en km) :</label>
+            <input
+              type="number"
+              name="dailyDistance"
+              value={formData.dailyDistance}
+              onChange={handleInputChange}
+              className="w-full border-gray-300 rounded-md"
+              placeholder="Ex : 15"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">Consommation de votre voiture (L/100 km) :</label>
+            <input
+              type="number"
+              name="fuelConsumption"
+              value={formData.fuelConsumption}
+              onChange={handleInputChange}
+              className="w-full border-gray-300 rounded-md"
+              placeholder="Ex : 7"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">Prix moyen du carburant (€/L) :</label>
+            <input
+              type="number"
+              name="fuelPrice"
+              value={formData.fuelPrice}
+              onChange={handleInputChange}
+              className="w-full border-gray-300 rounded-md"
+              placeholder="Ex : 1.8"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">Coût moyen d'usure par km (en €) :</label>
+            <input
+              type="number"
+              name="wearCostPerKm"
+              value={formData.wearCostPerKm}
+              onChange={handleInputChange}
+              className="w-full border-gray-300 rounded-md"
+              placeholder="Ex : 0.10"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+          >
+            Calculer
+          </button>
+        </form>
+
+        {/* Résultats */}
+        {results && (
+          <div className="mt-6 bg-gray-50 p-4 rounded-md">
+            <h3 className="text-lg font-bold mb-2">Résultats :</h3>
+            <p>
+              <strong>Coût mensuel avec votre voiture :</strong> {results.totalCarCost} €
+            </p>
+            <p>
+              <strong>Coût mensuel avec une trottinette :</strong> {results.scooterCost} €
+            </p>
+            <p>
+              <strong>Économies réalisées :</strong> {results.savings} € par mois
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Texte SEO */}
+      <div className="max-w-4xl bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 className="text-xl font-bold mb-4">Pourquoi passer à la trottinette électrique ?</h2>
+        <p className="mb-4">
+          Le temps passé dans les embouteillages dans les grandes villes est une réalité bien trop courante. Ce temps perdu, ajouté aux coûts liés au carburant et à l'entretien de la voiture, en fait une solution peu efficace pour les trajets quotidiens.
+        </p>
+        <p className="mb-4">
+          La trottinette électrique est une alternative pratique et économique pour les trajets courts. Elle permet non seulement de gagner du temps en évitant les bouchons, mais aussi de réduire les coûts mensuels, surtout pour les trajets quotidiens en ville.
+        </p>
+        <p className="mb-4">
+          De plus, en évitant l'usage de la voiture pour les trajets en solo, vous contribuez à réduire l'empreinte carbone et à alléger les rues. Un geste simple mais efficace pour votre porte-monnaie et pour l'environnement !
+        </p>
+
+        {/* Image illustrative */}
+        <div className="mt-6">
+          <img
+            src="https://example.com/image.jpg" // Remplacez par l'URL de votre image
+            alt="Trottinette électrique vs voiture"
+            className="w-full h-auto rounded-lg shadow-md"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EconomyCalculator;
