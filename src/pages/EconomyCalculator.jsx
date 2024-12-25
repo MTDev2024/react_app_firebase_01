@@ -48,9 +48,9 @@ const EconomyCalculator = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col justify-center  max-w-7xl mx-auto">
       {/* Texte SEO */}
-      <div className=" bg-white shadow-md rounded-lg p-6 mb-12 text-center">
+      <div className="shadow-md text-center">
         <h2 className="text-xl font-bold mb-4">Pourquoi passer à la trottinette électrique ?</h2>
         <p className="mb-4">
           Le temps passé dans les embouteillages dans les grandes villes est une réalité bien trop courante. Ce temps perdu, ajouté aux coûts liés au carburant et à l'entretien de la voiture, en fait une solution peu efficace pour les trajets quotidiens.
@@ -63,11 +63,11 @@ const EconomyCalculator = () => {
         </p>
       </div>
   
+      
       {/* Section calculateur et image */}
-      <h1 className="text-2xl font-bold mb-6 text-center">Calculateur d'économie</h1>
-      <div className="flex flex-col lg:flex-row bg-white shadow-md rounded-lg max-w-6xl w-full">
+      <section className="flex justify-center shadow-md max-w-6xl w-full">
         {/* Calculateur */}
-        <div className="p-8 flex flex-col justify-center">
+        <div className="flex flex-col justify-center">
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -129,25 +129,27 @@ const EconomyCalculator = () => {
               Calculer
             </button>
           </form>
-  
-
-
-        
+         
         </div>
   
         {/* Image illustrative */}
         <div className="w-full lg:w-1/2 p-8 flex justify-center items-center">
           <img
-            src="https://www.neozone.org/blog/wp-content/uploads/2020/11/trottinette-mercedes-003-780x502.jpg" // Remplacez par l'URL de votre image
+            src="https://www.neozone.org/blog/wp-content/uploads/2020/11/trottinette-mercedes-003-780x502.jpg"
             alt="Trottinette électrique vs voiture"
-            className="max-w-full h-auto rounded-lg shadow-md"
+            className="max-w-full h-auto shadow-md"
           />
         </div>
-      </div>
+
+      </section>
+
+
+
+
         {/* Résultats */}
         {results && (
-            <div className="mt-6 bg-gray-50 p-4 rounded-md">
-              <h3 className="text-lg font-bold mb-2">Résultats :</h3>
+            <section className="flex flex-col items-center">
+              <h3 className="text-lg font-bold">Résultats :</h3>
               <p>
                 <strong>Coût mensuel avec votre voiture :</strong> {results.totalCarCost} €
               </p>
@@ -157,7 +159,7 @@ const EconomyCalculator = () => {
               <p>
                 <strong>Économies réalisées :</strong> {results.savings} € par mois
               </p>
-            </div>
+            </section>
           )}
     </div>
   );
