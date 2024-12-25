@@ -49,10 +49,11 @@ const EconomyCalculator = () => {
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto">
-
       {/* Texte SEO */}
-      <div className="shadow-md pt-36 pb-8">
-        <h2 className="text-xl text-center font-bold mb-4">Quels avantages à réduire nos déplacements en voiture pour favoriser les mobilités douces ?</h2>
+      <section className="shadow-md pt-20 pb-8 px-8">
+        <h2 className="text-xl text-center font-bold mb-4">
+          Quels avantages à réduire nos déplacements en voiture pour favoriser les mobilités douces ?
+        </h2>
         <p className="mb-4 max-w-6xl w-full">
           Le temps passé dans les embouteillages dans les grandes villes est une réalité bien trop courante. Ce temps perdu, ajouté aux coûts liés au carburant et à l'entretien de la voiture, en fait une solution peu efficace pour les trajets quotidiens.
         </p>
@@ -62,14 +63,12 @@ const EconomyCalculator = () => {
         <p className="mb-4 max-w-6xl w-full">
           De plus, en évitant l'usage de la voiture pour les trajets en solo, vous contribuez à réduire l'empreinte carbone et à alléger les rues. Un geste simple mais efficace pour votre porte-monnaie et pour l'environnement !
         </p>
-      </div>
+      </section>
   
-      
-      {/* Section calculateur et image */}
-      <section className="flex justify-center shadow-md max-w-6xl w-full  py-8">
+      {/* Section calculateur, résultats et image */}
+      <section className="flex flex-col lg:flex-row justify-center shadow-md max-w-6xl w-full py-8">
         {/* Calculateur */}
-        <div className="flex flex-col justify-center w-full lg:w-1/2 p-8">
-          
+        <div className="flex flex-col justify-center w-full lg:w-1/2 p-8 order-1">
           <form onSubmit={handleSubmit} className="text-center space-y-4">
             <div>
               <label className="block mb-1 font-medium">Distance parcourue par jour (en km) :</label>
@@ -130,40 +129,38 @@ const EconomyCalculator = () => {
               Calculer
             </button>
           </form>
-         
         </div>
   
+        {/* Résultats */}
+        {results && (
+          <section className="flex flex-col items-center order-2 lg:order-none py-8">
+            <h3 className="text-lg font-bold">Résultats :</h3>
+            <p>
+              <strong>Coût mensuel avec votre voiture :</strong> {results.totalCarCost} €
+            </p>
+            <p>
+              <strong>Coût mensuel avec une trottinette :</strong> {results.scooterCost} €
+            </p>
+            <p>
+              <strong>Économies réalisées :</strong> {results.savings} € par mois
+            </p>
+          </section>
+        )}
+  
         {/* Image illustrative */}
-        <div className="w-full lg:w-1/2 p-8 flex justify-center items-center">
+        <div className="w-full lg:w-1/2 p-8 flex justify-center items-center order-3 lg:order-none">
           <img
             src="https://www.neozone.org/blog/wp-content/uploads/2020/11/trottinette-mercedes-003-780x502.jpg"
             alt="Trottinette électrique vs voiture"
-            className="max-w-full h-auto shadow-md"
+            className="max-w-full h-auto shadow-md rounded-md"
           />
         </div>
-
       </section>
-
-
-
-
-        {/* Résultats */}
-        {results && (
-            <section className="flex flex-col items-center py-8">
-              <h3 className="text-lg font-bold">Résultats :</h3>
-              <p>
-                <strong>Coût mensuel avec votre voiture :</strong> {results.totalCarCost} €
-              </p>
-              <p>
-                <strong>Coût mensuel avec une trottinette :</strong> {results.scooterCost} €
-              </p>
-              <p>
-                <strong>Économies réalisées :</strong> {results.savings} € par mois
-              </p>
-            </section>
-          )}
     </div>
   );
+  
+  
+  
   
 
   
