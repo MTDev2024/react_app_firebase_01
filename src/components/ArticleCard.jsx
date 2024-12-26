@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom"; // Pour naviguer vers la page de détail
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Tippy from "@tippyjs/react";
@@ -11,10 +12,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 
 function ArticleCard({ article }) {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false); // État pour savoir si l'article est favori
+  const [user, setUser] = useState(null); // État pour l'utilisateur connecté
 
-  // Gestion de l'état utilisateur
+  // Gestion de l'état utilisateur (vérification si connecté)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -51,11 +52,13 @@ function ArticleCard({ article }) {
     const userRef = doc(db, "users", user.uid);
     try {
       if (isFavorite) {
+        // Retirer des favoris
         await updateDoc(userRef, {
           favoriteArticles: arrayRemove(article.id),
         });
         setIsFavorite(false);
       } else {
+        // Ajouter aux favoris
         await updateDoc(userRef, {
           favoriteArticles: arrayUnion(article.id),
         });
@@ -76,11 +79,21 @@ function ArticleCard({ article }) {
   }
 
   return (
-    <article className="article-card bg-white shadow-lg overflow-hidden hover:scale-105 hover:border-2 hover:border-blue-200 md:transform-none cursor-pointer">
-      <img src={article.image} alt={article.title} className="w-full h-48 object-cover" />
+    <article className="article-card bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 hover:border-2 hover:border-blue-200 transform transition duration-200 cursor-pointer">
+      {/* Image de l'article */}
+      <img
+        src={article.image || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
+        alt={article.title}
+        className="w-full h-48 object-cover"
+      />
       <div className="p-6">
+        {/* Titre et bouton favoris */}
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xl font-bold text-gray-800">{article.title}</h2>
+          <Link to={`/articles/${article.id}`}>
+            <h2 className="text-xl font-bold text-gray-800 hover:underline">
+              {article.title}
+            </h2>
+          </Link>
           <Tippy content={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
             <button
               onClick={toggleFavorite}
@@ -94,19 +107,39 @@ function ArticleCard({ article }) {
             </button>
           </Tippy>
         </div>
+
+        {/* Description */}
         <p className="text-gray-600 mb-4">{article.description}</p>
+
+        {/* Tags */}
+        <div className="mb-4">
+          {article.tags && (
+            <span className="text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded-md">
+              {article.tags}
+            </span>
+          )}
+        </div>
+
+        {/* Lien vers la page de détail */}
+        <Link
+          to={`/articles/${article.id}`}
+          className="text-blue-600 hover:underline"
+        >
+          Lire la suite →
+        </Link>
       </div>
     </article>
   );
 }
 
-// Proptypes pour valider les propriétés
+// PropTypes pour valider les propriétés
 ArticleCard.propTypes = {
   article: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired, // Identifiant unique
+    title: PropTypes.string.isRequired, // Titre de l'article
+    description: PropTypes.string.isRequired, // Courte description
+    image: PropTypes.string, // URL de l'image
+    tags: PropTypes.string, // Tags ou catégorie (facultatif)
   }).isRequired,
 };
 
