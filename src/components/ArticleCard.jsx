@@ -82,14 +82,14 @@ function ArticleCard({ article }) {
     <article className="article-card bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 hover:border-2 hover:border-blue-200 transform transition duration-200 cursor-pointer">
       {/* Image de l'article */}
       <img
-        src={article.image || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
+        src={article.imgUrl || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
         alt={article.title}
         className="w-full h-48 object-cover"
       />
       <div className="p-6">
         {/* Titre et bouton favoris */}
         <div className="flex justify-between items-center mb-2">
-          <Link to={`/articles/${article.id}`}>
+          <Link to={`/articles/${article.slug}`}>
             <h2 className="text-xl font-bold text-gray-800 hover:underline">
               {article.title}
             </h2>
@@ -112,17 +112,20 @@ function ArticleCard({ article }) {
         <p className="text-gray-600 mb-4">{article.description}</p>
 
         {/* Tags */}
-        <div className="mb-4">
-          {article.tags && (
-            <span className="text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded-md">
-              {article.tags}
+        <div className="mb-4 flex flex-wrap gap-2">
+          {Array.isArray(article.tags) && article.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded-md"
+            >
+              {tag}
             </span>
-          )}
+          ))}
         </div>
 
         {/* Lien vers la page de détail */}
         <Link
-          to={`/articles/${article.id}`}
+          to={`/articles/${article.slug}`}
           className="text-blue-600 hover:underline"
         >
           Lire la suite →
@@ -138,8 +141,9 @@ ArticleCard.propTypes = {
     id: PropTypes.string.isRequired, // Identifiant unique
     title: PropTypes.string.isRequired, // Titre de l'article
     description: PropTypes.string.isRequired, // Courte description
-    image: PropTypes.string, // URL de l'image
-    tags: PropTypes.string, // Tags ou catégorie (facultatif)
+    imgUrl: PropTypes.string, // URL de l'image
+    tags: PropTypes.arrayOf(PropTypes.string), // Tableau de tags
+    slug: PropTypes.string.isRequired, // Slug pour l'URL unique
   }).isRequired,
 };
 
