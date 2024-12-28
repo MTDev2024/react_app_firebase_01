@@ -22,35 +22,48 @@ const addTestArticles = async () => {
 
   const testArticles = [
     {
-      id: "article-001",
-      title: "Les meilleures trottinettes pour 2024",
-      description: "Découvrez notre sélection des meilleurs modèles de l'année.",
-      image: "/assets/images/trottinette-001.jpg",
-      tags: "comparatif",
-      date: Timestamp.fromDate(new Date()),
+      slug: "choisir-trottinette-electrique",
+      title: "Comment choisir une trottinette électrique",
+      description: "Découvrez les critères pour choisir la meilleure trottinette.",
+      content: "Voici un guide complet pour vous aider à faire le bon choix...",
+      imageUrl: "https://example.com/trottinette.jpg",
+      date: Timestamp.fromDate(new Date("2024-12-28")),
+      tags: ["guide", "trottinette"],
+      categories: ["Loisir", "Électrique"],
+      featured: true,
+      seoKeywords: ["trottinette", "guide", "électrique"],
+      priority: 1,
     },
     {
-      id: "article-002",
-      title: "Guide d'entretien des trottinettes",
-      description: "Apprenez à prolonger la durée de vie de votre trottinette.",
-      image: "/assets/images/trottinette-002.jpg",
-      tags: "entretien",
-      date: Timestamp.fromDate(new Date()),
-    },
-    {
-      id: "article-003",
-      title: "Pourquoi choisir une trottinette électrique ?",
-      description: "Les avantages de la mobilité douce pour tous.",
-      image: "/assets/images/trottinette-003.jpg",
-      tags: "avantages",
-      date: Timestamp.fromDate(new Date()),
+      slug: "meilleures-trottinettes-enfants",
+      title: "Les meilleures trottinettes pour enfants",
+      description: "Une sélection des meilleures trottinettes adaptées aux enfants.",
+      content: "Découvrez notre top 5 des trottinettes pour enfants, leur sécurité, et leurs avantages...",
+      imageUrl: "https://example.com/trottinette-enfant.jpg",
+      date: Timestamp.fromDate(new Date("2024-12-29")),
+      tags: ["sécurité", "enfants"],
+      categories: ["Famille", "Sécurité"],
+      featured: false,
+      seoKeywords: ["trottinette", "enfant", "sécurité"],
+      priority: 2,
     },
   ];
 
-  for (const article of testArticles) {
-    await addDoc(articlesRef, article);
-    console.log(`Article ajouté : ${article.title}`);
+  try {
+    for (const article of testArticles) {
+      try {
+        const docRef = await addDoc(articlesRef, article);
+        console.log(`Article ajouté avec ID ${docRef.id} : ${article.title}`);
+      } catch (error) {
+        console.error(
+          `Erreur lors de l'ajout de l'article "${article.title}" :`,
+          error
+        );
+      }
+    }
+  } catch (globalError) {
+    console.error("Erreur générale lors de l'exécution du script :", globalError);
   }
 };
 
-addTestArticles().catch((error) => console.error("Erreur lors de l'ajout des articles :", error));
+addTestArticles();

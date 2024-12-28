@@ -9,7 +9,7 @@ import { auth, db } from "../firebase.js";
 
 // Import des fonctions nécessaires pour Firestore et Auth
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 
 const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -29,13 +29,12 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
     const checkIfFavorite = async () => {
       if (user && trottinette?.itemID) {
         try {
-          const userRef = doc(db, "users", user.uid);
-          const userDoc = await getDoc(userRef);
-          if (userDoc.exists()) {
-            if (userDoc.data().favoritesTrottinettes?.includes(trottinette.itemID)) {
-              setIsFavorite(true);
-            }
-          }
+          const favoriteRef = doc(
+            collection(db, "users", user.uid, "favoritesTrottinettes"),
+            trottinette.itemID
+          );
+          const docSnapshot = await getDoc(favoriteRef);
+          setIsFavorite(docSnapshot.exists());
         } catch (error) {
           console.error("Erreur lors de la vérification des favoris :", error);
         }
@@ -52,18 +51,26 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
       return;
     }
 
-    const userRef = doc(db, "users", user.uid);
+    const favoriteRef = doc(
+      collection(db, "users", user.uid, "favoritesTrottinettes"),
+      trottinette.itemID
+    );
 
     try {
       if (isFavorite) {
-        await updateDoc(userRef, {
-          favoritesTrottinettes: arrayRemove(trottinette.itemID),
-        });
+        // Retirer des favoris
+        await deleteDoc(favoriteRef);
+        console.log(`Trottinette retirée des favoris : ${trottinette.itemID}`);
         setIsFavorite(false);
       } else {
-        await updateDoc(userRef, {
-          favoritesTrottinettes: arrayUnion(trottinette.itemID),
+        // Ajouter aux favoris
+        await setDoc(favoriteRef, {
+          trottinetteId: trottinette.itemID,
+          marque: trottinette.marque,
+          modele: trottinette.modele,
+          dateAdded: new Date().toISOString(),
         });
+        console.log(`Trottinette ajoutée aux favoris : ${trottinette.itemID}`);
         setIsFavorite(true);
       }
     } catch (error) {
@@ -76,7 +83,9 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
       {/* Colonne de gauche : Informations */}
       <div className="flex-1 flex flex-col justify-between">
         <div>
-          <span className="block mb-1 text-yellow-400 italic font-medium">Sélection de la rédaction</span>
+          <span className="block mb-1 text-yellow-400 italic font-medium">
+            Sélection de la rédaction
+          </span>
           <h3 className="text-xl sm:text-2xl font-bold mb-2">{trottinette.marque}</h3>
           <h3 className="text-lg sm:text-xl font-bold mb-4">{trottinette.modele}</h3>
           <div className="flex items-center mb-4">
@@ -96,10 +105,18 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
             </div>
             <p className="text-sm">{trottinette.reviews} avis</p>
           </div>
-          <p><strong>Autonomie :</strong> {trottinette.distance_max} km</p>
-          <p><strong>Poids max utilisateur :</strong> {trottinette.poids_max} kg</p>
-          <p><strong>Poids trottinette :</strong> {trottinette.poids_trottinette} kg</p>
-          <p><strong>Guidon :</strong> {trottinette.taille_guidon}</p>
+          <p>
+            <strong>Autonomie :</strong> {trottinette.distance_max} km
+          </p>
+          <p>
+            <strong>Poids max utilisateur :</strong> {trottinette.poids_max} kg
+          </p>
+          <p>
+            <strong>Poids trottinette :</strong> {trottinette.poids_trottinette} kg
+          </p>
+          <p>
+            <strong>Guidon :</strong> {trottinette.taille_guidon}
+          </p>
           <p className="text-lg sm:text-2xl font-bold mt-4">{trottinette.prix} €</p>
         </div>
         <div className="flex mt-4 justify-around items-center">

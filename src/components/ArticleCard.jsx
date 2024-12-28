@@ -9,7 +9,7 @@ import "tippy.js/dist/tippy.css";
 // Firebase
 import { auth, db } from "../firebase.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 
 function ArticleCard({ article }) {
   const [isFavorite, setIsFavorite] = useState(false); // État pour savoir si l'article est favori
@@ -28,11 +28,12 @@ function ArticleCard({ article }) {
     const checkIfFavorite = async () => {
       if (user && article?.id) {
         try {
-          const userRef = doc(db, "users", user.uid);
-          const userDoc = await getDoc(userRef);
-          if (userDoc.exists() && userDoc.data().favoriteArticles?.includes(article.id)) {
-            setIsFavorite(true);
-          }
+          const favoriteRef = doc(
+            collection(db, "users", user.uid, "favoritesArticles"),
+            article.id
+          );
+          const docSnapshot = await getDoc(favoriteRef);
+          setIsFavorite(docSnapshot.exists());
         } catch (error) {
           console.error("Erreur lors de la vérification des favoris :", error);
         }
@@ -49,19 +50,25 @@ function ArticleCard({ article }) {
       return;
     }
 
-    const userRef = doc(db, "users", user.uid);
+    const favoriteRef = doc(
+      collection(db, "users", user.uid, "favoritesArticles"),
+      article.id
+    );
+
     try {
       if (isFavorite) {
         // Retirer des favoris
-        await updateDoc(userRef, {
-          favoriteArticles: arrayRemove(article.id),
-        });
+        await deleteDoc(favoriteRef);
+        console.log(`Article retiré des favoris : ${article.id}`);
         setIsFavorite(false);
       } else {
         // Ajouter aux favoris
-        await updateDoc(userRef, {
-          favoriteArticles: arrayUnion(article.id),
+        await setDoc(favoriteRef, {
+          articleId: article.id,
+          title: article.title,
+          dateAdded: new Date().toISOString(),
         });
+        console.log(`Article ajouté aux favoris : ${article.id}`);
         setIsFavorite(true);
       }
     } catch (error) {
@@ -79,10 +86,14 @@ function ArticleCard({ article }) {
   }
 
   return (
-    <article className="article-card bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 hover:border-2 hover:border-blue-200 transform transition duration-200 cursor-pointer">
+    <article
+      className={`article-card bg-white shadow-lg rounded-lg overflow-hidden ${
+        article.featured ? "border-2 border-yellow-400" : ""
+      } hover:scale-105 transform transition duration-200 cursor-pointer`}
+    >
       {/* Image de l'article */}
       <img
-        src={article.imgUrl || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
+        src={article.imageUrl || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
         alt={article.title}
         className="w-full h-48 object-cover"
       />
@@ -113,14 +124,28 @@ function ArticleCard({ article }) {
 
         {/* Tags */}
         <div className="mb-4 flex flex-wrap gap-2">
-          {Array.isArray(article.tags) && article.tags.map((tag, index) => (
-            <span
-              key={index}
-              className="text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded-md"
-            >
-              {tag}
-            </span>
-          ))}
+          {Array.isArray(article.tags) &&
+            article.tags.map((tag, index) => (
+              <span
+                key={index}
+                className="text-sm bg-gray-100 text-gray-800 px-2 py-1 rounded-md"
+              >
+                {tag}
+              </span>
+            ))}
+        </div>
+
+        {/* Catégories */}
+        <div className="mb-4">
+          {Array.isArray(article.categories) &&
+            article.categories.map((category, index) => (
+              <span
+                key={index}
+                className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-md mr-2"
+              >
+                {category}
+              </span>
+            ))}
         </div>
 
         {/* Lien vers la page de détail */}
@@ -141,9 +166,11 @@ ArticleCard.propTypes = {
     id: PropTypes.string.isRequired, // Identifiant unique
     title: PropTypes.string.isRequired, // Titre de l'article
     description: PropTypes.string.isRequired, // Courte description
-    imgUrl: PropTypes.string, // URL de l'image
+    imageUrl: PropTypes.string, // URL de l'image
     tags: PropTypes.arrayOf(PropTypes.string), // Tableau de tags
+    categories: PropTypes.arrayOf(PropTypes.string), // Tableau de catégories
     slug: PropTypes.string.isRequired, // Slug pour l'URL unique
+    featured: PropTypes.bool, // Article en avant
   }).isRequired,
 };
 
