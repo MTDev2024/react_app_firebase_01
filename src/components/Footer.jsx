@@ -1,18 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
 export default function Footer() {
   return (
-    <footer className="bg-blue-800 text-white w-full py-5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+    <footer className="bg-blue-800 text-white w-full py-6 px-4">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
         {/* Texte Footer */}
         <div className="text-sm text-center md:text-left">
           &copy; 2024 Compv3. Tous droits réservés.
         </div>
 
         {/* Footer Links */}
-        <div className="mt-4 md:mt-0 flex space-x-4">
+        <div className="mt-4 md:mt-0 flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
           <Link
             to="/politique-confidentialite"
             className="text-gray-400 hover:text-white"

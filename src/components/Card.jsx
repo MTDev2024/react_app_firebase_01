@@ -11,7 +11,7 @@ import { auth, db } from "../firebase.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 
-const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
+const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox = true }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -79,7 +79,7 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row border rounded-lg shadow-md bg-gray-800 text-white p-6 space-y-4 md:space-y-0 md:space-x-4">
+    <div className="flex flex-col md:flex-row border rounded-lg shadow-md bg-gray-800 text-white p-4 sm:p-6 space-y-4 md:space-y-0 md:space-x-4">
       {/* Colonne de gauche : Informations */}
       <div className="flex-1 flex flex-col justify-between">
         <div>
@@ -120,16 +120,18 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect }) => {
           <p className="text-lg sm:text-2xl font-bold mt-4">{trottinette.prix} €</p>
         </div>
         <div className="flex mt-4 justify-around items-center">
-          <Tippy content="Comparer">
-            <input
-              type="checkbox"
-              checked={isSelected}
-              onChange={() => onSelect(trottinette.itemID)}
-              className="form-checkbox h-5 w-5"
-              disabled={disableSelect}
-            />
-          </Tippy>
-          <Tippy content="Ajouter aux favoris">
+          {showCheckbox && (
+            <Tippy content="Comparer">
+              <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => onSelect(trottinette.itemID)}
+                className="form-checkbox h-5 w-5"
+                disabled={disableSelect}
+              />
+            </Tippy>
+          )}
+          <Tippy content={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
             <button
               onClick={toggleFavorite}
               className="focus:outline-none transform transition-transform duration-200 hover:scale-110"

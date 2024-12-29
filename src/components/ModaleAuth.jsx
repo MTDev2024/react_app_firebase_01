@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-
-// Import centralisé des services Firebase
 import { auth, db } from "../firebase.js";
-
-// Import des fonctions nécessaires pour l'authentification et Firestore
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -11,27 +7,39 @@ import {
   GoogleAuthProvider,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 
 export default function ModaleAuth({ show, onClose }) {
-  const [isSignup, setIsSignup] = useState(false); // Basculer entre inscription/connexion
-  const [isPasswordReset, setIsPasswordReset] = useState(false); // Basculer vers "Mot de passe oublié"
+  const [isSignup, setIsSignup] = useState(false); // Basculer entre inscription et connexion
+  const [isPasswordReset, setIsPasswordReset] = useState(false); // Basculer vers réinitialisation du mot de passe
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(""); // Messages d'information (succès/erreur)
+  const [message, setMessage] = useState(""); // Message d'information (succès/erreur)
+  const [messageType, setMessageType] = useState(""); // Type de message (success/error)
 
   const googleProvider = new GoogleAuthProvider();
 
+  // Fonction pour afficher un message stylisé
+  const displayMessage = (text, type) => {
+    setMessage(text);
+    setMessageType(type); // "success" ou "error"
+    setTimeout(() => {
+      setMessage("");
+      setMessageType("");
+    }, 5000); // Effacer le message après 5 secondes
+  };
+
+  // Gestion de l'inscription
   const handleSignup = async () => {
     try {
-      if (!password) {
-        setMessage("Veuillez définir un mot de passe pour vous inscrire.");
+      if (!email || !password) {
+        displayMessage("Veuillez remplir tous les champs.", "error");
         return;
       }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Ajouter l'utilisateur à Firestore avec un champ favorites vide
+      // Ajouter l'utilisateur à Firestore avec les champs nécessaires
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email: user.email,
@@ -40,36 +48,43 @@ export default function ModaleAuth({ show, onClose }) {
         createdAt: new Date(),
       });
 
-      alert("Compte créé avec succès !");
-      onClose(); // Fermer la modale
+      displayMessage("Compte créé avec succès !", "success");
+      setEmail("");
+      setPassword("");
+      onClose();
     } catch (error) {
-      setMessage(`Erreur : ${error.message}`);
+      displayMessage(`Erreur : ${error.message}`, "error");
     }
   };
 
+  // Gestion de la connexion
   const handleLogin = async () => {
     try {
+      if (!email || !password) {
+        displayMessage("Veuillez remplir tous les champs.", "error");
+        return;
+      }
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Connexion réussie !");
-      onClose(); // Fermer la modale
+      displayMessage("Connexion réussie !", "success");
+      setEmail("");
+      setPassword("");
+      onClose();
     } catch (error) {
-      setMessage(`Erreur : ${error.message}`);
+      displayMessage(`Erreur : ${error.message}`, "error");
     }
   };
 
+  // Gestion de la connexion via Google
   const handleGoogleLogin = async () => {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
-  
-      // Référence à l'utilisateur dans Firestore
+
       const userRef = doc(db, "users", user.uid);
-  
-      // Vérifier si l'utilisateur existe déjà dans Firestore
-      const userSnapshot = await userRef.get();
-  
+      const userSnapshot = await getDoc(userRef);
+
+      // Initialiser l'utilisateur dans Firestore si non existant
       if (!userSnapshot.exists()) {
-        // Si l'utilisateur n'existe pas, créer un nouveau document
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
@@ -78,25 +93,25 @@ export default function ModaleAuth({ show, onClose }) {
           createdAt: new Date(),
         });
       }
-  
-      alert("Connexion via Google réussie !");
-      onClose(); // Fermer la modale
+
+      displayMessage("Connexion via Google réussie !", "success");
+      onClose();
     } catch (error) {
-      setMessage(`Erreur : ${error.message}`);
+      displayMessage(`Erreur : ${error.message}`, "error");
     }
   };
-  
 
+  // Gestion de la réinitialisation de mot de passe
   const handlePasswordReset = async () => {
     if (!email) {
-      setMessage("Veuillez entrer votre adresse email.");
+      displayMessage("Veuillez entrer votre adresse email.", "error");
       return;
     }
     try {
       await sendPasswordResetEmail(auth, email);
-      setMessage("Email de réinitialisation envoyé. Vérifiez votre boîte mail !");
+      displayMessage("Email de réinitialisation envoyé. Vérifiez votre boîte mail !", "success");
     } catch (error) {
-      setMessage(`Erreur : ${error.message}`);
+      displayMessage(`Erreur : ${error.message}`, "error");
     }
   };
 
@@ -104,7 +119,7 @@ export default function ModaleAuth({ show, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 w-96 transform transition-transform duration-500">
+      <div className="bg-white p-6 w-96 rounded-lg shadow-lg transform transition-transform duration-500">
         <h2 className="text-2xl font-bold mb-4">
           {isPasswordReset
             ? "Réinitialisation du mot de passe"
@@ -113,7 +128,18 @@ export default function ModaleAuth({ show, onClose }) {
             : "Connexion"}
         </h2>
 
-        {message && <p className="text-center text-red-500 mb-4">{message}</p>}
+        {/* Message stylisé */}
+        {message && (
+          <p
+            className={`text-center p-2 mb-4 rounded ${
+              messageType === "success"
+                ? "bg-green-100 text-green-700 border border-green-400"
+                : "bg-red-100 text-red-700 border border-red-400"
+            }`}
+          >
+            {message}
+          </p>
+        )}
 
         {isPasswordReset ? (
           <>
@@ -122,11 +148,11 @@ export default function ModaleAuth({ show, onClose }) {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 mb-4 border"
+              className="w-full p-2 mb-4 border rounded"
             />
             <button
               onClick={handlePasswordReset}
-              className="w-full bg-blue-600 text-white py-2 mb-4"
+              className="w-full bg-blue-600 text-white py-2 mb-4 rounded hover:bg-blue-700"
             >
               Envoyer un email de réinitialisation
             </button>
@@ -146,24 +172,24 @@ export default function ModaleAuth({ show, onClose }) {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 mb-4 border"
+              className="w-full p-2 mb-4 border rounded"
             />
             <input
               type="password"
               placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 mb-4 border"
+              className="w-full p-2 mb-4 border rounded"
             />
             <button
               onClick={isSignup ? handleSignup : handleLogin}
-              className="w-full bg-blue-600 text-white py-2 mb-4"
+              className="w-full bg-blue-600 text-white py-2 mb-4 rounded hover:bg-blue-700"
             >
               {isSignup ? "S'inscrire" : "Se connecter"}
             </button>
             <button
               onClick={handleGoogleLogin}
-              className="w-full bg-red-600 text-white py-2 mb-4 flex justify-center items-center"
+              className="w-full bg-red-600 text-white py-2 mb-4 rounded hover:bg-red-700 flex justify-center items-center"
             >
               <ion-icon name="logo-google" className="p-2"></ion-icon>
               {isSignup ? "S'inscrire avec Google" : "Se connecter avec Google"}

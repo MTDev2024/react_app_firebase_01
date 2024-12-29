@@ -1,93 +1,60 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase"; // Firebase centralisé
-import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import Card from "../components/Card.jsx"; // Import du composant Card
+import Card from "../components/Card.jsx"; // Composant Card pour les trottinettes
+import ArticleCard from "../components/ArticleCard.jsx"; // Composant ArticleCard pour les articles
 
 export default function Favorites() {
   const [user, setUser] = useState(null); // Utilisateur connecté
-  const [favoriteIDs, setFavoriteIDs] = useState([]); // IDs des trottinettes favorites
   const [favoriteScooters, setFavoriteScooters] = useState([]); // Détails des trottinettes favorites
+  const [favoriteArticles, setFavoriteArticles] = useState([]); // Détails des articles favoris
   const [loading, setLoading] = useState(true); // État de chargement
   const [error, setError] = useState(null); // État des erreurs
 
-  // Récupérer l'utilisateur connecté et ses favoris
+  // Vérifier l'état de connexion de l'utilisateur
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        console.log("Utilisateur connecté :", currentUser);
         setUser(currentUser);
-        try {
-          const userRef = doc(db, "users", currentUser.uid);
-          const userDoc = await getDoc(userRef);
-          if (userDoc.exists()) {
-            const favorites = userDoc.data().favoritesTrottinettes || [];
-            setFavoriteIDs(favorites);
-            console.log("Favoris récupérés :", favorites);
-          } else {
-            console.warn("Document utilisateur non trouvé.");
-            setFavoriteIDs([]);
-          }
-        } catch (error) {
-          console.error("Erreur lors de la récupération des favoris :", error);
-          setError("Impossible de charger les favoris. Veuillez réessayer.");
-        }
+        await loadFavorites(currentUser.uid); // Charger les favoris
       } else {
+        console.log("Aucun utilisateur connecté.");
         setUser(null);
-        setFavoriteIDs([]);
+        setFavoriteScooters([]);
+        setFavoriteArticles([]);
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Charger les détails des trottinettes favorites
-  useEffect(() => {
-    const fetchScooters = async () => {
-      setLoading(true);
-      setError(null);
-      const scooterDetails = [];
-      try {
-        for (const id of favoriteIDs) {
-          const scooterRef = doc(db, "trottinettes", id); // Assurez-vous d'utiliser "trottinettes"
-          const scooterDoc = await getDoc(scooterRef);
-          if (scooterDoc.exists()) {
-            scooterDetails.push({ itemID: id, ...scooterDoc.data() });
-            console.log(`Trottinette trouvée : ${id}`, scooterDoc.data());
-          } else {
-            console.warn(`Trottinette non trouvée pour l'ID : ${id}`);
-          }
-        }
-        setFavoriteScooters(scooterDetails);
-      } catch (error) {
-        console.error("Erreur lors du chargement des trottinettes :", error);
-        setError("Impossible de charger les détails des trottinettes.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (favoriteIDs.length > 0) {
-      fetchScooters();
-    } else {
-      setFavoriteScooters([]);
-      setLoading(false);
-    }
-  }, [favoriteIDs]);
-
-  // Retirer une trottinette des favoris
-  const removeFavorite = async (scooterID) => {
-    if (!user) return;
+  // Charger les favoris depuis les sous-collections
+  const loadFavorites = async (userId) => {
+    setLoading(true);
+    setError(null);
+    console.log("Chargement des favoris pour l'utilisateur ID :", userId);
 
     try {
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        favoritesTrottinettes: arrayRemove(scooterID),
-      });
-      setFavoriteIDs((prev) => prev.filter((id) => id !== scooterID));
-      console.log(`Trottinette retirée des favoris : ${scooterID}`);
+      // Charger les trottinettes favorites
+      const scooterSnapshot = await getDocs(collection(db, "users", userId, "favoritesTrottinettes"));
+      const scooterDetails = scooterSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+      // Charger les articles favoris
+      const articleSnapshot = await getDocs(collection(db, "users", userId, "favoritesArticles"));
+      const articleDetails = articleSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+      setFavoriteScooters(scooterDetails);
+      setFavoriteArticles(articleDetails);
+
+      console.log("Trottinettes favorites récupérées :", scooterDetails);
+      console.log("Articles favoris récupérés :", articleDetails);
     } catch (error) {
-      console.error("Erreur lors de la suppression des favoris :", error);
-      setError("Impossible de retirer cette trottinette des favoris.");
+      console.error("Erreur lors de la récupération des favoris :", error);
+      setError("Impossible de charger vos favoris. Veuillez réessayer.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,25 +73,43 @@ export default function Favorites() {
     return <p className="text-center text-red-600 font-bold mt-10">Veuillez vous connecter pour voir vos favoris.</p>;
   }
 
-  // Affichage si aucun favori n'est disponible
-  if (favoriteScooters.length === 0) {
-    return <p className="text-center text-gray-600 font-bold mt-10">Aucune trottinette favorite pour le moment.</p>;
-  }
-
   // Affichage des favoris
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-4xl font-bold m-6 text-blue-800 text-center">Mes Favoris</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {favoriteScooters.map((scooter) => (
-          <Card
-            key={scooter.itemID}
-            trottinette={scooter}
-            isSelected={false}
-            onSelect={() => {}}
-            disableSelect={true}
-          />
-        ))}
+
+      {/* Trottinettes favorites */}
+      <div>
+        <h3 className="text-2xl font-bold mb-4">Trottinettes favorites</h3>
+        {favoriteScooters.length === 0 ? (
+          <p className="text-center text-gray-600 font-bold mt-4">Aucune trottinette favorite pour le moment.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {favoriteScooters.map((scooter) => (
+              <Card
+                key={scooter.id}
+                trottinette={scooter}
+                isSelected={false}
+                onSelect={() => {}}
+                disableSelect={true}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Articles favoris */}
+      <div className="mt-10">
+        <h3 className="text-2xl font-bold mb-4">Articles favoris</h3>
+        {favoriteArticles.length === 0 ? (
+          <p className="text-center text-gray-600 font-bold mt-4">Aucun article favori pour le moment.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {favoriteArticles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
