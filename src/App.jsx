@@ -21,7 +21,7 @@ const Apropos = lazy(() => import("./pages/Apropos.jsx"));
 const EconomyCalculator = lazy(() => import("./pages/EconomyCalculator.jsx"));
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
 const CGU = lazy(() => import("./pages/CGU.jsx")); 
-const PolitiqueConfidentialite = lazy(() => import("./pages/PolitiqueConfidentialite.jsx ")); 
+const Confidentialite = lazy(() => import("./pages/Confidentialite.jsx")); 
 
 
 function App() {
@@ -59,7 +59,7 @@ function App() {
 
 
 
-            <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite  />} /> 
+            <Route path="/confidentialite" element={<Confidentialite  />} /> 
 
 
             <Route path="*" element={<div>Page non trouvée</div>} />

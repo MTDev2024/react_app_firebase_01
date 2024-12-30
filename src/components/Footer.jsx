@@ -12,14 +12,15 @@ export default function Footer() {
 
         {/* Footer Links */}
         <div className="mt-4 md:mt-0 flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
-          <Link
-            to="/politique-confidentialite"
-            className="text-gray-400 hover:text-white"
-            title="Voir notre politique de confidentialité"
-            aria-label="Voir notre politique de confidentialité"
-          >
-            Politique de confidentialité
-          </Link>
+        <Link
+         to="/confidentialite"
+         className="text-gray-400 hover:text-white"
+         title="Voir notre politique de confidentialité"
+         aria-label="Voir notre politique de confidentialité"
+        >
+          Politique de confidentialité
+        </Link>
+
 
           <Link
             to="/cgu"
