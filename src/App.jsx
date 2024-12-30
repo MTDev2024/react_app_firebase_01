@@ -19,6 +19,10 @@ const ComparisonPage = lazy(() => import("./pages/ComparisonPage.jsx"));
 const Favorites = lazy(() => import("./pages/Favorites.jsx"));
 const Apropos = lazy(() => import("./pages/Apropos.jsx"));
 const EconomyCalculator = lazy(() => import("./pages/EconomyCalculator.jsx"));
+const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
+const CGU = lazy(() => import("./pages/CGU.jsx")); 
+const PolitiqueConfidentialite = lazy(() => import("./pages/PolitiqueConfidentialite.jsx ")); 
+
 
 function App() {
   useEffect(() => {
@@ -50,6 +54,14 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/apropos" element={<Apropos />} />
             <Route path="/calculator" element={<EconomyCalculator />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route path="/cgu" element={<CGU />} /> 
+
+
+
+            <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite  />} /> 
+
+
             <Route path="*" element={<div>Page non trouvée</div>} />
           </Routes>
         </Suspense>

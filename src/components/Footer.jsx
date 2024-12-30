@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
         {/* Texte Footer */}
         <div className="text-sm text-center md:text-left">
-          &copy; 2024 Compv3. Tous droits réservés.
+          &copy; 2024 Trotticomp. Tous droits réservés.
         </div>
 
         {/* Footer Links */}
@@ -22,12 +22,12 @@ export default function Footer() {
           </Link>
 
           <Link
-            to="/conditions-utilisation"
+            to="/cgu"
             className="text-gray-400 hover:text-white"
-            title="Voir les conditions d'utilisation"
-            aria-label="Voir les conditions d'utilisation"
+            title="Voir les conditions générales d'utilisation"
+            aria-label="Voir les conditions générales d'utilisation"
           >
-            Conditions d'utilisation
+            Conditions générales d'utilisation
           </Link>
 
           <Link
