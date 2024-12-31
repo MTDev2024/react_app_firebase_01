@@ -24,6 +24,7 @@ const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
 const CGU = lazy(() => import("./pages/CGU.jsx"));
 const Confidentialite = lazy(() => import("./pages/Confidentialite.jsx"));
 const AddArticle = lazy(() => import("./components/AddArticle.jsx")); // Corrigé pour le dossier components
+const Admin = lazy(() => import("./pages/Admin.jsx")); // Page Admin
 
 function App() {
   useEffect(() => {
@@ -63,6 +64,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AddArticle />
+                </ProtectedRoute>
+              }
+            />
+            {/* Route protégée pour Admin */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <Admin />
                 </ProtectedRoute>
               }
             />

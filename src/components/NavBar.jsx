@@ -45,6 +45,7 @@ export default function NavBar() {
     try {
       await auth.signOut();
       setIsDropdownOpen(false); // Ferme le dropdown après la déconnexion
+      setIsMenuOpen(false); // Ferme le menu mobile
       navigate("/"); // Redirige vers la page d'accueil
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
@@ -161,9 +162,43 @@ export default function NavBar() {
             </button>
           )}
         </div>
+
+        {/* Menu hamburger pour mobile */}
+        <button
+  className="md:hidden flex items-center text-gray-700"
+  onClick={() => setIsMenuOpen(!isMenuOpen)} // Ouvre/ferme le menu
+  aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+>
+  <svg
+    className={`w-8 h-8 transform transition-transform duration-300 ${
+      isMenuOpen ? "rotate-45" : ""
+    }`}
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    {isMenuOpen ? (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M6 18L18 6M6 6l12 12" // Croix
+      />
+    ) : (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 6h16M4 12h16M4 18h16" // Trois barres
+      />
+    )}
+  </svg>
+</button>
+
       </div>
 
-      {/* Navigation mobile (visible lorsque le menu hamburger est ouvert) */}
+      {/* Navigation mobile */}
       {isMenuOpen && (
         <nav className="md:hidden bg-white shadow-lg">
           <ul className="space-y-4 px-4 py-2">
@@ -171,7 +206,7 @@ export default function NavBar() {
               <Link
                 to="/"
                 className="text-gray-700 hover:text-blue-800"
-                onClick={() => setIsMenuOpen(false)} // Ferme le menu après clic
+                onClick={() => setIsMenuOpen(false)}
               >
                 Accueil
               </Link>
@@ -208,7 +243,7 @@ export default function NavBar() {
                 <Link
                   to="/admin"
                   className="text-blue-800 hover:text-blue-600"
-                  onClick={() => setIsMenuOpen(false)} // Ferme le menu après clic
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Administration
                 </Link>
@@ -219,7 +254,7 @@ export default function NavBar() {
                 <li>
                   <button
                     onClick={() => {
-                      navigate("/favorites"); // Redirige vers la page des favoris
+                      navigate("/favorites");
                       setIsMenuOpen(false);
                     }}
                     className="w-full text-left text-gray-700 hover:text-blue-800"
@@ -232,7 +267,7 @@ export default function NavBar() {
                 </li>
                 <li>
                   <button
-                    onClick={handleLogout} // Gère la déconnexion
+                    onClick={handleLogout}
                     className="w-full text-left text-red-600 hover:text-red-800"
                   >
                     Déconnexion
@@ -242,7 +277,7 @@ export default function NavBar() {
             ) : (
               <li>
                 <button
-                  onClick={() => setShowModal(true)} // Ouvre la modale
+                  onClick={() => setShowModal(true)}
                   className="w-full text-left text-gray-700 hover:text-blue-800"
                 >
                   Inscription / Connexion
@@ -257,7 +292,7 @@ export default function NavBar() {
       {showModal && (
         <ModaleAuth
           show={showModal}
-          onClose={() => setShowModal(false)} // Ferme la modale
+          onClose={() => setShowModal(false)}
         />
       )}
     </header>
