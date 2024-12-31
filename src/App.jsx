@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from "react";
-import { Routes, Route } from "react-router-dom"; // Retiré BrowserRouter ici
+import { Routes, Route } from "react-router-dom";
 
 // Import Firebase Auth
 import { auth } from "./firebase";
@@ -9,6 +9,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import NavBar from "./components/NavBar.jsx";
 import Footer from "./components/Footer.jsx";
 import Results from "./components/Results.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Route protégée
 
 // Lazy loading pour les pages
 const Home = lazy(() => import("./pages/Home.jsx"));
@@ -20,9 +21,9 @@ const Favorites = lazy(() => import("./pages/Favorites.jsx"));
 const Apropos = lazy(() => import("./pages/Apropos.jsx"));
 const EconomyCalculator = lazy(() => import("./pages/EconomyCalculator.jsx"));
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
-const CGU = lazy(() => import("./pages/CGU.jsx")); 
-const Confidentialite = lazy(() => import("./pages/Confidentialite.jsx")); 
-
+const CGU = lazy(() => import("./pages/CGU.jsx"));
+const Confidentialite = lazy(() => import("./pages/Confidentialite.jsx"));
+const AddArticle = lazy(() => import("./components/AddArticle.jsx")); // Corrigé pour le dossier components
 
 function App() {
   useEffect(() => {
@@ -55,13 +56,16 @@ function App() {
             <Route path="/apropos" element={<Apropos />} />
             <Route path="/calculator" element={<EconomyCalculator />} />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
-            <Route path="/cgu" element={<CGU />} /> 
-
-
-
-            <Route path="/confidentialite" element={<Confidentialite  />} /> 
-
-
+            <Route path="/cgu" element={<CGU />} />
+            <Route path="/confidentialite" element={<Confidentialite />} />
+            <Route
+              path="/add-article"
+              element={
+                <ProtectedRoute>
+                  <AddArticle />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<div>Page non trouvée</div>} />
           </Routes>
         </Suspense>
