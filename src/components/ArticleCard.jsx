@@ -92,11 +92,13 @@ function ArticleCard({ article }) {
       } hover:scale-105 transform transition duration-200 cursor-pointer`}
     >
       {/* Image de l'article */}
-      <img
-        src={article.imageUrl || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
-        alt={article.title}
-        className="w-full h-48 object-cover"
-      />
+      <div className="overflow-hidden">
+        <img
+          src={article.imageUrl || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
+          alt={article.title}
+          className="w-full h-48 object-cover transform transition-transform duration-300 ease-in-out hover:translate-y-2 hover:scale-105 hover:shadow-lg"
+        />
+      </div>
       <div className="p-6">
         {/* Titre et bouton favoris */}
         <div className="flex justify-between items-center mb-2">
