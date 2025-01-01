@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { auth, db } from "../firebase"; // Firebase Auth et Firestore
+import { auth, db } from "../firebase";
 import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 
 const AddArticle = () => {
