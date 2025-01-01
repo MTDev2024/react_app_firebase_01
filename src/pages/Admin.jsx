@@ -45,7 +45,7 @@ const Admin = () => {
         Bienvenue, {user.email}. Vous êtes connecté en tant qu'administrateur.
       </p>
 
-      {/* Ajoutez ici des sections pour les fonctionnalités d'administration */}
+      {/* Boutons pour les fonctionnalités d'administration */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <button
           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
@@ -64,6 +64,18 @@ const Admin = () => {
           onClick={() => navigate("/manage-articles")} // Redirige vers la gestion des articles
         >
           Gérer les articles
+        </button>
+        <button
+          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+          onClick={() => navigate("/add-trottinette")} // Redirige vers l'ajout de trottinettes
+        >
+          Ajouter une trottinette
+        </button>
+        <button
+          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+          onClick={() => navigate("/manage-trottinettes")} // Redirige vers la gestion des trottinettes
+        >
+          Gérer les trottinettes
         </button>
       </div>
     </div>

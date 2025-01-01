@@ -23,8 +23,10 @@ const EconomyCalculator = lazy(() => import("./pages/EconomyCalculator.jsx"));
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
 const CGU = lazy(() => import("./pages/CGU.jsx"));
 const Confidentialite = lazy(() => import("./pages/Confidentialite.jsx"));
-const AddArticle = lazy(() => import("./components/AddArticle.jsx")); // Corrigé pour le dossier components
-const Admin = lazy(() => import("./pages/Admin.jsx")); // Page Admin
+const AddArticle = lazy(() => import("./components/AddArticle.jsx"));
+const AddTrottinette = lazy(() => import("./components/AddTrottinette.jsx")); // Nouveau
+const ManageTrottinettes = lazy(() => import("./components/ManageTrottinettes.jsx")); // Nouveau
+const Admin = lazy(() => import("./pages/Admin.jsx"));
 
 function App() {
   useEffect(() => {
@@ -67,7 +69,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Route protégée pour Admin */}
+            <Route
+              path="/add-trottinette"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AddTrottinette />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/manage-trottinettes"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <ManageTrottinettes />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/admin"
               element={
