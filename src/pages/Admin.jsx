@@ -42,41 +42,54 @@ const Admin = () => {
         Page d'administration
       </h1>
       <p className="text-center text-gray-700 mb-4">
-        Bienvenue, {user.email}. Vous êtes connecté en tant qu'administrateur.
+        Bienvenue, <span className="font-bold text-blue-800">{user.email}</span>. Vous êtes connecté en tant qu'administrateur.
       </p>
 
       {/* Boutons pour les fonctionnalités d'administration */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-6">
         <button
           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-          onClick={() => navigate("/add-article")} // Redirige vers l'ajout d'article
+          onClick={() => navigate("/add-article")}
         >
           Ajouter un article
         </button>
         <button
           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-          onClick={() => navigate("/manage-users")} // Redirige vers la gestion des utilisateurs
-        >
-          Gérer les utilisateurs
-        </button>
-        <button
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-          onClick={() => navigate("/manage-articles")} // Redirige vers la gestion des articles
+          onClick={() => navigate("/manage-articles")}
         >
           Gérer les articles
         </button>
         <button
           className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
-          onClick={() => navigate("/add-trottinette")} // Redirige vers l'ajout de trottinettes
+          onClick={() => navigate("/add-trottinette")}
         >
           Ajouter une trottinette
         </button>
         <button
           className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
-          onClick={() => navigate("/manage-trottinettes")} // Redirige vers la gestion des trottinettes
+          onClick={() => navigate("/manage-trottinettes")}
         >
           Gérer les trottinettes
         </button>
+        <button
+          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          onClick={() => navigate("/manage-users")}
+        >
+          Gérer les utilisateurs
+        </button>
+        <button
+          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          onClick={() => navigate("/manage-newsletter")}
+        >
+          Gérer les inscrits à la newsletter
+        </button>
+        <button
+  className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
+  onClick={() => navigate("/manage-messages")}
+>
+  Gérer les messages
+</button>
+
       </div>
     </div>
   );

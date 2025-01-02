@@ -26,6 +26,11 @@ const Confidentialite = lazy(() => import("./pages/Confidentialite.jsx"));
 const AddArticle = lazy(() => import("./components/Management/AddArticle.jsx"));
 const AddTrottinette = lazy(() => import("./components/Management/AddTrottinette.jsx")); 
 const ManageTrottinettes = lazy(() => import("./components/Management/ManageTrottinettes.jsx"));
+const ManageNewsletter = lazy(() => import("./components/Management/ManageNewsletter.jsx"));
+const ManageArticles = lazy(() => import("./components/Management/ManageArticles.jsx"));
+const ManageUsers = lazy(() => import("./components/Management/ManageUsers.jsx"));
+const ManageMessages = lazy(() => import("./components/Management/ManageMessages.jsx"));
+
 const Admin = lazy(() => import("./pages/Admin.jsx"));
 
 function App() {
@@ -45,9 +50,9 @@ function App() {
       {/* Barre de navigation */}
       <NavBar />
 
-      {/* Contenu principal */}
+      {/* Contenu principal avec Fallback */}
       <main className="flex-grow flex">
-        <Suspense fallback={<div>Chargement...</div>}>
+        <Suspense fallback={<div className="flex justify-center items-center h-screen">Chargement en cours...</div>}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/blog" element={<Blog />} />
@@ -82,6 +87,38 @@ function App() {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <ManageTrottinettes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/manage-newsletter"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <ManageNewsletter />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/manage-articles"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <ManageArticles />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/manage-users"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <ManageUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/manage-messages"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <ManageMessages />
                 </ProtectedRoute>
               }
             />
