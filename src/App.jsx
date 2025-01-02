@@ -30,7 +30,6 @@ const ManageNewsletter = lazy(() => import("./components/Management/ManageNewsle
 const ManageArticles = lazy(() => import("./components/Management/ManageArticles.jsx"));
 const ManageUsers = lazy(() => import("./components/Management/ManageUsers.jsx"));
 const ManageMessages = lazy(() => import("./components/Management/ManageMessages.jsx"));
-
 const Admin = lazy(() => import("./pages/Admin.jsx"));
 
 function App() {
@@ -52,8 +51,15 @@ function App() {
 
       {/* Contenu principal avec Fallback */}
       <main className="flex-grow flex">
-        <Suspense fallback={<div className="flex justify-center items-center h-screen">Chargement en cours...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center h-screen">
+              Chargement en cours...
+            </div>
+          }
+        >
           <Routes>
+            {/* Routes principales */}
             <Route path="/" element={<Home />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
@@ -66,6 +72,8 @@ function App() {
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/cgu" element={<CGU />} />
             <Route path="/confidentialite" element={<Confidentialite />} />
+
+            {/* Routes protégées */}
             <Route
               path="/add-article"
               element={
@@ -130,6 +138,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Route fallback */}
             <Route path="*" element={<div>Page non trouvée</div>} />
           </Routes>
         </Suspense>
