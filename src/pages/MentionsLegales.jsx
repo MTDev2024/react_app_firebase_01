@@ -42,6 +42,10 @@ const MentionsLegales = () => {
             Les icônes utilisées sur ce site sont fournies par <strong>Flaticon</strong>. Elles sont créées par
             différents auteurs et utilisées sous licence conformément aux conditions de Flaticon :
           </p>
+          <p>
+            Certaines des images utilisées sur ce site sont fournies par <strong>Unslplash</strong>. Elles sont créées par
+            différents auteurs et utilisées sous licence conformément aux conditions de Unsplash :
+          </p>
           <ul className="list-disc pl-6">
             <li>
               Flaticon : <a href="https://www.flaticon.com/" className="text-blue-600 underline">https://www.flaticon.com/</a>
@@ -50,6 +54,10 @@ const MentionsLegales = () => {
             <li>
               Catégories utilisées : <a href="https://www.flaticon.com/free-animated-icons/green-technology" className="text-blue-600 underline">Green Technology Animated Icons</a>
             </li>
+            <p>
+            Certaines des images utilisées sur ce site sont fournies par <strong>Unslplash</strong>. Elles sont créées par
+            différents auteurs et utilisées sous licence conformément aux conditions de Unsplash :
+          </p>
           </ul>
         </section>
 
