@@ -105,19 +105,87 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
             </div>
             <p className="text-sm">{trottinette.reviews} avis</p>
           </div>
-          <p>
-            <strong>Autonomie :</strong> {trottinette.distance_max} km
-          </p>
-          <p>
-            <strong>Poids max utilisateur :</strong> {trottinette.poids_max} kg
-          </p>
-          <p>
-            <strong>Poids trottinette :</strong> {trottinette.poids_trottinette} kg
-          </p>
-          <p>
-            <strong>Guidon :</strong> {trottinette.taille_guidon}
-          </p>
-          <p className="text-lg sm:text-2xl font-bold mt-4">{trottinette.prix} €</p>
+          
+          <div>
+  <p>
+    <strong>Autonomie :</strong> {trottinette.distance_max || "NC"} km
+  </p>
+  <p>
+    <strong>Poids max utilisateur :</strong> {trottinette.poids_max || "NC"} kg
+  </p>
+  <p>
+    <strong>Poids trottinette :</strong> {trottinette.poids_trottinette || "NC"} kg
+  </p>
+  <p>
+    <strong>Type de guidon :</strong> {trottinette.guidon?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Freins :</strong> {trottinette.freins?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Type de pneus :</strong> {trottinette.pneus_type?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Taille des pneus :</strong> {trottinette.pneus_taille || "NC"}
+  </p>
+  <p>
+    <strong>Étanchéité :</strong> {trottinette.etancheite?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Capacité de la batterie :</strong> {trottinette.batterie_capacite || "NC"} Ah
+  </p>
+  <p>
+    <strong>Type de batterie :</strong> {trottinette.batterie_type?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Temps de charge :</strong> {trottinette.batterie_charge || "NC"} heures
+  </p>
+  <p>
+    <strong>Connectivité :</strong> {trottinette.connectivite?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Type d'amortisseurs :</strong> {trottinette.type_amortisseurs?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Position du moteur :</strong> {trottinette.moteur_position?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Puissance moteur :</strong> {trottinette.puissance_moteur || "NC"} W
+  </p>
+  <p>
+    <strong>Couple moteur :</strong> {trottinette.couple_moteur || "NC"} Nm
+  </p>
+  <p>
+    <strong>Pente max :</strong> {trottinette.pente_max || "NC"} %
+  </p>
+  <p>
+    <strong>Vitesse max bridée :</strong> {trottinette.vitesse_max_bridee || "NC"} km/h
+  </p>
+  <p>
+    <strong>Vitesse max débridée :</strong> {trottinette.vitesse_max_debridee || "NC"} km/h
+  </p>
+  <p>
+    <strong>Type de trajets :</strong> {trottinette.type_trajet?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Relief supporté :</strong> {trottinette.relief?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Éclairage :</strong> {trottinette.eclairage_ambiant?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Dimensions de la plateforme :</strong> {trottinette.plateforme_dimensions || "NC"}
+  </p>
+  <p>
+    <strong>Revêtement de la plateforme :</strong> {trottinette.plateforme_revetement?.join(", ") || "NC"}
+  </p>
+  <p>
+    <strong>Type d'utilisation :</strong> {trottinette.type_utilisation?.join(", ") || "NC"}
+  </p>
+</div>
+
+
+          
         </div>
         <div className="flex mt-4 justify-around items-center">
           {showCheckbox && (
