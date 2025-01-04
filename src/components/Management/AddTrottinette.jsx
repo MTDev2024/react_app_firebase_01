@@ -210,11 +210,11 @@ const AddTrottinette = () => {
           {message}
         </p>
       )}
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
         {/* Formulaire complet ici */}
 
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
   {/* ID, Marque, Modèle */}
   <div>
     <label className="block text-gray-700 font-medium">ID (Unique)</label>
@@ -489,7 +489,7 @@ const AddTrottinette = () => {
 
 
 
-      </form>
+      
     </div>
   );
 };
