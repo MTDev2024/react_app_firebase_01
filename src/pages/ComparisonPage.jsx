@@ -85,6 +85,8 @@ export default function ComparisonPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {selectedScooters.map((scooter) => {
+          console.log("Données de la trottinette :", scooter);
+
           const isFavorite = favorites.includes(scooter.itemID);
 
           return (
@@ -94,28 +96,40 @@ export default function ComparisonPage() {
             >
               {/* Image de la trottinette */}
               <img
-                src={scooter.image}
-                alt={`${scooter.marque} - ${scooter.modele}`}
+                src={scooter.image || "#"}
+                alt={`${scooter.marque || "NC"} - ${scooter.modele || "NC"}`}
                 className="w-full h-48 object-cover object-bottom rounded-md mb-4"
               />
               {/* Détails */}
               <div className="text-center w-full">
-                <h3 className="text-2xl font-bold">{scooter.marque}</h3>
-                <h2 className="text-xl font-bold mb-2">{scooter.modele}</h2>
+                <h3 className="text-2xl font-bold">{scooter.marque || "NC"}</h3>
+                <h2 className="text-xl font-bold mb-2">{scooter.modele || "NC"}</h2>
                 <div className="text-left mt-2">
-                  <p>
-                    <strong>Autonomie :</strong> {scooter.distance_max} km
-                  </p>
-                  <p>
-                    <strong>Poids max utilisateur :</strong> {scooter.poids_max} kg
-                  </p>
-                  <p>
-                    <strong>Poids trottinette :</strong> {scooter.poids_trottinette} kg
-                  </p>
-                  <p>
-                    <strong>Guidon :</strong> {scooter.taille_guidon}
-                  </p>
-                  <p className="text-2xl font-bold mt-4">{scooter.prix} €</p>
+                  <p><strong>Autonomie :</strong> {scooter.distance_max || "NC"} km</p>
+                  <p><strong>Poids max utilisateur :</strong> {scooter.poids_max || "NC"} kg</p>
+                  <p><strong>Poids trottinette :</strong> {scooter.poids_trottinette || "NC"} kg</p>
+                  <p><strong>Type de guidon :</strong> {scooter.guidon?.join(", ") || "NC"}</p>
+                  <p><strong>Freins :</strong> {scooter.freins?.join(", ") || "NC"}</p>
+                  <p><strong>Type de pneus :</strong> {scooter.pneus_type?.join(", ") || "NC"}</p>
+                  <p><strong>Taille des pneus :</strong> {scooter.pneus_taille || "NC"}</p>
+                  <p><strong>Étanchéité :</strong> {scooter.etancheite?.join(", ") || "NC"}</p>
+                  <p><strong>Capacité de la batterie :</strong> {scooter.batterie_capacite || "NC"} Ah</p>
+                  <p><strong>Type de batterie :</strong> {scooter.batterie_type?.join(", ") || "NC"}</p>
+                  <p><strong>Temps de charge :</strong> {scooter.batterie_charge || "NC"} heures</p>
+                  <p><strong>Connectivité :</strong> {scooter.connectivite?.join(", ") || "NC"}</p>
+                  <p><strong>Type d'amortisseurs :</strong> {scooter.type_amortisseurs?.join(", ") || "NC"}</p>
+                  <p><strong>Position du moteur :</strong> {scooter.moteur_position?.join(", ") || "NC"}</p>
+                  <p><strong>Puissance moteur :</strong> {scooter.puissance_moteur || "NC"} W</p>
+                  <p><strong>Couple moteur :</strong> {scooter.couple_moteur || "NC"} Nm</p>
+                  <p><strong>Pente max :</strong> {scooter.pente_max || "NC"} %</p>
+                  <p><strong>Vitesse max bridée :</strong> {scooter.vitesse_max_bridee || "NC"} km/h</p>
+                  <p><strong>Vitesse max débridée :</strong> {scooter.vitesse_max_debridee || "NC"} km/h</p>
+                  <p><strong>Type de trajets :</strong> {scooter.type_trajet?.join(", ") || "NC"}</p>
+                  <p><strong>Relief supporté :</strong> {scooter.relief?.join(", ") || "NC"}</p>
+                  <p><strong>Éclairage :</strong> {scooter.eclairage_ambiant?.join(", ") || "NC"}</p>
+                  <p><strong>Dimensions de la plateforme :</strong> {scooter.plateforme_dimensions || "NC"}</p>
+                  <p><strong>Revêtement de la plateforme :</strong> {scooter.plateforme_revetement?.join(", ") || "NC"}</p>
+                  <p><strong>Type d'utilisation :</strong> {scooter.type_utilisation?.join(", ") || "NC"}</p>
                 </div>
               </div>
 

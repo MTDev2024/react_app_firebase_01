@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import img04 from '../assets/images/img04.jpg'
-import img05 from '../assets/images/img05.jpg'
+import img04 from '../assets/images/img04.jpg';
+import img05 from '../assets/images/img05.jpg';
 
-const Question5 = ({ onNext }) => {
+const Question5 = ({ onNext, onPrevious }) => {
   const [selectedReliefs, setSelectedReliefs] = useState([]);
+  const [error, setError] = useState("");
 
   const toggleRelief = (value) => {
+    setError(""); // Réinitialise le message d'erreur
     if (selectedReliefs.includes(value)) {
       setSelectedReliefs(selectedReliefs.filter((item) => item !== value));
     } else {
@@ -17,7 +19,7 @@ const Question5 = ({ onNext }) => {
     if (selectedReliefs.length > 0) {
       onNext({ relief: selectedReliefs });
     } else {
-      alert("Veuillez sélectionner au moins un type de relief.");
+      setError("Veuillez sélectionner au moins un type de relief.");
     }
   };
 
@@ -35,10 +37,17 @@ const Question5 = ({ onNext }) => {
                 selectedReliefs.includes(relief) ? "border-2 border-blue-800" : ""
               }`}
               onClick={() => toggleRelief(relief)}
+              aria-pressed={selectedReliefs.includes(relief)}
             >
               <img
-                src={img04}
-                alt={relief}
+                src={relief === "pente" ? img05 : img04}
+                alt={
+                  relief === "plat"
+                    ? "Relief plat"
+                    : relief === "modere"
+                    ? "Relief modéré"
+                    : "Pentes"
+                }
                 className="w-full h-48 object-cover"
               />
               <div className="absolute inset-0 bg-gray-900 bg-opacity-10 flex items-center justify-center">
@@ -53,12 +62,25 @@ const Question5 = ({ onNext }) => {
             </button>
           ))}
         </div>
-        <button
-          className="bg-blue-800 text-white px-6 py-2 shadow-lg hover:bg-blue-600 transition duration-300 ease-in-out"
-          onClick={handleSubmit}
-        >
-          Suivant
-        </button>
+
+        {/* Message d'erreur */}
+        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+
+        {/* Boutons de navigation */}
+        <div className="flex justify-center space-x-4 w-full mt-4">
+          <button
+            className="bg-gray-500 text-white px-6 py-2 shadow-lg hover:bg-gray-700 transition duration-300 ease-in-out"
+            onClick={onPrevious}
+          >
+            Précédent
+          </button>
+          <button
+            className="bg-blue-800 text-white px-6 py-2 shadow-lg hover:bg-blue-600 transition duration-300 ease-in-out"
+            onClick={handleSubmit}
+          >
+            Suivant
+          </button>
+        </div>
       </div>
     </section>
   );

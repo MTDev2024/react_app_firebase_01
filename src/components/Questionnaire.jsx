@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importer le hook de navigation
+import { useNavigate } from "react-router-dom";
 import Question1 from "./Question1";
 import Question2 from "./Question2";
 import Question3 from "./Question3";
@@ -24,32 +24,90 @@ const Questionnaire = ({ onRestart }) => {
     mobilite: null,
   });
 
-  const navigate = useNavigate(); // Utiliser le hook pour la navigation
+  const navigate = useNavigate();
 
+  // Passer à la question suivante
   const handleNext = (newData) => {
     const newAnswers = { ...answers, ...newData };
     setAnswers(newAnswers);
 
     if (step === 9) {
-      // Après la dernière question, naviguer vers les résultats
       navigate("/results", { state: { answers: newAnswers } });
     } else {
-      // Passer à l'étape suivante
       setStep(step + 1);
     }
   };
 
+  // Revenir à la question précédente
+  const handlePrevious = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
+  // Recommencer le questionnaire
+  const handleRestart = () => {
+    setAnswers({
+      distance: null,
+      weight: null,
+      height: null,
+      type_trajet: [],
+      relief: [],
+      price: null,
+      meteo: null,
+      usage: null,
+      mobilite: null,
+    });
+    setStep(1);
+  };
+
+  // Suivi de progression
+  const progressPercentage = (step / 9) * 100;
+
   return (
     <div className="flex-grow flex flex-col items-center justify-center">
-      {step === 1 && <Question1 onNext={handleNext} />}
-      {step === 2 && <Question2 onNext={handleNext} />}
-      {step === 3 && <Question3 onNext={handleNext} />}
-      {step === 4 && <Question4 onNext={handleNext} />}
-      {step === 5 && <Question5 onNext={handleNext} />}
-      {step === 6 && <Question6 onNext={handleNext} />}
-      {step === 7 && <Question7 onNext={handleNext} />}
-      {step === 8 && <Question8 onNext={handleNext} />}
-      {step === 9 && <Question9 onNext={handleNext} />}
+      {/* Suivi de progression */}
+      <div className="w-full max-w-2xl px-4">
+        <div className="text-center text-gray-700 mb-2">
+          <p>{`Question ${step} sur 9`}</p>
+        </div>
+        <div className="w-full bg-gray-300 h-2 rounded">
+          <div
+            className="bg-blue-600 h-2 rounded"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
+      </div>
+
+      {/* Questions */}
+      <div className="flex-grow flex flex-col items-center justify-center w-full max-w-3xl">
+        {step === 1 && <Question1 onNext={handleNext} />}
+        {step === 2 && <Question2 onNext={handleNext} />}
+        {step === 3 && <Question3 onNext={handleNext} />}
+        {step === 4 && <Question4 onNext={handleNext} />}
+        {step === 5 && <Question5 onNext={handleNext} />}
+        {step === 6 && <Question6 onNext={handleNext} />}
+        {step === 7 && <Question7 onNext={handleNext} />}
+        {step === 8 && <Question8 onNext={handleNext} />}
+        {step === 9 && <Question9 onNext={handleNext} />}
+      </div>
+
+      {/* Boutons de navigation */}
+      <div className="flex space-x-4 mt-6">
+        <button
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
+          onClick={handlePrevious}
+          disabled={step === 1} // Désactiver si on est à la première question
+        >
+          Précédent
+        </button>
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+          onClick={handleRestart}
+        >
+          Recommencer
+        </button>
+      </div>
     </div>
   );
 };
