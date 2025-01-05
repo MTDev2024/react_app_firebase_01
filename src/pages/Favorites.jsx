@@ -11,16 +11,20 @@ export default function Favorites() {
   const [favoriteArticles, setFavoriteArticles] = useState([]); // Détails des articles favoris
   const [loading, setLoading] = useState(true); // État de chargement
   const [error, setError] = useState(null); // État des erreurs
+  const [filters, setFilters] = useState({
+    price: null,
+    puissance: null,
+    autonomie: null,
+    marque: [],
+  });
 
   // Vérifier l'état de connexion de l'utilisateur
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        console.log("Utilisateur connecté :", currentUser);
         setUser(currentUser);
         await loadFavorites(currentUser.uid); // Charger les favoris
       } else {
-        console.log("Aucun utilisateur connecté.");
         setUser(null);
         setFavoriteScooters([]);
         setFavoriteArticles([]);
@@ -34,58 +38,125 @@ export default function Favorites() {
   const loadFavorites = async (userId) => {
     setLoading(true);
     setError(null);
-    console.log("Chargement des favoris pour l'utilisateur ID :", userId);
 
     try {
-      // Charger les trottinettes favorites
-      const scooterSnapshot = await getDocs(collection(db, "users", userId, "favoritesTrottinettes"));
-      const scooterDetails = scooterSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const scooterSnapshot = await getDocs(
+        collection(db, "users", userId, "favoritesTrottinettes")
+      );
+      const scooterDetails = scooterSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-      // Charger les articles favoris
-      const articleSnapshot = await getDocs(collection(db, "users", userId, "favoritesArticles"));
-      const articleDetails = articleSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const articleSnapshot = await getDocs(
+        collection(db, "users", userId, "favoritesArticles")
+      );
+      const articleDetails = articleSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       setFavoriteScooters(scooterDetails);
       setFavoriteArticles(articleDetails);
-
-      console.log("Trottinettes favorites récupérées :", scooterDetails);
-      console.log("Articles favoris récupérés :", articleDetails);
     } catch (error) {
-      console.error("Erreur lors de la récupération des favoris :", error);
       setError("Impossible de charger vos favoris. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Affichage de l'état de chargement
-  if (loading) {
-    return <p className="text-center text-blue-500 font-bold mt-10">Chargement des favoris...</p>;
-  }
+  // Gestion des filtres
+  const handleFilterChange = (key, value) => {
+    setFilters((prevFilters) => ({ ...prevFilters, [key]: value }));
+  };
 
-  // Affichage des erreurs
-  if (error) {
-    return <p className="text-center text-red-600 font-bold mt-10">{error}</p>;
-  }
+  // Filtrage des trottinettes favorites
+  const filteredScooters = favoriteScooters.filter((scooter) => {
+    const priceMatch = filters.price === null || scooter.prix <= filters.price;
+    const puissanceMatch =
+      filters.puissance === null ||
+      scooter.puissance_moteur >= filters.puissance;
+    const autonomieMatch =
+      filters.autonomie === null ||
+      scooter.distance_max >= filters.autonomie;
+    const marqueMatch =
+      filters.marque.length === 0 || filters.marque.includes(scooter.marque);
 
-  // Affichage pour utilisateur non connecté
-  if (!user) {
-    return <p className="text-center text-red-600 font-bold mt-10">Veuillez vous connecter pour voir vos favoris.</p>;
-  }
+    return priceMatch && puissanceMatch && autonomieMatch && marqueMatch;
+  });
 
   // Affichage des favoris
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-4xl font-bold m-6 text-blue-800 text-center">Mes Favoris</h2>
 
+      {/* Filtres */}
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block font-bold mb-2">Prix maximal (€)</label>
+          <input
+            type="number"
+            value={filters.price || ""}
+            onChange={(e) => handleFilterChange("price", Number(e.target.value))}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+        <div>
+          <label className="block font-bold mb-2">Puissance minimale (W)</label>
+          <input
+            type="number"
+            value={filters.puissance || ""}
+            onChange={(e) =>
+              handleFilterChange("puissance", Number(e.target.value))
+            }
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+        <div>
+          <label className="block font-bold mb-2">Autonomie minimale (km)</label>
+          <input
+            type="number"
+            value={filters.autonomie || ""}
+            onChange={(e) =>
+              handleFilterChange("autonomie", Number(e.target.value))
+            }
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+        <div>
+          <label className="block font-bold mb-2">Marque</label>
+          <select
+            multiple
+            value={filters.marque}
+            onChange={(e) =>
+              handleFilterChange(
+                "marque",
+                Array.from(e.target.selectedOptions, (option) => option.value)
+              )
+            }
+            className="w-full p-2 border border-gray-300 rounded-md"
+          >
+            {[...new Set(favoriteScooters.map((scooter) => scooter.marque))]
+              .sort()
+              .map((marque) => (
+                <option key={marque} value={marque}>
+                  {marque}
+                </option>
+              ))}
+          </select>
+        </div>
+      </div>
+
       {/* Trottinettes favorites */}
       <div>
         <h3 className="text-2xl font-bold mb-4">Trottinettes favorites</h3>
-        {favoriteScooters.length === 0 ? (
-          <p className="text-center text-gray-600 font-bold mt-4">Aucune trottinette favorite pour le moment.</p>
+        {filteredScooters.length === 0 ? (
+          <p className="text-center text-gray-600 font-bold mt-4">
+            Aucune trottinette favorite correspondant aux filtres.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {favoriteScooters.map((scooter) => (
+            {filteredScooters.map((scooter) => (
               <Card
                 key={scooter.id}
                 trottinette={scooter}
@@ -102,7 +173,9 @@ export default function Favorites() {
       <div className="mt-10">
         <h3 className="text-2xl font-bold mb-4">Articles favoris</h3>
         {favoriteArticles.length === 0 ? (
-          <p className="text-center text-gray-600 font-bold mt-4">Aucun article favori pour le moment.</p>
+          <p className="text-center text-gray-600 font-bold mt-4">
+            Aucun article favori pour le moment.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {favoriteArticles.map((article) => (

@@ -9,6 +9,13 @@ const Results = () => {
   const navigate = useNavigate();
   const [showQuestionnaire, setShowQuestionnaire] = useState(false); // État pour relancer le questionnaire
   const [selectedScooters, setSelectedScooters] = useState([]); // État pour les trottinettes sélectionnées
+  const [filters, setFilters] = useState({
+    price: null,
+    puissance: null,
+    autonomie: null,
+    sortBy: "",
+    sortOrder: "asc",
+  });
 
   // Récupère les réponses du questionnaire depuis l'état de navigation
   const answers = location.state?.answers;
@@ -47,13 +54,18 @@ const Results = () => {
     });
   };
 
+  // Gestion des filtres
+  const handleFilterChange = (key, value) => {
+    setFilters((prevFilters) => ({ ...prevFilters, [key]: value }));
+  };
+
   // Si `showQuestionnaire` est activé, affiche le questionnaire
   if (showQuestionnaire) {
     return <Questionnaire />;
   }
 
-  // Filtrage des trottinettes selon les réponses du questionnaire
-  const filteredResults = trottinettes.filter((trottinette) => {
+  // Filtrage des trottinettes selon les réponses du questionnaire et les filtres
+  let filteredResults = trottinettes.filter((trottinette) => {
     const trajetMatch = answers.type_trajet.length
       ? answers.type_trajet.some((type) =>
           trottinette.type_trajet.includes(type)
@@ -71,14 +83,74 @@ const Results = () => {
     const priceMatch =
       answers.price === null || trottinette.prix <= answers.price;
 
-    return trajetMatch && reliefMatch && distanceMatch && weightMatch && priceMatch;
+    const filterPriceMatch =
+      filters.price === null || trottinette.prix <= filters.price;
+    const filterPuissanceMatch =
+      filters.puissance === null ||
+      trottinette.puissance_moteur >= filters.puissance;
+    const filterAutonomieMatch =
+      filters.autonomie === null ||
+      trottinette.distance_max >= filters.autonomie;
+
+    return (
+      trajetMatch &&
+      reliefMatch &&
+      distanceMatch &&
+      weightMatch &&
+      priceMatch &&
+      filterPriceMatch &&
+      filterPuissanceMatch &&
+      filterAutonomieMatch
+    );
   });
+
+  // Tri des résultats
+  if (filters.sortBy) {
+    filteredResults.sort((a, b) => {
+      if (filters.sortOrder === "asc") {
+        return a[filters.sortBy] - b[filters.sortBy];
+      } else {
+        return b[filters.sortBy] - a[filters.sortBy];
+      }
+    });
+  }
 
   return (
     <div className="px-4 mx-30">
-      <h2 className="text-4xl text-center mb-8 text-blue-800 my-6 font-bold">
+      <h2 className="text-4xl text-center pt-8 m-8 text-blue-800 my-6 font-bold">
         Résultats
       </h2>
+
+      {/* Filtres */}
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+       
+        
+        
+        <div>
+          <label className="block font-bold mb-2">Trier par</label>
+          <select
+            value={filters.sortBy}
+            onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Aucun</option>
+            <option value="prix">Prix</option>
+            <option value="puissance_moteur">Puissance</option>
+            <option value="distance_max">Autonomie</option>
+          </select>
+        </div>
+        <div>
+          <label className="block font-bold mb-2">Ordre</label>
+          <select
+            value={filters.sortOrder}
+            onChange={(e) => handleFilterChange("sortOrder", e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          >
+            <option value="asc">Croissant</option>
+            <option value="desc">Décroissant</option>
+          </select>
+        </div>
+      </div>
 
       {/* Affichage des résultats filtrés */}
       {filteredResults.length > 0 ? (
