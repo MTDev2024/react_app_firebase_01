@@ -319,6 +319,39 @@ const AddTrottinette = () => {
     />
   </div>
 
+
+
+ {/* Nombre de Roues */}
+ <div>
+          <label className="block text-gray-700 font-medium">Nombre de Roues</label>
+          <input
+            type="number"
+            name="nombre_roues"
+            value={trottinetteData.nombre_roues}
+            onChange={handleInputChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Ex : 2, 3, 4"
+          />
+        </div>
+
+        {/* Nombre de Moteurs */}
+        <div>
+          <label className="block text-gray-700 font-medium">Nombre de Moteurs</label>
+          <input
+            type="number"
+            name="nombre_moteurs"
+            value={trottinetteData.nombre_moteurs}
+            onChange={handleInputChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Ex : 1, 2, 4"
+          />
+        </div>
+
+
+
+
+
+
   {/* Prix */}
   <div>
     <label className="block text-gray-700 font-medium">Prix (€)</label>

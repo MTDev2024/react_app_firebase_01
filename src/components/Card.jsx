@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css"; // Styles par défaut
+import "tippy.js/dist/tippy.css";
+import { toast } from "react-toastify";
 
-// Import centralisé des services Firebase
+// Import Firebase et ses fonctions
 import { auth, db } from "../firebase.js";
-
-// Import des fonctions nécessaires pour Firestore et Auth
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 
 const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox = true }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [user, setUser] = useState(null);
+  const favoriteButtonRef = useRef(null); // Ref pour le bouton
 
   // Gestion de l'état utilisateur
   useEffect(() => {
@@ -44,10 +44,29 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
     checkIfFavorite();
   }, [user, trottinette]);
 
+  // Fonction pour afficher un toast au-dessus du bouton
+  const displayToast = (message, type) => {
+    const buttonRect = favoriteButtonRef.current.getBoundingClientRect(); // Récupère la position du bouton
+    const toastStyle = {
+      position: "absolute",
+      top: `${buttonRect.top + window.scrollY - 50}px`, // Ajuste la position au-dessus du bouton
+      left: `${buttonRect.left + window.scrollX + buttonRect.width / 2}px`, // Centre horizontalement
+      transform: "translateX(-50%)", // Centre le toast
+      zIndex: 1000, // Assure que le toast est visible
+    };
+
+    toast(message, {
+      type,
+      position: "top-left", // Position initiale (style personnalisé remplacera ceci)
+      style: toastStyle,
+      autoClose: 3000,
+    });
+  };
+
   // Ajout ou suppression des favoris
   const toggleFavorite = async () => {
     if (!user) {
-      alert("Veuillez vous connecter pour ajouter aux favoris.");
+      displayToast("Veuillez vous connecter pour ajouter aux favoris.", "error");
       return;
     }
 
@@ -60,21 +79,22 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
       if (isFavorite) {
         // Retirer des favoris
         await deleteDoc(favoriteRef);
-        console.log(`Trottinette retirée des favoris : ${trottinette.itemID}`);
         setIsFavorite(false);
+        displayToast(`"${trottinette.marque} ${trottinette.modele}" retirée des favoris.`, "info");
       } else {
         // Ajouter aux favoris
         await setDoc(favoriteRef, {
-          trottinetteId: trottinette.itemID,
+          itemID: trottinette.itemID,
           marque: trottinette.marque,
           modele: trottinette.modele,
           dateAdded: new Date().toISOString(),
         });
-        console.log(`Trottinette ajoutée aux favoris : ${trottinette.itemID}`);
         setIsFavorite(true);
+        displayToast(`"${trottinette.marque} ${trottinette.modele}" ajoutée aux favoris.`, "success");
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour des favoris :", error);
+      displayToast("Une erreur est survenue. Veuillez réessayer.", "error");
     }
   };
 
@@ -105,87 +125,17 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
             </div>
             <p className="text-sm">{trottinette.reviews} avis</p>
           </div>
-          
           <div>
-  <p>
-    <strong>Autonomie :</strong> {trottinette.distance_max || "NC"} km
-  </p>
-  <p>
-    <strong>Poids max utilisateur :</strong> {trottinette.poids_max || "NC"} kg
-  </p>
-  <p>
-    <strong>Poids trottinette :</strong> {trottinette.poids_trottinette || "NC"} kg
-  </p>
-  <p>
-    <strong>Type de guidon :</strong> {trottinette.guidon?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Freins :</strong> {trottinette.freins?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Type de pneus :</strong> {trottinette.pneus_type?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Taille des pneus :</strong> {trottinette.pneus_taille || "NC"}
-  </p>
-  <p>
-    <strong>Étanchéité :</strong> {trottinette.etancheite?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Capacité de la batterie :</strong> {trottinette.batterie_capacite || "NC"} Ah
-  </p>
-  <p>
-    <strong>Type de batterie :</strong> {trottinette.batterie_type?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Temps de charge :</strong> {trottinette.batterie_charge || "NC"} heures
-  </p>
-  <p>
-    <strong>Connectivité :</strong> {trottinette.connectivite?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Type d'amortisseurs :</strong> {trottinette.type_amortisseurs?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Position du moteur :</strong> {trottinette.moteur_position?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Puissance moteur :</strong> {trottinette.puissance_moteur || "NC"} W
-  </p>
-  <p>
-    <strong>Couple moteur :</strong> {trottinette.couple_moteur || "NC"} Nm
-  </p>
-  <p>
-    <strong>Pente max :</strong> {trottinette.pente_max || "NC"} %
-  </p>
-  <p>
-    <strong>Vitesse max bridée :</strong> {trottinette.vitesse_max_bridee || "NC"} km/h
-  </p>
-  <p>
-    <strong>Vitesse max débridée :</strong> {trottinette.vitesse_max_debridee || "NC"} km/h
-  </p>
-  <p>
-    <strong>Type de trajets :</strong> {trottinette.type_trajet?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Relief supporté :</strong> {trottinette.relief?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Éclairage :</strong> {trottinette.eclairage_ambiant?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Dimensions de la plateforme :</strong> {trottinette.plateforme_dimensions || "NC"}
-  </p>
-  <p>
-    <strong>Revêtement de la plateforme :</strong> {trottinette.plateforme_revetement?.join(", ") || "NC"}
-  </p>
-  <p>
-    <strong>Type d'utilisation :</strong> {trottinette.type_utilisation?.join(", ") || "NC"}
-  </p>
-</div>
-
-
-          
+            <p>
+              <strong>Autonomie :</strong> {trottinette.distance_max || "NC"} km
+            </p>
+            <p>
+              <strong>Poids max utilisateur :</strong> {trottinette.poids_max || "NC"} kg
+            </p>
+            <p>
+              <strong>Puissance moteur :</strong> {trottinette.puissance_moteur || "NC"} W
+            </p>
+          </div>
         </div>
         <div className="flex mt-4 justify-around items-center">
           {showCheckbox && (
@@ -196,13 +146,20 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
                 onChange={() => onSelect(trottinette.itemID)}
                 className="form-checkbox h-5 w-5"
                 disabled={disableSelect}
+                aria-label="Sélectionner pour comparer"
               />
             </Tippy>
           )}
           <Tippy content={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
             <button
+              ref={favoriteButtonRef} // Ref pour obtenir les coordonnées du bouton
               onClick={toggleFavorite}
               className="focus:outline-none transform transition-transform duration-200 hover:scale-110"
+              aria-label={
+                isFavorite
+                  ? "Retirer cette trottinette des favoris"
+                  : "Ajouter cette trottinette aux favoris"
+              }
             >
               {isFavorite ? (
                 <HeartIconSolid className="h-8 w-8 text-red-500" />
@@ -211,7 +168,10 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
               )}
             </button>
           </Tippy>
-          <button className="bg-blue-700 hover:bg-blue-800 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg transform transition-transform hover:scale-105">
+          <button
+            className="bg-blue-700 hover:bg-blue-800 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg transform transition-transform hover:scale-105"
+            aria-label="Voir la fiche détaillée"
+          >
             Voir la fiche détaillée
           </button>
         </div>

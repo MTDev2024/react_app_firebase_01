@@ -1,6 +1,10 @@
 import React, { useEffect, Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
+// Import react-toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // Import Firebase Auth
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -24,7 +28,7 @@ const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
 const CGU = lazy(() => import("./pages/CGU.jsx"));
 const Confidentialite = lazy(() => import("./pages/Confidentialite.jsx"));
 const AddArticle = lazy(() => import("./components/Management/AddArticle.jsx"));
-const AddTrottinette = lazy(() => import("./components/Management/AddTrottinette.jsx")); 
+const AddTrottinette = lazy(() => import("./components/Management/AddTrottinette.jsx"));
 const ManageTrottinettes = lazy(() => import("./components/Management/ManageTrottinettes.jsx"));
 const ManageNewsletter = lazy(() => import("./components/Management/ManageNewsletter.jsx"));
 const ManageArticles = lazy(() => import("./components/Management/ManageArticles.jsx"));
@@ -48,6 +52,19 @@ function App() {
     <div className="min-h-screen flex flex-col">
       {/* Barre de navigation */}
       <NavBar />
+
+      {/* Conteneur global pour les notifications */}
+      <ToastContainer
+        position="bottom-center" // Position des notifications
+        autoClose={3000}         // Fermeture automatique après 3 secondes
+        hideProgressBar={false}  // Afficher la barre de progression
+        newestOnTop={true}       // Les notifications récentes en haut
+        closeOnClick             // Fermeture au clic
+        rtl={false}              // Textes alignés de gauche à droite
+        pauseOnFocusLoss         // Pause la fermeture en cas de perte de focus
+        draggable                // Déplacement possible des notifications
+        pauseOnHover             // Pause la fermeture au survol
+      />
 
       {/* Contenu principal avec Fallback */}
       <main className="flex-grow flex">

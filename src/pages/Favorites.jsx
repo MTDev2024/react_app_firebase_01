@@ -23,8 +23,10 @@ export default function Favorites() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+        console.log("Utilisateur connecté :", currentUser.email);
         await loadFavorites(currentUser.uid); // Charger les favoris
       } else {
+        console.log("Aucun utilisateur connecté.");
         setUser(null);
         setFavoriteScooters([]);
         setFavoriteArticles([]);
@@ -56,9 +58,13 @@ export default function Favorites() {
         ...doc.data(),
       }));
 
+      console.log("Trottinettes favorites chargées :", scooterDetails);
+      console.log("Articles favoris chargés :", articleDetails);
+
       setFavoriteScooters(scooterDetails);
       setFavoriteArticles(articleDetails);
     } catch (error) {
+      console.error("Erreur lors du chargement des favoris :", error);
       setError("Impossible de charger vos favoris. Veuillez réessayer.");
     } finally {
       setLoading(false);
@@ -67,6 +73,7 @@ export default function Favorites() {
 
   // Gestion des filtres
   const handleFilterChange = (key, value) => {
+    console.log(`Filtre modifié : ${key} =`, value);
     setFilters((prevFilters) => ({ ...prevFilters, [key]: value }));
   };
 
@@ -74,18 +81,15 @@ export default function Favorites() {
   const filteredScooters = favoriteScooters.filter((scooter) => {
     const priceMatch = filters.price === null || scooter.prix <= filters.price;
     const puissanceMatch =
-      filters.puissance === null ||
-      scooter.puissance_moteur >= filters.puissance;
+      filters.puissance === null || scooter.puissance_moteur >= filters.puissance;
     const autonomieMatch =
-      filters.autonomie === null ||
-      scooter.distance_max >= filters.autonomie;
+      filters.autonomie === null || scooter.distance_max >= filters.autonomie;
     const marqueMatch =
       filters.marque.length === 0 || filters.marque.includes(scooter.marque);
 
     return priceMatch && puissanceMatch && autonomieMatch && marqueMatch;
   });
 
-  // Affichage des favoris
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-4xl font-bold m-6 text-blue-800 text-center">Mes Favoris</h2>
@@ -93,39 +97,50 @@ export default function Favorites() {
       {/* Filtres */}
       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block font-bold mb-2">Prix maximal (€)</label>
+          <label className="block font-bold mb-2" htmlFor="filter-price">
+            Prix maximal (€)
+          </label>
           <input
+            id="filter-price"
             type="number"
             value={filters.price || ""}
             onChange={(e) => handleFilterChange("price", Number(e.target.value))}
             className="w-full p-2 border border-gray-300 rounded-md"
+            aria-label="Filtrer par prix maximal"
           />
         </div>
         <div>
-          <label className="block font-bold mb-2">Puissance minimale (W)</label>
+          <label className="block font-bold mb-2" htmlFor="filter-puissance">
+            Puissance minimale (W)
+          </label>
           <input
+            id="filter-puissance"
             type="number"
             value={filters.puissance || ""}
-            onChange={(e) =>
-              handleFilterChange("puissance", Number(e.target.value))
-            }
+            onChange={(e) => handleFilterChange("puissance", Number(e.target.value))}
             className="w-full p-2 border border-gray-300 rounded-md"
+            aria-label="Filtrer par puissance minimale"
           />
         </div>
         <div>
-          <label className="block font-bold mb-2">Autonomie minimale (km)</label>
+          <label className="block font-bold mb-2" htmlFor="filter-autonomie">
+            Autonomie minimale (km)
+          </label>
           <input
+            id="filter-autonomie"
             type="number"
             value={filters.autonomie || ""}
-            onChange={(e) =>
-              handleFilterChange("autonomie", Number(e.target.value))
-            }
+            onChange={(e) => handleFilterChange("autonomie", Number(e.target.value))}
             className="w-full p-2 border border-gray-300 rounded-md"
+            aria-label="Filtrer par autonomie minimale"
           />
         </div>
         <div>
-          <label className="block font-bold mb-2">Marque</label>
+          <label className="block font-bold mb-2" htmlFor="filter-marque">
+            Marque
+          </label>
           <select
+            id="filter-marque"
             multiple
             value={filters.marque}
             onChange={(e) =>
@@ -135,6 +150,7 @@ export default function Favorites() {
               )
             }
             className="w-full p-2 border border-gray-300 rounded-md"
+            aria-label="Filtrer par marque"
           >
             {[...new Set(favoriteScooters.map((scooter) => scooter.marque))]
               .sort()
