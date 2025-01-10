@@ -13,7 +13,6 @@ import { doc, setDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox = true }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [user, setUser] = useState(null);
-  const favoriteButtonRef = useRef(null); // Ref pour le bouton
 
   // Gestion de l'état utilisateur
   useEffect(() => {
@@ -44,29 +43,12 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
     checkIfFavorite();
   }, [user, trottinette]);
 
-  // Fonction pour afficher un toast au-dessus du bouton
-  const displayToast = (message, type) => {
-    const buttonRect = favoriteButtonRef.current.getBoundingClientRect(); // Récupère la position du bouton
-    const toastStyle = {
-      position: "absolute",
-      top: `${buttonRect.top + window.scrollY - 50}px`, // Ajuste la position au-dessus du bouton
-      left: `${buttonRect.left + window.scrollX + buttonRect.width / 2}px`, // Centre horizontalement
-      transform: "translateX(-50%)", // Centre le toast
-      zIndex: 1000, // Assure que le toast est visible
-    };
-
-    toast(message, {
-      type,
-      position: "top-left", // Position initiale (style personnalisé remplacera ceci)
-      style: toastStyle,
-      autoClose: 3000,
-    });
-  };
-
   // Ajout ou suppression des favoris
   const toggleFavorite = async () => {
     if (!user) {
-      displayToast("Veuillez vous connecter pour ajouter aux favoris.", "error");
+      toast.error("Veuillez vous connecter pour ajouter aux favoris.", {
+        position: "top-center",
+      });
       return;
     }
 
@@ -80,7 +62,9 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
         // Retirer des favoris
         await deleteDoc(favoriteRef);
         setIsFavorite(false);
-        displayToast(`"${trottinette.marque} ${trottinette.modele}" retirée des favoris.`, "info");
+        toast.info(`"${trottinette.marque} ${trottinette.modele}" retirée des favoris.`, {
+          position: "top-center",
+        });
       } else {
         // Ajouter aux favoris
         await setDoc(favoriteRef, {
@@ -90,11 +74,15 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
           dateAdded: new Date().toISOString(),
         });
         setIsFavorite(true);
-        displayToast(`"${trottinette.marque} ${trottinette.modele}" ajoutée aux favoris.`, "success");
+        toast.success(`"${trottinette.marque} ${trottinette.modele}" ajoutée aux favoris.`, {
+          position: "top-center",
+        });
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour des favoris :", error);
-      displayToast("Une erreur est survenue. Veuillez réessayer.", "error");
+      toast.error("Une erreur est survenue. Veuillez réessayer.", {
+        position: "top-center",
+      });
     }
   };
 
@@ -152,7 +140,6 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
           )}
           <Tippy content={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
             <button
-              ref={favoriteButtonRef} // Ref pour obtenir les coordonnées du bouton
               onClick={toggleFavorite}
               className="focus:outline-none transform transition-transform duration-200 hover:scale-110"
               aria-label={
