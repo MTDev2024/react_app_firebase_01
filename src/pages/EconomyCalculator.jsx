@@ -99,13 +99,6 @@ const EconomyCalculator = () => {
           <h2 className="text-2xl font-semibold mb-2">
             Les trottinettes électriques : une solution adaptée aux conditions défavorables
           </h2>
-          <p className="text-base md:text-xl leading-relaxed">
-            Lorsque les embouteillages, les coûts de carburant et l'entretien de
-            votre voiture rendent vos trajets quotidiens inefficaces, une
-            trottinette électrique devient une alternative pratique. Sans
-            remplacer la voiture, elle s'intègre parfaitement comme un
-            complément dans votre quotidien.
-          </p>
         </div>
       </section>
 
@@ -116,6 +109,13 @@ const EconomyCalculator = () => {
             Quels avantages à réduire nos déplacements en voiture pour favoriser
             les mobilités douces ?
           </h2>
+          <p className="text-gray-600">
+            Lorsque les embouteillages, les coûts de carburant et l'entretien de
+            votre voiture rendent vos trajets quotidiens inefficaces, une
+            trottinette électrique devient une alternative pratique. Sans
+            remplacer la voiture, elle s'intègre parfaitement comme un
+            complément dans votre quotidien.
+          </p>
           <p className="text-gray-600">
             Le temps passé dans les embouteillages dans les grandes villes est
             une réalité bien trop courante. Ce temps perdu, ajouté aux coûts
