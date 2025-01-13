@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // Import centralisé des services Firebase
@@ -11,19 +11,20 @@ import ModaleAuth from "./ModaleAuth.jsx"; // Modale d'authentification
 
 export default function NavBar() {
   const [showModal, setShowModal] = useState(false); // État pour afficher/masquer la modale
-  const [user, setUser] = useState(null); // État pour l'utilisateur connecté
+  const [user, setUser] = useState(null); // État de l'utilisateur connecté
   const [isAdmin, setIsAdmin] = useState(false); // Vérifie si l'utilisateur est admin
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // État du dropdown (menu utilisateur)
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // État du menu hamburger (mobile)
-  const navigate = useNavigate(); // Navigation avec React Router
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // État pour afficher/masquer le dropdown
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // État pour afficher/masquer le menu mobile
+  const dropdownRef = useRef(null); // Référence pour détecter les clics à l'extérieur
+  const navigate = useNavigate(); // Permet de naviguer entre les pages
 
-  // 1. Gestion de l'état d'authentification
+  // Gestion de l'état d'authentification
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        setUser(currentUser); // Met à jour l'utilisateur
+        setUser(currentUser);
 
-        // Vérifie si l'utilisateur a le rôle "Administrateur"
+        // Vérifie si l'utilisateur est un administrateur
         const userDoc = await getDoc(doc(db, "users", currentUser.uid));
         if (userDoc.exists() && userDoc.data().role === "Administrateur") {
           setIsAdmin(true);
@@ -36,15 +37,28 @@ export default function NavBar() {
       }
     });
 
-    // Nettoyage lors du démontage du composant
-    return () => unsubscribe();
+    return () => unsubscribe(); // Nettoie l'écouteur Firebase lors du démontage
   }, []);
 
-  // 2. Fonction de déconnexion
+  // Gestion du clic à l'extérieur du dropdown pour le fermer
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false); // Ferme le dropdown si le clic est à l'extérieur
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick); // Ajoute l'écouteur de clic
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick); // Nettoie l'écouteur
+    };
+  }, []);
+
+  // Fonction pour gérer la déconnexion de l'utilisateur
   const handleLogout = async () => {
     try {
-      await auth.signOut();
-      setIsDropdownOpen(false); // Ferme le dropdown après la déconnexion
+      await auth.signOut(); // Déconnecte l'utilisateur via Firebase
+      setIsDropdownOpen(false); // Ferme le dropdown après déconnexion
       setIsMenuOpen(false); // Ferme le menu mobile
       navigate("/"); // Redirige vers la page d'accueil
     } catch (error) {
@@ -56,7 +70,7 @@ export default function NavBar() {
     <header className="bg-white shadow-lg w-full">
       {/* Conteneur principal pour la navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-        {/* Logo du site */}
+        {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-blue-800">
           Compv3
         </Link>
@@ -88,8 +102,10 @@ export default function NavBar() {
         {/* Section utilisateur : Dropdown ou bouton de connexion */}
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
-            // Si l'utilisateur est connecté
-            <div className="relative dropdown">
+            <div
+              className="relative dropdown"
+              ref={dropdownRef} // Référence pour détecter les clics à l'extérieur
+            >
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Ouvre/ferme le dropdown
                 className="flex items-center gap-2 bg-blue-800 text-white py-2 px-4 rounded hover:bg-gray-700"
@@ -118,13 +134,16 @@ export default function NavBar() {
                 </svg>
               </button>
 
-              {/* Dropdown : Liens et actions utilisateur */}
+              {/* Dropdown menu */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg z-50">
                   <ul className="py-2">
                     <li>
                       <button
-                        onClick={() => navigate("/favorites")} // Redirige vers la page des favoris
+                        onClick={() => {
+                          navigate("/favorites");
+                          setIsDropdownOpen(false); // Ferme le dropdown après navigation
+                        }}
                         className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                       >
                         Mes favoris
@@ -137,7 +156,7 @@ export default function NavBar() {
                     </li>
                     <li>
                       <button
-                        onClick={handleLogout} // Gère la déconnexion
+                        onClick={handleLogout}
                         className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
                       >
                         Déconnexion
@@ -148,9 +167,9 @@ export default function NavBar() {
               )}
             </div>
           ) : (
-            // Si aucun utilisateur connecté : Bouton d'inscription/connexion
+            // Si l'utilisateur n'est pas connecté
             <button
-              onClick={() => setShowModal(true)} // Ouvre la modale
+              onClick={() => setShowModal(true)} // Ouvre la modale d'inscription
               className="font-mono bg-blue-800 text-white py-2 px-4 hover:bg-gray-700 transition duration-300 flex items-center gap-2 rounded"
             >
               <img
@@ -162,139 +181,10 @@ export default function NavBar() {
             </button>
           )}
         </div>
-
-        {/* Menu hamburger pour mobile */}
-        <button
-  className="md:hidden flex items-center text-gray-700"
-  onClick={() => setIsMenuOpen(!isMenuOpen)} // Ouvre/ferme le menu
-  aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
->
-  <svg
-    className={`w-8 h-8 transform transition-transform duration-300 ${
-      isMenuOpen ? "rotate-45" : ""
-    }`}
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    {isMenuOpen ? (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M6 18L18 6M6 6l12 12" // Croix
-      />
-    ) : (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4 6h16M4 12h16M4 18h16" // Trois barres
-      />
-    )}
-  </svg>
-</button>
-
       </div>
 
-      {/* Navigation mobile */}
-      {isMenuOpen && (
-        <nav className="md:hidden bg-white shadow-lg">
-          <ul className="space-y-4 px-4 py-2">
-            <li>
-              <Link
-                to="/"
-                className="text-gray-700 hover:text-blue-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Accueil
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/blog"
-                className="text-gray-700 hover:text-blue-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Blog
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/apropos"
-                className="text-gray-700 hover:text-blue-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                À propos
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/contact"
-                className="text-gray-700 hover:text-blue-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
-            </li>
-            {isAdmin && (
-              <li>
-                <Link
-                  to="/admin"
-                  className="text-blue-800 hover:text-blue-600"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Administration
-                </Link>
-              </li>
-            )}
-            {user ? (
-              <>
-                <li>
-                  <button
-                    onClick={() => {
-                      navigate("/favorites");
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full text-left text-gray-700 hover:text-blue-800"
-                  >
-                    Mes favoris
-                  </button>
-                </li>
-                <li>
-                  <p className="text-gray-500 truncate">{user.email}</p>
-                </li>
-                <li>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left text-red-600 hover:text-red-800"
-                  >
-                    Déconnexion
-                  </button>
-                </li>
-              </>
-            ) : (
-              <li>
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="w-full text-left text-gray-700 hover:text-blue-800"
-                >
-                  Inscription / Connexion
-                </button>
-              </li>
-            )}
-          </ul>
-        </nav>
-      )}
-
       {/* Modale d'authentification */}
-      {showModal && (
-        <ModaleAuth
-          show={showModal}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+      {showModal && <ModaleAuth show={showModal} onClose={() => setShowModal(false)} />}
     </header>
   );
 }
