@@ -85,7 +85,7 @@ const AddArticle = () => {
   }
 
   return (
-    <div className="w-full mx-24 mt-8 justify-center bg-white shadow-lg p-6 rounded-lg">
+    <div className="w-full mx-36 mt-8 justify-center bg-white shadow-lg p-6 rounded-lg">
       <h1 className="text-2xl font-bold mb-6">Ajouter un article</h1>
       {message && <p className="text-center text-green-600 mb-4">{message}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">

@@ -197,7 +197,7 @@ const AddTrottinette = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto mt-8 bg-white shadow-lg p-8 rounded-lg">
+    <div className="w-full mx-48 mt-8 justify-center bg-white shadow-lg p-8 rounded-lg">
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
         Ajouter une Trottinette
       </h1>
@@ -214,7 +214,7 @@ const AddTrottinette = () => {
         {/* Formulaire complet ici */}
 
 
-       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 sm:grid gap-6">
   {/* ID, Marque, Modèle */}
   <div>
     <label className="block text-gray-700 font-medium">ID (Unique)</label>
@@ -400,7 +400,7 @@ const AddTrottinette = () => {
   <div>
     <label className="block text-gray-700 font-medium">Type de Pneus</label>
     <div className="flex items-center space-x-4">
-      {["gonflables", "pleins", "mixtes", "anti-crevaison"].map((option) => (
+      {["gonflables", "tubeless", "pleins", "mixtes", "anti-crevaison"].map((option) => (
         <label key={option} className="inline-flex items-center">
           <input
             type="checkbox"
