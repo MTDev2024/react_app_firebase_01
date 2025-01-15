@@ -22,7 +22,8 @@ const AddTrottinette = () => {
     pneus_type: [],
     pneus_taille: "",
     etancheite: [],
-    batterie_capacite: "",
+    batterie_amperage: "",
+    batterie_voltage: "",
     batterie_type: [],
     connectivite: [],
     type_utilisation: [],
@@ -216,7 +217,7 @@ const AddTrottinette = () => {
 
         {/* Confort */}
         <div className="col-span-2">
-          <label className="block text-gray-700 font-medium">Guidon</label>
+          <label className="block text-gray-700 font-medium">Guidon / Potence</label>
           <div className="flex items-center space-x-4">
             {["Réglable", "Non réglable", "Pliable"].map((option) => (
               <label key={option} className="inline-flex items-center">
@@ -232,14 +233,14 @@ const AddTrottinette = () => {
           </div>
         </div>
         <div className="col-span-2">
-          <label className="block text-gray-700 font-medium">Amortisseurs</label>
+          <label className="block text-gray-700 font-medium">Suspensions</label>
           <div className="flex items-center space-x-4">
             {["Avant", "Arrière"].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
                   value={option}
-                  onChange={(e) => handleCheckboxChange(e, "amortisseurs")}
+                  onChange={(e) => handleCheckboxChange(e, "suspensions")}
                   className="form-checkbox"
                 />
                 <span className="ml-2">{option}</span>
@@ -250,7 +251,7 @@ const AddTrottinette = () => {
 
         {/* Niveau de pente */}
         <div className="col-span-2">
-          <label className="block text-gray-700 font-medium">Niveau de Pente Max</label>
+          <label className="block text-gray-700 font-medium">Niveau de pente Max</label>
           <div className="flex items-center space-x-4">
             <input
               type="number"
@@ -339,11 +340,19 @@ const AddTrottinette = () => {
 
         {/* Batterie */}
         <div>
-          <label className="block text-gray-700 font-medium">Capacité Batterie (Ah)</label>
+          <label className="block text-gray-700 font-medium">Caractéristiques Batterie(V)(Ah)</label>
           <input
             type="text"
-            name="batterie_capacite"
-            value={trottinetteData.batterie_capacite}
+            name="batterie_amperage"
+            value={trottinetteData.batterie_amperage}
+            onChange={handleInputChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Ex : 60"
+          />
+          <input
+            type="text"
+            name="batterie_voltage"
+            value={trottinetteData.batterie_voltage}
             onChange={handleInputChange}
             className="w-full border rounded px-3 py-2"
             placeholder="Ex : 12"
