@@ -27,6 +27,7 @@ const AddTrottinette = () => {
     batterie_type: [],
     connectivite: [],
     type_utilisation: [],
+    options: [],
     urlImage: "",
   });
 
@@ -110,10 +111,12 @@ const AddTrottinette = () => {
         pneus_type: [],
         pneus_taille: "",
         etancheite: [],
-        batterie_capacite: "",
+        batterie_amperage: "",
+        batterie_voltage: "",
         batterie_type: [],
         connectivite: [],
         type_utilisation: [],
+        options: [],
         urlImage: "",
       });
     } catch (error) {
@@ -137,7 +140,8 @@ const AddTrottinette = () => {
         Ajouter une Trottinette
       </h1>
       {message && (
-        <p className={`text-center mb-4 ${message.includes("succès") ? "text-green-600" : "text-red-500"}`}>
+        <p className={`text-center mb-4 ${message.includes("succès") ? "text-green-600" : "text-red-500"}`}
+        >
           {message}
         </p>
       )}
@@ -219,7 +223,11 @@ const AddTrottinette = () => {
         <div className="col-span-2">
           <label className="block text-gray-700 font-medium">Guidon / Potence</label>
           <div className="flex items-center space-x-4">
-            {["Réglable", "Non réglable", "Pliable"].map((option) => (
+            {[
+              "Réglable",
+              "Non réglable",
+              "Pliable",
+            ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -235,12 +243,15 @@ const AddTrottinette = () => {
         <div className="col-span-2">
           <label className="block text-gray-700 font-medium">Suspensions</label>
           <div className="flex items-center space-x-4">
-            {["Avant", "Arrière"].map((option) => (
+            {[
+              "Avant",
+              "Arrière",
+            ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
                   value={option}
-                  onChange={(e) => handleCheckboxChange(e, "suspensions")}
+                  onChange={(e) => handleCheckboxChange(e, "amortisseurs")}
                   className="form-checkbox"
                 />
                 <span className="ml-2">{option}</span>
@@ -250,34 +261,43 @@ const AddTrottinette = () => {
         </div>
 
         {/* Niveau de pente */}
-        <div className="col-span-2">
+        <div>
           <label className="block text-gray-700 font-medium">Niveau de pente Max</label>
-          <div className="flex items-center space-x-4">
-            <input
-              type="number"
-              name="pente_max"
-              value={trottinetteData.pente_max}
-              onChange={handleInputChange}
-              className="w-full border rounded px-3 py-2"
-              placeholder="Ex : 15"
-            />
-            <select
-              name="pente_unite"
-              value={trottinetteData.pente_unite}
-              onChange={handleInputChange}
-              className="border rounded px-3 py-2"
-            >
-              <option value="%">%</option>
-              <option value="°">°</option>
-            </select>
-          </div>
+          <input
+            type="number"
+            name="pente_max"
+            value={trottinetteData.pente_max}
+            onChange={handleInputChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Ex : 15"
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 font-medium">Unité de pente</label>
+          <select
+            name="pente_unite"
+            value={trottinetteData.pente_unite}
+            onChange={handleInputChange}
+            className="w-full border rounded px-3 py-2"
+          >
+            <option value="%">%</option>
+            <option value="°">°</option>
+          </select>
         </div>
 
         {/* Freins */}
         <div className="col-span-2">
           <label className="block text-gray-700 font-medium">Freinage</label>
           <div className="flex items-center space-x-4">
-            {["Disques AV", "Disques AR", "Tambour AV", "Tambour AR", "ABS", "Électromagnétiques", "Hydrauliques"].map((option) => (
+            {[
+              "Disques AV",
+              "Disques AR",
+              "Tambour AV",
+              "Tambour AR",
+              "ABS",
+              "Électromagnétiques",
+              "Hydrauliques",
+            ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -293,9 +313,14 @@ const AddTrottinette = () => {
 
         {/* Pneus */}
         <div>
-          <label className="block text-gray-700 font-medium text-center">Type de Pneus</label>
+          <label className="block text-gray-700 font-medium">Type de Pneus</label>
           <div className="flex items-center space-x-4">
-            {["Gonflables", "Tubeless", "Pleins", "Anti-crevaison"].map((option) => (
+            {[
+              "Gonflables",
+              "Tubeless",
+              "Pleins",
+              "Anti-crevaison",
+            ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -309,7 +334,7 @@ const AddTrottinette = () => {
           </div>
         </div>
         <div>
-          <label className="block text-gray-700 font-medium pb-2 text-center">Taille des Pneus</label>
+          <label className="block text-gray-700 font-medium">Taille des Pneus</label>
           <input
             type="text"
             name="pneus_taille"
@@ -324,7 +349,11 @@ const AddTrottinette = () => {
         <div className="col-span-2">
           <label className="block text-gray-700 font-medium">Étanchéité</label>
           <div className="flex items-center space-x-4">
-            {["IPX4", "IPX6", "IPX7"].map((option) => (
+            {[
+              "IPX4",
+              "IPX6",
+              "IPX7",
+            ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -340,19 +369,22 @@ const AddTrottinette = () => {
 
         {/* Batterie */}
         <div>
-          <label className="block text-gray-700 font-medium">Caractéristiques Batterie(V)(Ah)</label>
-          <input
-            type="text"
-            name="batterie_amperage"
-            value={trottinetteData.batterie_amperage}
-            onChange={handleInputChange}
-            className="w-full border rounded px-3 py-2"
-            placeholder="Ex : 60"
-          />
+          <label className="block text-gray-700 font-medium">Caractéristiques Batterie (V)</label>
           <input
             type="text"
             name="batterie_voltage"
             value={trottinetteData.batterie_voltage}
+            onChange={handleInputChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Ex : 60"
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 font-medium">Caractéristiques Batterie (Ah)</label>
+          <input
+            type="text"
+            name="batterie_amperage"
+            value={trottinetteData.batterie_amperage}
             onChange={handleInputChange}
             className="w-full border rounded px-3 py-2"
             placeholder="Ex : 12"
@@ -361,7 +393,11 @@ const AddTrottinette = () => {
         <div className="col-span-2">
           <label className="block text-gray-700 font-medium">Type de Batterie</label>
           <div className="flex items-center space-x-4">
-            {["Li-ion", "NiMH", "Autre"].map((option) => (
+            {[
+              "Li-ion",
+              "NiMH",
+              "Autre",
+            ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -379,7 +415,12 @@ const AddTrottinette = () => {
         <div className="col-span-2">
           <label className="block text-gray-700 font-medium">Connectivité</label>
           <div className="flex items-center space-x-4">
-            {["Bluetooth", "Application mobile", "Port USB", "GPS"].map((option) => (
+            {[
+              "Bluetooth",
+              "Application mobile",
+              "Port USB",
+              "GPS",
+            ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -403,6 +444,8 @@ const AddTrottinette = () => {
               "Clé / Carte de démarrage",
               "Porte bagage",
               "Led RGB",
+              "Selle",
+              "Antidémarrage",
             ].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
