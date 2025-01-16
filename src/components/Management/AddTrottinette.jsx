@@ -275,9 +275,9 @@ const AddTrottinette = () => {
 
         {/* Freins */}
         <div className="col-span-2">
-          <label className="block text-gray-700 font-medium">Freins</label>
+          <label className="block text-gray-700 font-medium">Freinage</label>
           <div className="flex items-center space-x-4">
-            {["Disques AV", "Disques AR", "Tambour AV", "Tambour AR", "ABS", "Électromagnétique"].map((option) => (
+            {["Disques AV", "Disques AR", "Tambour AV", "Tambour AR", "ABS", "Électromagnétiques", "Hydrauliques"].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
                   type="checkbox"
@@ -392,6 +392,31 @@ const AddTrottinette = () => {
             ))}
           </div>
         </div>
+
+
+  {/* Options */}
+        <div className="col-span-2">
+          <label className="block text-gray-700 font-medium">Options</label>
+          <div className="flex items-center space-x-4">
+            {[
+              "Alarme",
+              "Clé / Carte de démarrage",
+              "Porte bagage",
+              "Led RGB",
+            ].map((option) => (
+              <label key={option} className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  value={option}
+                  onChange={(e) => handleCheckboxChange(e, "options")}
+                  className="form-checkbox"
+                />
+                <span className="ml-2">{option}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
 
         {/* Type d'utilisation */}
         <div className="col-span-2">
