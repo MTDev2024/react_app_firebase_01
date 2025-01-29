@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import img04 from '../assets/images/img04.jpg';
-import img05 from '../assets/images/img05.jpg';
+import img06 from '../assets/images/img06.jpg';
+import img07 from '../assets/images/img07.jpg';
+import img08 from '../assets/images/img08.jpg';
 
 const Question5 = ({ onNext, onPrevious }) => {
   const [selectedReliefs, setSelectedReliefs] = useState([]);
@@ -40,7 +41,13 @@ const Question5 = ({ onNext, onPrevious }) => {
               aria-pressed={selectedReliefs.includes(relief)}
             >
               <img
-                src={relief === "pente" ? img05 : img04}
+                src={
+                  relief === "plat"
+                    ? img06
+                    : relief === "modere"
+                    ? img07
+                    : img08
+                }
                 alt={
                   relief === "plat"
                     ? "Relief plat"
