@@ -99,7 +99,7 @@ const Questionnaire = ({ onRestart }) => {
           onClick={handlePrevious}
           disabled={step === 1} // Désactiver si on est à la première question
         >
-          Précédent
+          PrécédentA
         </button>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"

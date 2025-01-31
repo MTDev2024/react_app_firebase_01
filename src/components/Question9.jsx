@@ -59,7 +59,7 @@ const Question9 = ({ onNext, onPrevious }) => {
             className="bg-gray-500 text-white px-6 py-2 shadow-lg hover:bg-gray-700 transition duration-300 ease-in-out"
             onClick={onPrevious}
           >
-            Précédent
+            PrécédentB
           </button>
           <button
             className="bg-blue-800 text-white px-6 py-2 shadow-lg hover:bg-blue-600 transition duration-300 ease-in-out"
