@@ -81,26 +81,19 @@ const Questionnaire = ({ onRestart }) => {
 
       {/* Questions */}
       <div className="flex-grow flex flex-col items-center justify-center w-full max-w-3xl">
-        {step === 1 && <Question1 onNext={handleNext} />}
-        {step === 2 && <Question2 onNext={handleNext} />}
-        {step === 3 && <Question3 onNext={handleNext} />}
-        {step === 4 && <Question4 onNext={handleNext} />}
-        {step === 5 && <Question5 onNext={handleNext} />}
-        {step === 6 && <Question6 onNext={handleNext} />}
-        {step === 7 && <Question7 onNext={handleNext} />}
-        {step === 8 && <Question8 onNext={handleNext} />}
-        {step === 9 && <Question9 onNext={handleNext} />}
+        {step === 1 && <Question1 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 2 && <Question2 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 3 && <Question3 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 4 && <Question4 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 5 && <Question5 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 6 && <Question6 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 7 && <Question7 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 8 && <Question8 onNext={handleNext} onPrevious={handlePrevious} />}
+        {step === 9 && <Question9 onNext={handleNext} onPrevious={handlePrevious} />}
       </div>
 
-      {/* Boutons de navigation */}
+      {/* Bouton Recommencer */}
       <div className="flex space-x-4 mt-6">
-        <button
-          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
-          onClick={handlePrevious}
-          disabled={step === 1} // Désactiver si on est à la première question
-        >
-          PrécédentA
-        </button>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
           onClick={handleRestart}
