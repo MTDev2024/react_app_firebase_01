@@ -1,78 +1,133 @@
 import React, { useState } from "react";
 
 const EconomyCalculator = () => {
+  // État pour stocker les données du formulaire
   const [formData, setFormData] = useState({
-    dailyDistance: "",
-    fuelConsumption: "",
-    fuelPrice: "",
-    vehicleAge: "",
-    wearCostPerKm: ""
+    dailyDistance: "",        // Distance parcourue par jour en km
+    fuelConsumption: "",      // Consommation de carburant en L/100 km
+    fuelPrice: "",            // Prix moyen du carburant en €/L
+    vehicleAge: "",           // Âge du véhicule en années
+    wearCostPerKm: ""         // Coût d'usure par km, calculé automatiquement selon l'âge
   });
 
+  // État pour stocker les résultats du calcul
   const [results, setResults] = useState(null);
 
+  // État pour stocker les messages d'erreur pour chaque champ
+  const [errors, setErrors] = useState({});
+
+  // Fonction qui calcule le coût d'usure par km en fonction de l'âge du véhicule
+  const calculateWearCostPerKm = (age) => {
+    let maintenanceCostPerKm = 0.05; // Coût par défaut : 0,05 € par km
+    if (age > 5) {
+      maintenanceCostPerKm = age <= 10 ? 0.08 : 0.12;
+    }
+    return maintenanceCostPerKm;
+  };
+
+  // Fonction de gestion du changement dans les champs du formulaire
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Mettre à jour les données du formulaire
     setFormData((prevFormData) => {
       const updatedFormData = { ...prevFormData, [name]: value };
 
-      // Calculate wearCostPerKm dynamically based on vehicleAge
+      // Si l'utilisateur modifie l'âge du véhicule, recalculer le coût d'usure
       if (name === "vehicleAge") {
         const age = parseInt(value, 10);
-        let maintenanceCostPerKm = 0.05;
-        if (age > 5) maintenanceCostPerKm = age <= 10 ? 0.08 : 0.12;
-        updatedFormData.wearCostPerKm = maintenanceCostPerKm;
+        if (!isNaN(age)) {
+          updatedFormData.wearCostPerKm = calculateWearCostPerKm(age);
+        } else {
+          updatedFormData.wearCostPerKm = "";
+        }
       }
-
       return updatedFormData;
     });
+
+    // Réinitialiser l'erreur associée à ce champ
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
+  // Fonction de validation du formulaire
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.dailyDistance || parseFloat(formData.dailyDistance) <= 0) {
+      newErrors.dailyDistance = "La distance doit être supérieure à 0.";
+    }
+    if (!formData.fuelConsumption || parseFloat(formData.fuelConsumption) <= 0) {
+      newErrors.fuelConsumption = "La consommation doit être supérieure à 0.";
+    }
+    if (!formData.fuelPrice || parseFloat(formData.fuelPrice) <= 0) {
+      newErrors.fuelPrice = "Le prix du carburant doit être supérieur à 0.";
+    }
+    if (!formData.vehicleAge || parseFloat(formData.vehicleAge) <= 0) {
+      newErrors.vehicleAge = "L'âge du véhicule doit être supérieur à 0.";
+    }
+    return newErrors;
+  };
+
+  // Fonction de gestion de la soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { dailyDistance, fuelConsumption, fuelPrice, wearCostPerKm, vehicleAge } = formData;
-
-    if (!dailyDistance || !fuelConsumption || !fuelPrice || !vehicleAge) {
-      alert("Veuillez remplir tous les champs.");
-      return;
+    // Valider les données du formulaire
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return; // Arrêter le traitement si des erreurs sont détectées
     }
 
+    // Extraction et conversion des valeurs du formulaire
+    const { dailyDistance, fuelConsumption, fuelPrice, wearCostPerKm } = formData;
     const dailyDistanceNum = parseFloat(dailyDistance);
     const fuelConsumptionNum = parseFloat(fuelConsumption);
     const fuelPriceNum = parseFloat(fuelPrice);
     const wearCostNum = parseFloat(wearCostPerKm);
 
+    // Calcul de la distance mensuelle (supposant 30 jours par mois)
     const monthlyDistance = dailyDistanceNum * 30;
 
-    // Calcul des coûts de la voiture
+    // --- Calculs pour la voiture ---
+    // Coût du carburant = (consommation (L/100 km) / 100) * distance quotidienne * 30 jours * prix du carburant
     const fuelCost =
       (fuelConsumptionNum / 100) * dailyDistanceNum * 30 * fuelPriceNum;
-
+    // Coût d'entretien = distance mensuelle * coût d'usure par km
     const maintenanceCost = monthlyDistance * wearCostNum;
+    // Coût total de la voiture
     const totalCarCost = fuelCost + maintenanceCost;
 
-    // Calcul des coûts de la trottinette
-    const electricityPrice = 0.25; // Prix moyen de l'électricité en €/kWh
-    const scooterConsumptionPerKm = 0.015; // Consommation moyenne en kWh/km
-    const scooterMaintenancePerKm = 0.0375; // Usure, pneus, chambre à air, etc.
-    const laborCostPerKm = 0.03; // Main-d'œuvre pour les réparations
-
+    // --- Calculs pour la trottinette ---
+    // Explication sur la consommation de la trottinette :
+    // - Prix moyen de l'électricité : 0,25 €/kWh
+    // - Consommation électrique : 0,015 kWh par km
+    // - Coût de maintenance : 0,0375 €/km (usure, pneus, chambres à air, etc.)
+    // - Coût de main-d'œuvre pour réparations : 0,03 €/km
+    // Le coût par km est calculé en additionnant :
+    // (consommation * prix de l'électricité) + coût de maintenance + coût de main-d'œuvre
+    const electricityPrice = 0.25;
+    const scooterConsumptionPerKm = 0.015;
+    const scooterMaintenancePerKm = 0.0375;
+    const laborCostPerKm = 0.03;
     const scooterCostPerKm =
       scooterConsumptionPerKm * electricityPrice +
       scooterMaintenancePerKm +
       laborCostPerKm;
-
+    // Coût mensuel de la trottinette
     const scooterCost = monthlyDistance * scooterCostPerKm;
 
-    // Calcul des émissions carbone
-    const fuelEmissionFactor = 2.3; // kg CO₂/L pour l'essence
-    const scooterElectricEmissionFactor = 0.056; // kg CO₂/kWh en France
+    // --- Calcul des émissions de CO₂ ---
+    // Pour la voiture : émissions basées sur le carburant (2,3 kg CO₂ par litre)
+    const fuelEmissionFactor = 2.3;
     const carCO2 = (fuelConsumptionNum / 100) * monthlyDistance * fuelEmissionFactor;
+    // Pour la trottinette : émissions basées sur la consommation électrique (0,056 kg CO₂/kWh)
+    const scooterElectricEmissionFactor = 0.056;
     const scooterCO2 = monthlyDistance * scooterConsumptionPerKm * scooterElectricEmissionFactor;
 
+    // Calcul des économies mensuelles
     const savings = totalCarCost - scooterCost;
 
+    // Mise à jour de l'état des résultats (arrondis à deux décimales)
     setResults({
       totalCarCost: totalCarCost.toFixed(2),
       scooterCost: scooterCost.toFixed(2),
@@ -82,9 +137,22 @@ const EconomyCalculator = () => {
     });
   };
 
+  // Fonction pour réinitialiser le formulaire, les résultats et les erreurs
+  const handleReset = () => {
+    setFormData({
+      dailyDistance: "",
+      fuelConsumption: "",
+      fuelPrice: "",
+      vehicleAge: "",
+      wearCostPerKm: ""
+    });
+    setResults(null);
+    setErrors({});
+  };
+
   return (
     <main className="flex-grow mt-4">
-      {/* Hero Section */}
+      {/* Section Hero avec image de fond et texte accrocheur */}
       <section
         className="flex flex-col justify-center max-w-7xl mx-auto py-16 px-4 bg-cover bg-center bg-no-repeat"
         style={{
@@ -102,7 +170,7 @@ const EconomyCalculator = () => {
         </div>
       </section>
 
-      {/* Texte SEO */}
+      {/* Section SEO pour le référencement */}
       <section className="py-8 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto space-y-4">
           <h2 className="text-xl text-center font-bold mb-4">
@@ -137,81 +205,111 @@ const EconomyCalculator = () => {
         </div>
       </section>
 
-      {/* Calculator Section */}
+      {/* Section du calculateur */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Calculator Form */}
+            {/* Formulaire de saisie avec fieldset pour améliorer l'accessibilité */}
             <div className="bg-white shadow-lg p-6 rounded-lg animate-slide-up">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">Calculez vos économies</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block mb-1 font-medium text-gray-700">
-                    Distance parcourue par jour (km)
-                  </label>
-                  <input
-                    type="number"
-                    name="dailyDistance"
-                    value={formData.dailyDistance}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
-                    placeholder="Ex : 15"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1 font-medium text-gray-700">
-                    Consommation de carburant (L/100 km)
-                  </label>
-                  <input
-                    type="number"
-                    name="fuelConsumption"
-                    value={formData.fuelConsumption}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
-                    placeholder="Ex : 7"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1 font-medium text-gray-700">
-                    Prix moyen du carburant (€/L)
-                  </label>
-                  <input
-                    type="number"
-                    name="fuelPrice"
-                    value={formData.fuelPrice}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
-                    placeholder="Ex : 1.8"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1 font-medium text-gray-700">
-                    Âge du véhicule (années)
-                  </label>
-                  <input
-                    type="number"
-                    name="vehicleAge"
-                    value={formData.vehicleAge}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
-                    placeholder="Ex : 5"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1 font-medium text-gray-700">
-                    Coût d'usure par km (€) <span className="text-gray-500">(calculé automatiquement)</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.wearCostPerKm}
-                    className="w-full p-2 border rounded bg-gray-100 text-gray-500"
-                    readOnly
-                  />
-                </div>
+                <fieldset>
+                  <legend className="sr-only">Informations sur votre véhicule et vos trajets</legend>
+                  {/* Champ : Distance parcourue par jour */}
+                  <div>
+                    <label className="block mb-1 font-medium text-gray-700" htmlFor="dailyDistance">
+                      Distance parcourue par jour (km)
+                    </label>
+                    <input
+                      type="number"
+                      id="dailyDistance"
+                      name="dailyDistance"
+                      value={formData.dailyDistance}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded"
+                      placeholder="Ex : 15"
+                      aria-label="Distance parcourue par jour en kilomètres"
+                      required
+                    />
+                    {errors.dailyDistance && (
+                      <span className="text-red-600 text-sm">{errors.dailyDistance}</span>
+                    )}
+                  </div>
+                  {/* Champ : Consommation de carburant */}
+                  <div>
+                    <label className="block mb-1 font-medium text-gray-700" htmlFor="fuelConsumption">
+                      Consommation de carburant (L/100 km)
+                    </label>
+                    <input
+                      type="number"
+                      id="fuelConsumption"
+                      name="fuelConsumption"
+                      value={formData.fuelConsumption}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded"
+                      placeholder="Ex : 7"
+                      aria-label="Consommation de carburant en litres par 100 kilomètres"
+                      required
+                    />
+                    {errors.fuelConsumption && (
+                      <span className="text-red-600 text-sm">{errors.fuelConsumption}</span>
+                    )}
+                  </div>
+                  {/* Champ : Prix moyen du carburant */}
+                  <div>
+                    <label className="block mb-1 font-medium text-gray-700" htmlFor="fuelPrice">
+                      Prix moyen du carburant (€/L)
+                    </label>
+                    <input
+                      type="number"
+                      id="fuelPrice"
+                      name="fuelPrice"
+                      value={formData.fuelPrice}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded"
+                      placeholder="Ex : 1.8"
+                      aria-label="Prix moyen du carburant en euros par litre"
+                      required
+                    />
+                    {errors.fuelPrice && (
+                      <span className="text-red-600 text-sm">{errors.fuelPrice}</span>
+                    )}
+                  </div>
+                  {/* Champ : Âge du véhicule */}
+                  <div>
+                    <label className="block mb-1 font-medium text-gray-700" htmlFor="vehicleAge">
+                      Âge du véhicule (années)
+                    </label>
+                    <input
+                      type="number"
+                      id="vehicleAge"
+                      name="vehicleAge"
+                      value={formData.vehicleAge}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border rounded"
+                      placeholder="Ex : 5"
+                      aria-label="Âge du véhicule en années"
+                      required
+                    />
+                    {errors.vehicleAge && (
+                      <span className="text-red-600 text-sm">{errors.vehicleAge}</span>
+                    )}
+                  </div>
+                  {/* Champ : Coût d'usure par km (calculé automatiquement) */}
+                  <div>
+                    <label className="block mb-1 font-medium text-gray-700">
+                      Coût d'usure par km (€) <span className="text-gray-500">(calculé automatiquement)</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="wearCostPerKm"
+                      value={formData.wearCostPerKm}
+                      className="w-full p-2 border rounded bg-gray-100 text-gray-500"
+                      readOnly
+                      aria-label="Coût d'usure par kilomètre"
+                    />
+                  </div>
+                </fieldset>
                 <button
                   type="submit"
                   className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300"
@@ -221,7 +319,7 @@ const EconomyCalculator = () => {
               </form>
             </div>
 
-            {/* Results */}
+            {/* Affichage des résultats */}
             {results && (
               <div className="bg-white shadow-lg p-6 rounded-lg animate-slide-up">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Vos résultats</h2>
@@ -243,15 +341,15 @@ const EconomyCalculator = () => {
                 <p className="text-sm text-gray-500 mt-4">
                   Les coûts et émissions indiqués sont basés sur des moyennes estimées et incluent :
                   <ul className="list-disc ml-6">
-                    <li>Pour la voiture : le carburant, les coûts d'entretien (varient selon l'âge du véhicule) et les émissions de CO₂ liées à la combustion du carburant.</li>
-                    <li>Pour la trottinette : la consommation électrique, l'usure (pneus et chambres à air), la main-d'œuvre éventuelle pour les réparations, et les émissions de CO₂ liées à la consommation électrique.</li>
+                    <li>Pour la voiture : carburant, entretien (varie selon l'âge du véhicule) et émissions de CO₂ liées à la combustion.</li>
+                    <li>Pour la trottinette : consommation électrique, usure (pneus, chambres à air), main-d'œuvre pour réparations et émissions de CO₂ liées à la consommation électrique.</li>
                   </ul>
                   <span className="block mt-2">
-                    Ces calculs n'incluent pas le prix d'achat de votre voiture ou trottinette. Ils sont indicatifs et peuvent varier en fonction de votre situation personnelle et des tarifs locaux.
+                    Ces calculs n'incluent pas le prix d'achat de votre véhicule ou trottinette. Ils sont indicatifs et peuvent varier selon votre situation et les tarifs locaux.
                   </span>
                 </p>
                 <button
-                  onClick={() => setResults(null)}
+                  onClick={handleReset}
                   className="mt-4 w-full py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition duration-300"
                 >
                   Recalculer
