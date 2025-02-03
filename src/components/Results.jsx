@@ -175,7 +175,7 @@ const Results = () => {
         </p>
       )}
 
-      <div className="mt-8 flex justify-center space-x-4">
+      <div className="mt-8 mb-8 flex justify-center space-x-4">
         {/* Bouton Recommencer */}
         <button
           onClick={handleRestart}

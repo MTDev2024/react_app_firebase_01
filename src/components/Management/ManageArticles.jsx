@@ -3,14 +3,21 @@ import { collection, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore"
 import { auth, db } from "../../firebase";
 import AddArticle from "./AddArticle";
 import ArticleCard from "../ArticleCard";
+import EditArticle from "./EditArticle";
 
 const ManageArticle = () => {
-  const [articles, setArticles] = useState([]); // Liste des articles
-  const [loading, setLoading] = useState(true); // Indicateur de chargement
-  const [isAdmin, setIsAdmin] = useState(false); // Vérification si l'utilisateur est admin
-  const [message, setMessage] = useState(""); // Message de confirmation ou d'erreur
+  // État pour stocker la liste des articles
+  const [articles, setArticles] = useState([]);
+  // Indicateur de chargement lors de la récupération des articles
+  const [loading, setLoading] = useState(true);
+  // Vérification si l'utilisateur connecté a le rôle d'administrateur
+  const [isAdmin, setIsAdmin] = useState(false);
+  // Message pour affichage d'erreur ou de confirmation
+  const [message, setMessage] = useState("");
+  // Article actuellement en cours d'édition (null si aucun)
+  const [editingArticle, setEditingArticle] = useState(null);
 
-  // Vérification du rôle utilisateur
+  // Vérification du rôle de l'utilisateur
   useEffect(() => {
     const checkUserRole = async () => {
       auth.onAuthStateChanged(async (currentUser) => {
@@ -18,7 +25,7 @@ const ManageArticle = () => {
           try {
             const userDoc = await getDoc(doc(db, "users", currentUser.uid));
             if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-              setIsAdmin(true); // L'utilisateur est un administrateur
+              setIsAdmin(true);
             } else {
               setMessage("Vous n'avez pas l'autorisation d'accéder à cette page.");
             }
@@ -35,34 +42,37 @@ const ManageArticle = () => {
     checkUserRole();
   }, []);
 
-  // Récupération des articles depuis Firestore
-  useEffect(() => {
-    const fetchArticles = async () => {
-      if (isAdmin) {
-        try {
-          const articlesSnapshot = await getDocs(collection(db, "articles"));
-          const articlesData = articlesSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setArticles(articlesData); // Mise à jour de la liste des articles
-        } catch (error) {
-          console.error("Erreur lors du chargement des articles :", error);
-          setMessage("Impossible de charger les articles.");
-        } finally {
-          setLoading(false); // Fin du chargement
-        }
-      }
-    };
+  // Fonction pour charger les articles depuis Firestore
+  const fetchArticles = async () => {
+    setLoading(true);
+    try {
+      const articlesSnapshot = await getDocs(collection(db, "articles"));
+      const articlesData = articlesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setArticles(articlesData);
+    } catch (error) {
+      console.error("Erreur lors du chargement des articles :", error);
+      setMessage("Impossible de charger les articles.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchArticles();
+  // Charger les articles une fois que l'on a vérifié que l'utilisateur est administrateur
+  useEffect(() => {
+    if (isAdmin) {
+      fetchArticles();
+    }
   }, [isAdmin]);
 
-  // Suppression d'un article
+  // Fonction de suppression d'un article
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, "articles", id));
-      setArticles(articles.filter((article) => article.id !== id)); // Mise à jour de la liste
+      // Mise à jour de la liste des articles après suppression
+      setArticles(articles.filter((article) => article.id !== id));
       setMessage("Article supprimé avec succès.");
     } catch (error) {
       console.error("Erreur lors de la suppression de l'article :", error);
@@ -70,6 +80,12 @@ const ManageArticle = () => {
     }
   };
 
+  // Callback pour rafraîchir la liste après modification (édition)
+  const handleUpdated = () => {
+    fetchArticles();
+  };
+
+  // Si l'utilisateur n'est pas administrateur, afficher un message d'erreur
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -88,7 +104,16 @@ const ManageArticle = () => {
       {/* Formulaire pour ajouter un article */}
       <AddArticle />
 
-      {/* Liste des articles */}
+      {/* Si un article est en cours d'édition, afficher le composant d'édition */}
+      {editingArticle && (
+        <EditArticle
+          article={editingArticle}
+          onClose={() => setEditingArticle(null)}
+          onUpdated={handleUpdated}
+        />
+      )}
+
+      {/* Liste des articles existants */}
       <div className="mt-8">
         <h2 className="text-2xl font-semibold mb-4">Articles existants</h2>
         {loading ? (
@@ -100,7 +125,14 @@ const ManageArticle = () => {
             {articles.map((article) => (
               <div key={article.id} className="relative">
                 <ArticleCard article={article} />
-                {/* Bouton pour supprimer un article */}
+                {/* Bouton pour éditer l'article */}
+                <button
+                  onClick={() => setEditingArticle(article)}
+                  className="absolute top-2 right-20 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                >
+                  Éditer
+                </button>
+                {/* Bouton pour supprimer l'article */}
                 <button
                   onClick={() => handleDelete(article.id)}
                   className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"

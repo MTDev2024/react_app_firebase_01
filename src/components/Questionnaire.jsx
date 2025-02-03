@@ -93,7 +93,7 @@ const Questionnaire = ({ onRestart }) => {
       </div>
 
       {/* Bouton Recommencer */}
-      <div className="flex space-x-4 mt-6">
+      <div className="flex space-x-4 mt-6 mb-6">
         <button
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
           onClick={handleRestart}
