@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../../firebase";
 import { collection, addDoc, doc, getDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AddArticle = () => {
   const [isAdmin, setIsAdmin] = useState(false); // Vérification de rôle
   const [message, setMessage] = useState("");
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   const [articleData, setArticleData] = useState({
     title: "",
     description: "",
     content: "",
-    imageUrl: "",
+    imageUrl: "", // Pour stocker l'URL manuelle OU celle de Firebase
     tags: "",
     categories: "",
     featured: false,
@@ -47,16 +51,38 @@ const AddArticle = () => {
     });
   };
 
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!articleData.title || !articleData.description || !articleData.content) {
+      setMessage("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
     try {
+      setUploading(true);
+      let finalImageUrl = articleData.imageUrl; // On garde l'URL si elle est fournie
+
+      if (image) {
+        const storage = getStorage();
+        const storageRef = ref(storage, `articles/${image.name}`);
+        await uploadBytes(storageRef, image);
+        finalImageUrl = await getDownloadURL(storageRef); // Remplace l’URL manuelle par l’URL Firebase
+      }
+
       const articlesRef = collection(db, "articles");
       const newArticle = {
         ...articleData,
+        imageUrl: finalImageUrl, // Soit URL manuelle, soit URL Firebase
         tags: articleData.tags.split(",").map((tag) => tag.trim()),
         categories: articleData.categories.split(",").map((cat) => cat.trim()),
         date: new Date(),
       };
+
       await addDoc(articlesRef, newArticle);
       setMessage("Article ajouté avec succès !");
       setArticleData({
@@ -68,9 +94,12 @@ const AddArticle = () => {
         categories: "",
         featured: false,
       });
+      setImage(null);
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'article :", error);
       setMessage("Une erreur est survenue lors de l'ajout de l'article.");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -124,14 +153,23 @@ const AddArticle = () => {
           />
         </div>
         <div>
-          <label className="block mb-2 text-gray-700">Image URL</label>
+          <label className="block mb-2 text-gray-700">Télécharger une image</label>
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="w-full border rounded px-3 py-2"
+            accept="image/*"
+          />
+        </div>
+        <div>
+          <label className="block mb-2 text-gray-700">OU entrer une URL d'image</label>
           <input
             type="text"
             name="imageUrl"
             value={articleData.imageUrl}
             onChange={handleInputChange}
             className="w-full border rounded px-3 py-2"
-            placeholder="Lien vers l'image"
+            placeholder="https://exemple.com/image.jpg"
           />
         </div>
         <div>
@@ -169,8 +207,9 @@ const AddArticle = () => {
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          disabled={uploading}
         >
-          Ajouter l'article
+          {uploading ? "Ajout en cours..." : "Ajouter l'article"}
         </button>
       </form>
     </div>

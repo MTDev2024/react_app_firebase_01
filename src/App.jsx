@@ -55,14 +55,14 @@ function App() {
 
       {/* Conteneur global pour les notifications */}
       <ToastContainer
-        position="bottom-center" // Position des notifications
-        autoClose={3000}         // Fermeture automatique après 3 secondes
-        hideProgressBar={false}  // Afficher la barre de progression
-        newestOnTop={true}       // Les notifications récentes en haut
-        closeOnClick             // Fermeture au clic
-        rtl={false}              // Textes alignés de gauche à droite
+        position="bottom-center" // Position des notifs
+        autoClose={3000}         // Fermeture après 3 secondes
+        hideProgressBar={false}  // Afficher barre de progression
+        newestOnTop={true}       // Notifications + récentes en haut
+        closeOnClick             // Fermer en cliquant
+        rtl={false}              // Texte alignés gauche - droite
         pauseOnFocusLoss         // Pause la fermeture en cas de perte de focus
-        draggable                // Déplacement possible des notifications
+        draggable                // Déplacement des notifications
         pauseOnHover             // Pause la fermeture au survol
       />
 
