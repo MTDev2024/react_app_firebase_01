@@ -6,15 +6,10 @@ import ArticleCard from "../ArticleCard";
 import EditArticle from "./EditArticle";
 
 const ManageArticle = () => {
-  // État pour stocker la liste des articles
   const [articles, setArticles] = useState([]);
-  // Indicateur de chargement lors de la récupération des articles
   const [loading, setLoading] = useState(true);
-  // Vérification si l'utilisateur connecté a le rôle d'administrateur
   const [isAdmin, setIsAdmin] = useState(false);
-  // Message pour affichage d'erreur ou de confirmation
   const [message, setMessage] = useState("");
-  // Article actuellement en cours d'édition (null si aucun)
   const [editingArticle, setEditingArticle] = useState(null);
 
   // Vérification du rôle de l'utilisateur
@@ -48,7 +43,7 @@ const ManageArticle = () => {
     try {
       const articlesSnapshot = await getDocs(collection(db, "articles"));
       const articlesData = articlesSnapshot.docs.map((doc) => ({
-        id: doc.id,
+        slug: doc.id, // Utilisation du slug comme identifiant
         ...doc.data(),
       }));
       setArticles(articlesData);
@@ -60,19 +55,17 @@ const ManageArticle = () => {
     }
   };
 
-  // Charger les articles une fois que l'on a vérifié que l'utilisateur est administrateur
   useEffect(() => {
     if (isAdmin) {
       fetchArticles();
     }
   }, [isAdmin]);
 
-  // Fonction de suppression d'un article
-  const handleDelete = async (id) => {
+  // Fonction de suppression d'un article (utilisation du slug)
+  const handleDelete = async (slug) => {
     try {
-      await deleteDoc(doc(db, "articles", id));
-      // Mise à jour de la liste des articles après suppression
-      setArticles(articles.filter((article) => article.id !== id));
+      await deleteDoc(doc(db, "articles", slug));
+      setArticles(articles.filter((article) => article.slug !== slug));
       setMessage("Article supprimé avec succès.");
     } catch (error) {
       console.error("Erreur lors de la suppression de l'article :", error);
@@ -80,12 +73,11 @@ const ManageArticle = () => {
     }
   };
 
-  // Callback pour rafraîchir la liste après modification (édition)
+  // Callback pour rafraîchir la liste après modification
   const handleUpdated = () => {
     fetchArticles();
   };
 
-  // Si l'utilisateur n'est pas administrateur, afficher un message d'erreur
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -104,7 +96,7 @@ const ManageArticle = () => {
       {/* Formulaire pour ajouter un article */}
       <AddArticle />
 
-      {/* Si un article est en cours d'édition, afficher le composant d'édition */}
+      {/* Affichage de la fenêtre d'édition si un article est en cours d'édition */}
       {editingArticle && (
         <EditArticle
           article={editingArticle}
@@ -123,7 +115,7 @@ const ManageArticle = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article) => (
-              <div key={article.id} className="relative">
+              <div key={article.slug} className="relative">
                 <ArticleCard article={article} />
                 {/* Bouton pour éditer l'article */}
                 <button
@@ -134,7 +126,7 @@ const ManageArticle = () => {
                 </button>
                 {/* Bouton pour supprimer l'article */}
                 <button
-                  onClick={() => handleDelete(article.id)}
+                  onClick={() => handleDelete(article.slug)}
                   className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                 >
                   Supprimer

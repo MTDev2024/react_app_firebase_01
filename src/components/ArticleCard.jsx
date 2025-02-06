@@ -12,8 +12,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 
 function ArticleCard({ article }) {
-  const [isFavorite, setIsFavorite] = useState(false); // État pour savoir si l'article est favori
-  const [user, setUser] = useState(null); // État pour l'utilisateur connecté
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [user, setUser] = useState(null);
 
   // Gestion de l'état utilisateur (vérification si connecté)
   useEffect(() => {
@@ -26,11 +26,11 @@ function ArticleCard({ article }) {
   // Vérification initiale si l'article est favori
   useEffect(() => {
     const checkIfFavorite = async () => {
-      if (user && article?.id) {
+      if (user && article?.slug) {
         try {
           const favoriteRef = doc(
             collection(db, "users", user.uid, "favoritesArticles"),
-            article.id
+            article.slug
           );
           const docSnapshot = await getDoc(favoriteRef);
           setIsFavorite(docSnapshot.exists());
@@ -41,7 +41,7 @@ function ArticleCard({ article }) {
     };
 
     checkIfFavorite();
-  }, [user, article?.id]);
+  }, [user, article?.slug]);
 
   // Ajout ou retrait de l'article des favoris
   const toggleFavorite = async () => {
@@ -52,23 +52,23 @@ function ArticleCard({ article }) {
 
     const favoriteRef = doc(
       collection(db, "users", user.uid, "favoritesArticles"),
-      article.id
+      article.slug
     );
 
     try {
       if (isFavorite) {
         // Retirer des favoris
         await deleteDoc(favoriteRef);
-        console.log(`Article retiré des favoris : ${article.id}`);
+        console.log(`Article retiré des favoris : ${article.slug}`);
         setIsFavorite(false);
       } else {
         // Ajouter aux favoris
         await setDoc(favoriteRef, {
-          articleId: article.id,
+          articleSlug: article.slug,
           title: article.title,
           dateAdded: new Date().toISOString(),
         });
-        console.log(`Article ajouté aux favoris : ${article.id}`);
+        console.log(`Article ajouté aux favoris : ${article.slug}`);
         setIsFavorite(true);
       }
     } catch (error) {
@@ -92,13 +92,15 @@ function ArticleCard({ article }) {
       } hover:scale-105 transform transition duration-200 cursor-pointer`}
     >
       {/* Image de l'article */}
-      <div className="overflow-hidden">
-        <img
-          src={article.imageUrl || "/assets/images/placeholder.jpg"} // Placeholder si l'image est vide
-          alt={article.title}
-          className="w-full h-48 object-cover transform transition-transform duration-300 ease-in-out hover:translate-y-2 hover:scale-105 hover:shadow-lg"
-        />
-      </div>
+      <Link to={`/articles/${article.slug}`}>
+        <div className="overflow-hidden">
+          <img
+            src={article.imageUrl || "/assets/images/placeholder.jpg"}
+            alt={article.title}
+            className="w-full h-48 object-cover transform transition-transform duration-300 ease-in-out hover:translate-y-2 hover:scale-105 hover:shadow-lg"
+          />
+        </div>
+      </Link>
       <div className="p-6">
         {/* Titre et bouton favoris */}
         <div className="flex justify-between items-center mb-2">
@@ -151,10 +153,7 @@ function ArticleCard({ article }) {
         </div>
 
         {/* Lien vers la page de détail */}
-        <Link
-          to={`/articles/${article.slug}`}
-          className="text-blue-600 hover:underline"
-        >
+        <Link to={`/articles/${article.slug}`} className="text-blue-600 hover:underline">
           Lire la suite →
         </Link>
       </div>
@@ -165,13 +164,12 @@ function ArticleCard({ article }) {
 // PropTypes pour valider les propriétés
 ArticleCard.propTypes = {
   article: PropTypes.shape({
-    id: PropTypes.string.isRequired, // Identifiant unique
+    slug: PropTypes.string.isRequired, // Slug unique
     title: PropTypes.string.isRequired, // Titre de l'article
     description: PropTypes.string.isRequired, // Courte description
     imageUrl: PropTypes.string, // URL de l'image
     tags: PropTypes.arrayOf(PropTypes.string), // Tableau de tags
     categories: PropTypes.arrayOf(PropTypes.string), // Tableau de catégories
-    slug: PropTypes.string.isRequired, // Slug pour l'URL unique
     featured: PropTypes.bool, // Article en avant
   }).isRequired,
 };

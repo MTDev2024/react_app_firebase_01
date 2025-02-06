@@ -15,6 +15,8 @@ import Footer from "./components/Footer.jsx";
 import Results from "./components/Results.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Route protégée
 
+import ArticleDetails from "./components/ArticleDetails"; // Importe le composant
+
 // Lazy loading pour les pages
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Blog = lazy(() => import("./pages/Blog.jsx"));
@@ -89,6 +91,7 @@ function App() {
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/cgu" element={<CGU />} />
             <Route path="/confidentialite" element={<Confidentialite />} />
+            <Route path="/articles/:slug" element={<ArticleDetails />} />
 
             {/* Routes protégées */}
             <Route
