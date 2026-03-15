@@ -11,9 +11,9 @@ const slugify = (text) => {
     .toString()
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, '-') // Remplace les espaces par des tirets
-    .replace(/[^a-z0-9-]/g, '') // Supprime les caractères spéciaux
-    .replace(/-+/g, '-'); // Remplace plusieurs tirets par un seul
+    .replace(/\s+/g, "-") // Remplace les espaces par des tirets
+    .replace(/[^a-z0-9-]/g, "") // Supprime les caractères spéciaux
+    .replace(/-+/g, "-"); // Remplace plusieurs tirets par un seul
 };
 
 const AddArticle = () => {
@@ -35,7 +35,6 @@ const AddArticle = () => {
     featured: false,
   });
 
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const updatedData = {
@@ -56,7 +55,11 @@ const AddArticle = () => {
   // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!articleData.title || !articleData.description || !articleData.content) {
+    if (
+      !articleData.title ||
+      !articleData.description ||
+      !articleData.content
+    ) {
       setMessage("Veuillez remplir tous les champs obligatoires.");
       return;
     }
@@ -64,7 +67,7 @@ const AddArticle = () => {
     try {
       setUploading(true);
       let finalImageUrl = articleData.imageUrl;
-      
+
       // Gestion de l'upload de l'image
       if (image) {
         const storage = getStorage();
@@ -75,7 +78,7 @@ const AddArticle = () => {
 
       let uniqueSlug = slug;
       const docRef = doc(db, "articles", uniqueSlug);
-      
+
       // Vérifier si le slug existe déjà et en générer un unique si nécessaire
       let docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
@@ -121,19 +124,85 @@ const AddArticle = () => {
       <h1 className="text-2xl font-bold mb-6">Ajouter un article</h1>
       {message && <p className="text-center text-green-600 mb-4">{message}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="title" placeholder="Titre" value={articleData.title} onChange={handleInputChange} required className="w-full border p-2 rounded" />
-        <input type="text" name="slug" value={slug} readOnly className="w-full border p-2 rounded bg-gray-200" />
-        <textarea name="description" placeholder="Description" value={articleData.description} onChange={handleInputChange} required className="w-full border p-2 rounded" />
-        <textarea name="content" placeholder="Contenu" value={articleData.content} onChange={handleInputChange} required className="w-full border p-2 rounded" />
-        <input type="file" onChange={handleImageChange} className="w-full border p-2 rounded" accept="image/*" />
-        <input type="text" name="imageUrl" placeholder="URL de l'image" value={articleData.imageUrl} onChange={handleInputChange} className="w-full border p-2 rounded" />
-        <input type="text" name="tags" placeholder="Tags (séparés par des virgules)" value={articleData.tags} onChange={handleInputChange} className="w-full border p-2 rounded" />
-        <input type="text" name="categories" placeholder="Catégories (séparées par des virgules)" value={articleData.categories} onChange={handleInputChange} className="w-full border p-2 rounded" />
+        <input
+          type="text"
+          name="title"
+          placeholder="Titre"
+          value={articleData.title}
+          onChange={handleInputChange}
+          required
+          className="w-full border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="slug"
+          value={slug}
+          readOnly
+          className="w-full border p-2 rounded bg-gray-200"
+        />
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={articleData.description}
+          onChange={handleInputChange}
+          required
+          className="w-full border p-2 rounded"
+        />
+        <textarea
+          name="content"
+          placeholder="Contenu"
+          value={articleData.content}
+          onChange={handleInputChange}
+          required
+          className="w-full border p-2 rounded"
+        />
+        <input
+          type="file"
+          onChange={handleImageChange}
+          className="w-full border p-2 rounded"
+          accept="image/*"
+        />
+        <input
+          type="text"
+          name="imageUrl"
+          placeholder="URL de l'image"
+          value={articleData.imageUrl}
+          onChange={handleInputChange}
+          className="w-full border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="tags"
+          placeholder="Tags (séparés par des virgules)"
+          value={articleData.tags}
+          onChange={handleInputChange}
+          className="w-full border p-2 rounded"
+        />
+        <input
+          type="text"
+          name="categories"
+          placeholder="Catégories (séparées par des virgules)"
+          value={articleData.categories}
+          onChange={handleInputChange}
+          className="w-full border p-2 rounded"
+        />
         <label className="flex items-center">
-          <input type="checkbox" name="featured" checked={articleData.featured} onChange={handleInputChange} className="mr-2" />
+          <input
+            type="checkbox"
+            name="featured"
+            checked={articleData.featured}
+            onChange={handleInputChange}
+            className="mr-2"
+          />
           Mettre en avant
         </label>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded" disabled={uploading}>{uploading ? "Ajout en cours..." : "Ajouter l'article"}</button>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded"
+          disabled={uploading}
+        >
+          {uploading ? "Ajout en cours..." : "Ajouter l'article"}
+        </button>
       </form>
     </div>
   );

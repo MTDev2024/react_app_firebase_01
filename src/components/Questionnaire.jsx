@@ -1,16 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Question1 from "./Question1";
-import Question2 from "./Question2";
-import Question3 from "./Question3";
-import Question4 from "./Question4";
-import Question5 from "./Question5";
-import Question6 from "./Question6";
-import Question7 from "./Question7";
-import Question8 from "./Question8";
-import Question9 from "./Question9";
+import Question from "./Question";
+import { questions } from "../data/questionsData";
 
-const Questionnaire = ({ onRestart }) => {
+const Questionnaire = () => {
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState({
     distance: null,
@@ -79,17 +72,17 @@ const Questionnaire = ({ onRestart }) => {
         </div>
       </div>
 
-      {/* Questions */}
+      {/* Question courante — le composant unique lit ses données depuis questionsData.js */}
       <div className="flex-grow flex flex-col items-center justify-center w-full max-w-3xl">
-        {step === 1 && <Question1 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 2 && <Question2 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 3 && <Question3 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 4 && <Question4 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 5 && <Question5 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 6 && <Question6 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 7 && <Question7 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 8 && <Question8 onNext={handleNext} onPrevious={handlePrevious} />}
-        {step === 9 && <Question9 onNext={handleNext} onPrevious={handlePrevious} />}
+        {/* key={step} force React à remonter le composant à chaque question,
+            ce qui réinitialise les états (selected, sliderValue, error) */}
+        <Question
+          key={step}
+          data={questions[step - 1]}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+          isLast={step === questions.length}
+        />
       </div>
 
       {/* Bouton Recommencer */}
