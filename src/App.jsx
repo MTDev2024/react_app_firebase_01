@@ -1,13 +1,17 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // Import react-toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Import Firebase Auth
-import { auth } from "./firebase";
+// Import Firebase Auth et Firestore
+import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+
+// Import du store Zustand
+import useStore from "./store/store";
 
 // Import des composants principaux
 import NavBar from "./components/NavBar.jsx";
@@ -39,16 +43,30 @@ const ManageMessages = lazy(() => import("./components/Management/ManageMessages
 const Admin = lazy(() => import("./pages/Admin.jsx"));
 
 function App() {
+  // On récupère les actions du store pour mettre à jour l'état
+  const { setUser, clearUser } = useStore();
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("Utilisateur connecté :", user.email);
+    // onAuthStateChanged est un listener Firebase :
+    // il se déclenche une fois au démarrage, puis à chaque connexion/déconnexion
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // L'utilisateur est connecté — on vérifie son rôle dans Firestore
+        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+        const isAdmin =
+          userDoc.exists() && userDoc.data().role === "Administrateur";
+
+        // On met à jour le store avec l'utilisateur et son rôle
+        setUser(firebaseUser, isAdmin);
       } else {
-        console.log("Aucun utilisateur connecté.");
+        // Aucun utilisateur connecté — on vide le store
+        clearUser();
       }
     });
+
+    // Nettoyage : on arrête le listener quand le composant est démonté
     return () => unsubscribe();
-  }, []);
+  }, [setUser, clearUser]);
 
   return (
     <div className="min-h-screen flex flex-col">

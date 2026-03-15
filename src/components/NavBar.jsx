@@ -1,38 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase.js";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { auth } from "../firebase.js";
 import ModaleAuth from "./ModaleAuth.jsx";
+import useStore from "../store/store";
 
 export default function NavBar() {
   const [showModal, setShowModal] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  // Vérifie l'état de l'utilisateur et son rôle
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-        if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
-        }
-      } else {
-        setUser(null);
-        setIsAdmin(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  // On lit directement le store — plus besoin d'écouter Firebase ici
+  // App.jsx s'en charge et met à jour le store pour tout le monde
+  const { user, isAdmin } = useStore();
 
   // Ferme le dropdown lorsqu'on clique à l'extérieur
   useEffect(() => {

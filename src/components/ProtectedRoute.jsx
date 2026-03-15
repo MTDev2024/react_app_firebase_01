@@ -1,56 +1,28 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { auth, db } from "../firebase"; // Firebase Auth et Firestore
-import { doc, getDoc } from "firebase/firestore";
+import useStore from "../store/store";
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const [isLoading, setIsLoading] = useState(true); // Indique si la vérification est en cours
-  const [isAuthorized, setIsAuthorized] = useState(false); // Autorisation de l'utilisateur
+  // On lit le store : plus besoin de gérer un state local ni d'appeler Firebase
+  const { user, isAdmin, isLoading } = useStore();
 
-  useEffect(() => {
-    const checkAuthorization = async () => {
-      const user = auth.currentUser;
-
-      if (!user) {
-        setIsAuthorized(false);
-        setIsLoading(false);
-        return;
-      }
-
-      if (adminOnly) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-            setIsAuthorized(true);
-          } else {
-            setIsAuthorized(false);
-          }
-        } catch (error) {
-          console.error("Erreur lors de la vérification du rôle :", error);
-          setIsAuthorized(false);
-        }
-      } else {
-        setIsAuthorized(true); // Autoriser tous les utilisateurs connectés si `adminOnly` est faux
-      }
-
-      setIsLoading(false);
-    };
-
-    checkAuthorization();
-  }, [adminOnly]);
-
-  // Affichage pendant le chargement
+  // Firebase n'a pas encore répondu — on attend avant de décider quoi afficher
+  // Sans ce garde, l'utilisateur serait redirigé au démarrage même s'il est connecté
   if (isLoading) {
     return <div className="text-center mt-8">Vérification en cours...</div>;
   }
 
-  // Redirige si l'utilisateur n'est pas autorisé
-  if (!isAuthorized) {
+  // Pas connecté → retour à l'accueil
+  if (!user) {
     return <Navigate to="/" replace />;
   }
 
-  return children; // Rendu des enfants si l'utilisateur est autorisé
+  // Route admin mais utilisateur non admin → retour à l'accueil
+  if (adminOnly && !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Tout est ok → on affiche la page demandée
+  return children;
 };
 
 export default ProtectedRoute;
