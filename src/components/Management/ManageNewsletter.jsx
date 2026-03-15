@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { auth, db } from "../../firebase";
+import { useEffect, useState, useCallback } from "react";
+import { db } from "../../firebase";
 import {
   collection,
   getDocs,
@@ -7,11 +7,11 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  getDoc,
 } from "firebase/firestore";
+import useStore from "../../store/store";
 
 const ManageNewsletter = () => {
-  const [isAdmin, setIsAdmin] = useState(false); // Vérification de rôle
+  const { isAdmin } = useStore();
   const [message, setMessage] = useState("");
   const [subscribers, setSubscribers] = useState([]); // Liste des inscrits
   const [newEmail, setNewEmail] = useState(""); // Ajout ou modification
@@ -19,31 +19,6 @@ const ManageNewsletter = () => {
   const [loading, setLoading] = useState(true);
 
   const collectionRef = collection(db, "newsletter");
-
-  // Vérification du rôle Administrateur
-  useEffect(() => {
-    const checkUserRole = async () => {
-      auth.onAuthStateChanged(async (currentUser) => {
-        if (currentUser) {
-          try {
-            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-            if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-              setIsAdmin(true);
-            } else {
-              setMessage("Vous n'avez pas l'autorisation d'accéder à cette page.");
-            }
-          } catch (error) {
-            console.error("Erreur lors de la vérification du rôle :", error);
-            setMessage("Erreur lors de la vérification de vos permissions.");
-          }
-        } else {
-          setMessage("Veuillez vous connecter pour accéder à cette page.");
-        }
-      });
-    };
-
-    checkUserRole();
-  }, []);
 
   // Récupérer les inscrits
   const fetchSubscribers = useCallback(async () => {

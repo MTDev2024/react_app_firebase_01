@@ -1,41 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { collection, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase";
+import { useState, useEffect } from "react";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase";
+import useStore from "../../store/store";
 import AddArticle from "./AddArticle";
 import ArticleCard from "../ArticleCard";
 import EditArticle from "./EditArticle";
 
 const ManageArticle = () => {
+  const { isAdmin } = useStore();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [message, setMessage] = useState("");
   const [editingArticle, setEditingArticle] = useState(null);
-
-  // Vérification du rôle de l'utilisateur
-  useEffect(() => {
-    const checkUserRole = async () => {
-      auth.onAuthStateChanged(async (currentUser) => {
-        if (currentUser) {
-          try {
-            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-            if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-              setIsAdmin(true);
-            } else {
-              setMessage("Vous n'avez pas l'autorisation d'accéder à cette page.");
-            }
-          } catch (error) {
-            console.error("Erreur lors de la vérification du rôle :", error);
-            setMessage("Erreur lors de la vérification de vos permissions.");
-          }
-        } else {
-          setMessage("Veuillez vous connecter pour accéder à cette page.");
-        }
-      });
-    };
-
-    checkUserRole();
-  }, []);
 
   // Fonction pour charger les articles depuis Firestore
   const fetchArticles = async () => {

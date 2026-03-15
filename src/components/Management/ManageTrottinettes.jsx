@@ -1,28 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { auth, db } from "../../firebase"; // Import Firestore et Auth
-import { collection, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "../../firebase";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import useStore from "../../store/store";
 import { useNavigate } from "react-router-dom";
 
 const ManageTrottinettes = () => {
+  const { isAdmin } = useStore();
   const [trottinettes, setTrottinettes] = useState([]); // Liste des trottinettes
   const [message, setMessage] = useState(""); // Message utilisateur
-  const [isAdmin, setIsAdmin] = useState(false); // Vérifier si l'utilisateur est admin
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkUserRole = async () => {
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        const userRef = doc(db, "users", currentUser.uid);
-        const userDoc = await getDoc(userRef);
-        if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
-        }
-      }
-    };
-
     const fetchTrottinettes = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "trottinettes"));
@@ -36,7 +24,6 @@ const ManageTrottinettes = () => {
       }
     };
 
-    checkUserRole();
     fetchTrottinettes();
   }, []);
 

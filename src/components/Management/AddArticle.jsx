@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { auth, db } from "../../firebase";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import { useState } from "react";
+import { db } from "../../firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import useStore from "../../store/store";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,7 +17,9 @@ const slugify = (text) => {
 };
 
 const AddArticle = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  // Lecture du store — ProtectedRoute garantit déjà l'accès, mais on garde
+  // isAdmin pour les cas où AddArticle est rendu en dehors d'une route protégée
+  const { isAdmin } = useStore();
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -32,21 +35,6 @@ const AddArticle = () => {
     featured: false,
   });
 
-  // Vérification du rôle administrateur
-  useEffect(() => {
-    auth.onAuthStateChanged(async (currentUser) => {
-      if (currentUser) {
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-        if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-          setIsAdmin(true);
-        } else {
-          setMessage("Vous n'avez pas l'autorisation d'accéder à cette page.");
-        }
-      } else {
-        setMessage("Veuillez vous connecter pour accéder à cette page.");
-      }
-    });
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

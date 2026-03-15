@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { auth, db } from "../../firebase";
+import { useState } from "react";
+import { db } from "../../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import useStore from "../../store/store";
 
 const AddTrottinette = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAdmin } = useStore();
   const [message, setMessage] = useState("");
   const [trottinetteData, setTrottinetteData] = useState({
     itemID: "",
@@ -31,28 +32,6 @@ const AddTrottinette = () => {
     urlImage: "",
   });
 
-  useEffect(() => {
-    const checkUserRole = async () => {
-      try {
-        auth.onAuthStateChanged(async (currentUser) => {
-          if (currentUser) {
-            const userRef = doc(db, "users", currentUser.uid);
-            const userDoc = await getDoc(userRef);
-            if (userDoc.exists() && userDoc.data().role === "Administrateur") {
-              setIsAdmin(true);
-            } else {
-              setMessage("Vous n'avez pas l'autorisation d'accéder à cette page.");
-            }
-          } else {
-            setMessage("Veuillez vous connecter pour accéder à cette page.");
-          }
-        });
-      } catch (error) {
-        setMessage("Erreur lors de la vérification des permissions.");
-      }
-    };
-    checkUserRole();
-  }, []);
 
   const handleCheckboxChange = (e, category) => {
     const { value, checked } = e.target;
