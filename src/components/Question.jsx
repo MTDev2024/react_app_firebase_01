@@ -27,7 +27,9 @@ const Question = ({ data, onNext, onPrevious, isLast }) => {
     if (data.multiple) {
       // Ajoute ou retire la valeur du tableau
       setSelected((prev) =>
-        prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+        prev.includes(value)
+          ? prev.filter((v) => v !== value)
+          : [...prev, value],
       );
     } else {
       // Remplace la sélection courante
@@ -112,8 +114,10 @@ const Question = ({ data, onNext, onPrevious, isLast }) => {
             {/* Messages contextuels optionnels (ex: avertissement à 0 ou 150 km) */}
             {data.messages?.map(({ when, text }) =>
               sliderValue === when ? (
-                <p key={when} className="text-red-600 text-sm">{text}</p>
-              ) : null
+                <p key={when} className="text-red-600 text-sm">
+                  {text}
+                </p>
+              ) : null,
             )}
 
             <NavigationButtons />
@@ -131,7 +135,9 @@ const Question = ({ data, onNext, onPrevious, isLast }) => {
           {data.question}
         </h2>
 
-        <div className={`grid grid-cols-1 md:grid-cols-${data.columns} gap-4 w-full`}>
+        <div
+          className={`grid grid-cols-1 md:grid-cols-${data.columns} gap-4 w-full`}
+        >
           {data.options.map((option) => (
             <button
               key={option.value}
@@ -147,7 +153,9 @@ const Question = ({ data, onNext, onPrevious, isLast }) => {
                 className="w-full h-48 object-cover"
               />
               <div className="absolute inset-0 bg-gray-900 bg-opacity-10 flex items-center justify-center">
-                <h3 className="text-white text-2xl font-semibold">{option.label}</h3>
+                <h3 className="text-white text-2xl font-semibold">
+                  {option.label}
+                </h3>
               </div>
             </button>
           ))}
