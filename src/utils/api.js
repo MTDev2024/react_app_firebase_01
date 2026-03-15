@@ -7,63 +7,49 @@ import {
   startAfter,
   getDocs,
 } from "firebase/firestore";
-import { db } from "../firebase.js"; // Import explicite de la base de données Firestore
+import { db } from "../firebase.js";
 
 /**
- * Fonction pour récupérer les articles depuis Firestore
- * @param {number} page - Numéro de la page actuelle
+ * Récupère les articles depuis Firestore avec pagination et filtrage par tags.
+ *
+ * @param {number} _page - Numéro de page (non utilisé — la pagination se fait via lastVisible)
  * @param {number} pageSize - Nombre d'articles par page
- * @param {Array} tags - Tags sélectionnés pour filtrer les articles
- * @param {Object} lastVisible - Dernier document visible (pour la pagination)
- * @returns {Object} - Contient les articles récupérés et le nombre total de documents
+ * @param {Array} tags - Tags pour filtrer les articles (vide = pas de filtre)
+ * @param {Object} lastVisible - Dernier document de la page précédente (curseur de pagination)
+ * @returns {Object} { articles, totalDocuments, lastVisible }
  */
-export const fetchArticles = async (page, pageSize, tags = [], lastVisible = null) => {
-  console.log("Démarrage de la fonction fetchArticles");
-  console.log("Paramètres reçus :", { page, pageSize, tags });
+export const fetchArticles = async (_page, pageSize, tags = [], lastVisible = null) => {
+  const articlesRef = collection(db, "articles");
 
-  const articlesRef = collection(db, "articles"); // Référence à la collection "articles"
-
-  // Ajouter un filtre pour les tags si nécessaire
+  // Filtre par tags uniquement si des tags sont sélectionnés
   const tagFilter =
     tags.length > 0
-      ? where("tags", "array-contains-any", tags) // Vérifier si les articles contiennent au moins un des tags
+      ? where("tags", "array-contains-any", tags)
       : null;
 
   try {
-    // Construire la requête Firestore
+    // Construction de la requête avec filtre, tri et pagination
     const q = query(
       articlesRef,
-      ...(tagFilter ? [tagFilter] : []), // Appliquer le filtre des tags
-      orderBy("date", "desc"), // Trier par date décroissante
-      limit(pageSize), // Limiter les résultats à pageSize
-      ...(lastVisible ? [startAfter(lastVisible)] : []) // Pagination avec le dernier document visible
+      ...(tagFilter ? [tagFilter] : []),
+      orderBy("date", "desc"),
+      limit(pageSize),
+      ...(lastVisible ? [startAfter(lastVisible)] : [])
     );
 
-    console.log("Requête Firestore construite :", q);
-
-    // Récupérer les articles correspondant à la requête
+    // Récupération des articles de la page courante
     const snapshot = await getDocs(q);
-    console.log("Documents récupérés :", snapshot.docs.length);
 
-    // Calculer le nombre total d'articles (non paginé)
-    const totalDocuments = (await getDocs(articlesRef)).size;
-    console.log("Nombre total de documents :", totalDocuments);
-
-    // Transformer les documents Firestore en objets JavaScript
     const articles = snapshot.docs.map((doc) => ({
-      id: doc.id, // Inclure l'ID du document
-      ...doc.data(), // Inclure les données du document
+      id: doc.id,
+      ...doc.data(),
     }));
 
-    console.log("Articles transformés :", articles);
-
-    // Obtenir le dernier document visible pour la pagination
     const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1] || null;
 
-    // Retourner les résultats
-    return { articles, totalDocuments, lastVisible: lastVisibleDoc };
+    return { articles, lastVisible: lastVisibleDoc };
   } catch (error) {
     console.error("Erreur lors de la récupération des articles :", error);
-    return { articles: [], totalDocuments: 0, lastVisible: null }; // Retourner des valeurs par défaut en cas d'erreur
+    return { articles: [], lastVisible: null };
   }
 };
