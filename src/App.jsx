@@ -16,6 +16,7 @@ import useStore from "./store/store";
 // Import des composants principaux
 import NavBar from "./components/NavBar.jsx";
 import Footer from "./components/Footer.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import Results from "./components/Results.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Route protégée
 
@@ -69,6 +70,7 @@ function App() {
   }, [setUser, clearUser]);
 
   return (
+    <ErrorBoundary>
     <div className="min-h-screen flex flex-col">
       {/* Barre de navigation */}
       <NavBar />
@@ -185,6 +187,7 @@ function App() {
       {/* Pied de page */}
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 }
 
