@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import trottinettes from "../data/trottinettes";
 import Card from "./Card";
@@ -7,8 +7,8 @@ import Questionnaire from "../components/Questionnaire";
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [showQuestionnaire, setShowQuestionnaire] = useState(false); // État pour relancer le questionnaire
-  const [selectedScooters, setSelectedScooters] = useState([]); // État pour les trottinettes sélectionnées
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  const [selectedScooters, setSelectedScooters] = useState([]);
   const [filters, setFilters] = useState({
     price: null,
     puissance: null,
@@ -155,10 +155,11 @@ const Results = () => {
       {/* Affichage des résultats filtrés */}
       {filteredResults.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {filteredResults.map((trottinette) => (
+          {filteredResults.map((trottinette, index) => (
             <Card
               key={trottinette.itemID}
               trottinette={trottinette}
+              index={index}
               isSelected={selectedScooters.includes(trottinette.itemID)}
               onSelect={handleSelectScooter}
               disableSelect={

@@ -34,3 +34,13 @@ code {
 .animate-slide-in-left {
   animation: slideInFromLeft 0.3s ease-out;
 }
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-fade-in {
+  opacity: 0;
+  animation: cardFadeIn 0.45s ease-out forwards;
+}
