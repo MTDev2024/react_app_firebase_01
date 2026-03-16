@@ -20,7 +20,10 @@ const ManageTrottinettes = () => {
         }));
         setTrottinettes(data);
       } catch (error) {
-        console.error("Erreur lors de la récupération des trottinettes :", error);
+        console.error(
+          "Erreur lors de la récupération des trottinettes :",
+          error,
+        );
       }
     };
 
@@ -29,13 +32,19 @@ const ManageTrottinettes = () => {
 
   const handleDelete = async (id) => {
     if (!isAdmin) {
-      setMessage("Vous n'avez pas l'autorisation de supprimer cette trottinette.");
+      setMessage(
+        "Vous n'avez pas l'autorisation de supprimer cette trottinette.",
+      );
       return;
     }
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette trottinette ?")) {
+    if (
+      window.confirm("Êtes-vous sûr de vouloir supprimer cette trottinette ?")
+    ) {
       try {
         await deleteDoc(doc(db, "trottinettes", id));
-        setTrottinettes(trottinettes.filter((trottinette) => trottinette.id !== id));
+        setTrottinettes(
+          trottinettes.filter((trottinette) => trottinette.id !== id),
+        );
         setMessage("Trottinette supprimée avec succès.");
       } catch (error) {
         console.error("Erreur lors de la suppression :", error);
@@ -70,7 +79,9 @@ const ManageTrottinettes = () => {
                   <td className="border px-4 py-2 text-center">
                     <button
                       className="bg-blue-600 text-white py-1 px-2 rounded hover:bg-blue-700 mr-2"
-                      onClick={() => navigate(`/edit-trottinette/${trottinette.id}`)}
+                      onClick={() =>
+                        navigate(`/edit-trottinette/${trottinette.id}`)
+                      }
                     >
                       Modifier
                     </button>

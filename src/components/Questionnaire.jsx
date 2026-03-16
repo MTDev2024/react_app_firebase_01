@@ -5,6 +5,7 @@ import { questions } from "../data/questionsData";
 
 const Questionnaire = () => {
   const [step, setStep] = useState(1);
+  const [direction, setDirection] = useState("forward");
   const [answers, setAnswers] = useState({
     distance: null,
     weight: null,
@@ -27,6 +28,7 @@ const Questionnaire = () => {
     if (step === 9) {
       navigate("/results", { state: { answers: newAnswers } });
     } else {
+      setDirection("forward");
       setStep(step + 1);
     }
   };
@@ -34,6 +36,7 @@ const Questionnaire = () => {
   // Revenir à la question précédente
   const handlePrevious = () => {
     if (step > 1) {
+      setDirection("backward");
       setStep(step - 1);
     }
   };
@@ -82,6 +85,7 @@ const Questionnaire = () => {
           onNext={handleNext}
           onPrevious={handlePrevious}
           isLast={step === questions.length}
+          direction={direction}
         />
       </div>
 

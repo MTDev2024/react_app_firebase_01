@@ -1,27 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { toast } from "react-toastify";
+import useStore from "../store/store";
 
-// Import Firebase et ses fonctions
-import { auth, db } from "../firebase.js";
-import { onAuthStateChanged } from "firebase/auth";
+import { db } from "../firebase.js";
 import { doc, setDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 
-const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox = true }) => {
+const Card = ({
+  trottinette,
+  isSelected,
+  onSelect,
+  disableSelect,
+  showCheckbox = true,
+}) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [user, setUser] = useState(null);
 
-  // Gestion de l'état utilisateur
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const { user } = useStore();
 
   // Vérification des favoris
   useEffect(() => {
@@ -30,7 +27,7 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
         try {
           const favoriteRef = doc(
             collection(db, "users", user.uid, "favoritesTrottinettes"),
-            trottinette.itemID
+            trottinette.itemID,
           );
           const docSnapshot = await getDoc(favoriteRef);
           setIsFavorite(docSnapshot.exists());
@@ -54,7 +51,7 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
 
     const favoriteRef = doc(
       collection(db, "users", user.uid, "favoritesTrottinettes"),
-      trottinette.itemID
+      trottinette.itemID,
     );
 
     try {
@@ -62,9 +59,12 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
         // Retirer des favoris
         await deleteDoc(favoriteRef);
         setIsFavorite(false);
-        toast.info(`"${trottinette.marque} ${trottinette.modele}" retirée des favoris.`, {
-          position: "top-center",
-        });
+        toast.info(
+          `"${trottinette.marque} ${trottinette.modele}" retirée des favoris.`,
+          {
+            position: "top-center",
+          },
+        );
       } else {
         // Ajouter aux favoris
         await setDoc(favoriteRef, {
@@ -74,9 +74,12 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
           dateAdded: new Date().toISOString(),
         });
         setIsFavorite(true);
-        toast.success(`"${trottinette.marque} ${trottinette.modele}" ajoutée aux favoris.`, {
-          position: "top-center",
-        });
+        toast.success(
+          `"${trottinette.marque} ${trottinette.modele}" ajoutée aux favoris.`,
+          {
+            position: "top-center",
+          },
+        );
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour des favoris :", error);
@@ -94,8 +97,12 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
           <span className="block mb-1 text-yellow-400 italic font-medium">
             Sélection de la rédaction
           </span>
-          <h3 className="text-xl sm:text-2xl font-bold mb-2">{trottinette.marque}</h3>
-          <h3 className="text-lg sm:text-xl font-bold mb-4">{trottinette.modele}</h3>
+          <h3 className="text-xl sm:text-2xl font-bold mb-2">
+            {trottinette.marque}
+          </h3>
+          <h3 className="text-lg sm:text-xl font-bold mb-4">
+            {trottinette.modele}
+          </h3>
           <div className="flex items-center mb-4">
             <div className="flex items-center text-yellow-400 mr-2">
               {Array.from({ length: 5 }).map((_, index) => (
@@ -118,10 +125,12 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
               <strong>Autonomie :</strong> {trottinette.distance_max || "NC"} km
             </p>
             <p>
-              <strong>Poids max utilisateur :</strong> {trottinette.poids_max || "NC"} kg
+              <strong>Poids max utilisateur :</strong>{" "}
+              {trottinette.poids_max || "NC"} kg
             </p>
             <p>
-              <strong>Puissance moteur :</strong> {trottinette.puissance_moteur || "NC"} W
+              <strong>Puissance moteur :</strong>{" "}
+              {trottinette.puissance_moteur || "NC"} W
             </p>
           </div>
         </div>
@@ -138,7 +147,9 @@ const Card = ({ trottinette, isSelected, onSelect, disableSelect, showCheckbox =
               />
             </Tippy>
           )}
-          <Tippy content={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
+          <Tippy
+            content={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+          >
             <button
               onClick={toggleFavorite}
               className="focus:outline-none transform transition-transform duration-200 hover:scale-110"
