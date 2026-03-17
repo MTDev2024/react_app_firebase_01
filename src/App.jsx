@@ -42,6 +42,7 @@ const ManageArticles = lazy(() => import("./components/Management/ManageArticles
 const ManageUsers = lazy(() => import("./components/Management/ManageUsers.jsx"));
 const ManageMessages = lazy(() => import("./components/Management/ManageMessages.jsx"));
 const Admin = lazy(() => import("./pages/Admin.jsx"));
+const TrottinetteDetail = lazy(() => import("./pages/TrottinetteDetail.jsx"));
 
 function App() {
   // On récupère les actions du store pour mettre à jour l'état
@@ -112,6 +113,7 @@ function App() {
             <Route path="/cgu" element={<CGU />} />
             <Route path="/confidentialite" element={<Confidentialite />} />
             <Route path="/articles/:slug" element={<ArticleDetails />} />
+            <Route path="/trottinette/:id" element={<TrottinetteDetail />} />
 
             {/* Routes protégées */}
             <Route

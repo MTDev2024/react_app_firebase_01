@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Tippy from "@tippyjs/react";
@@ -18,6 +19,7 @@ const Card = ({
   index = 0,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
 
   const { user } = useStore();
 
@@ -172,6 +174,7 @@ const Card = ({
               </button>
             </Tippy>
             <button
+              onClick={() => navigate(`/trottinette/${trottinette.itemID}`)}
               className="bg-blue-700 hover:bg-blue-800 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg transform transition-transform hover:scale-105"
               aria-label="Voir la fiche détaillée"
             >
