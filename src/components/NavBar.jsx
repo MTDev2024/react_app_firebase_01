@@ -1,8 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { auth } from "../firebase.js";
 import ModaleAuth from "./ModaleAuth.jsx";
 import useStore from "../store/store";
+
+const navLinkClass = ({ isActive }) =>
+  `relative font-medium tracking-wide text-[15px] transition-colors duration-200 pb-0.5 ` +
+  `after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 ` +
+  (isActive
+    ? "text-blue-700 after:w-full"
+    : "text-gray-600 hover:text-blue-700 after:w-0 hover:after:w-full");
 
 export default function NavBar() {
   const [showModal, setShowModal] = useState(false);
@@ -83,18 +90,10 @@ export default function NavBar() {
 
         {/* Navigation Desktop */}
         <nav className="hidden md:flex space-x-8 items-center">
-          <Link to="/" className="text-gray-700 hover:text-blue-800">
-            Accueil
-          </Link>
-          <Link to="/blog" className="text-gray-700 hover:text-blue-800">
-            Blog
-          </Link>
-          <Link to="/apropos" className="text-gray-700 hover:text-blue-800">
-            À propos
-          </Link>
-          <Link to="/contact" className="text-gray-700 hover:text-blue-800">
-            Contact
-          </Link>
+          <NavLink to="/" end className={navLinkClass}>Accueil</NavLink>
+          <NavLink to="/blog" className={navLinkClass}>Blog</NavLink>
+          <NavLink to="/apropos" className={navLinkClass}>À propos</NavLink>
+          <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
           {isAdmin && (
             <Link
               to="/admin"
