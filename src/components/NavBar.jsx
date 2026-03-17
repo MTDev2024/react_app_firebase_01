@@ -8,11 +8,13 @@ export default function NavBar() {
   const [showModal, setShowModal] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  // On lit directement le store — plus besoin d'écouter Firebase ici
-  // App.jsx s'en charge et met à jour le store pour tout le monde
+  
+
+
   const { user, isAdmin } = useStore();
 
   // Ferme le dropdown lorsqu'on clique à l'extérieur
@@ -26,6 +28,8 @@ export default function NavBar() {
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
+
+  
 
   // Gère la déconnexion
   const handleLogout = async () => {

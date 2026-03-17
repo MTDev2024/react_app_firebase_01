@@ -77,7 +77,7 @@ const Question = ({ data, onNext, onPrevious, isLast, direction = "forward" }) =
   // ─── Layout Slider ───────────────────────────────────────────────────────────
   if (data.type === "slider") {
     return (
-      <section className={`flex flex-1 items-center justify-center min-h-[calc(100vh-128px)] ${animationClass}`}>
+      <section className={`flex flex-1 items-center justify-center w-full py-8 ${animationClass}`}>
         <div className="flex flex-col md:flex-row items-center max-w-3xl w-full px-6 md:px-12 space-y-8 md:space-y-0 md:space-x-8">
           {/* Image */}
           <div className="w-full md:w-1/2 h-64 md:h-80">
@@ -131,7 +131,7 @@ const Question = ({ data, onNext, onPrevious, isLast, direction = "forward" }) =
 
   // ─── Layout Choix (unique ou multiple) ───────────────────────────────────────
   return (
-    <section className={`flex flex-1 items-center justify-center min-h-[calc(100vh-128px)] ${animationClass}`}>
+    <section className={`flex flex-1 items-center justify-center w-full py-8 ${animationClass}`}>
       <div className="flex flex-col items-center max-w-3xl w-full px-6 md:px-12 space-y-8">
         <h2 className="text-2xl md:text-3xl font-bold text-blue-800 text-center">
           {data.question}

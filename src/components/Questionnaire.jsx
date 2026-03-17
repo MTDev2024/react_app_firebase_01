@@ -61,11 +61,17 @@ const Questionnaire = () => {
   const progressPercentage = (step / 9) * 100;
 
   return (
-    <div className="flex-grow flex flex-col items-center justify-center">
-      {/* Suivi de progression */}
-      <div className="w-full max-w-2xl px-4">
-        <div className="text-center text-gray-700 mb-2">
-          <p>{`Question ${step} sur 9`}</p>
+    <div className="flex-grow flex flex-col items-center justify-center py-6">
+      {/* Suivi de progression + Recommencer */}
+      <div className="w-full max-w-2xl px-4 mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <p className="text-gray-700 text-sm font-medium">{`Question ${step} sur 9`}</p>
+          <button
+            className="flex items-center gap-1 text-sm text-gray-400 hover:text-red-500 transition-colors duration-200 border border-gray-200 hover:border-red-300 rounded-full px-3 py-1"
+            onClick={handleRestart}
+          >
+            ↺ Recommencer
+          </button>
         </div>
         <div className="w-full bg-gray-300 h-2 rounded">
           <div
@@ -75,10 +81,8 @@ const Questionnaire = () => {
         </div>
       </div>
 
-      {/* Question courante — le composant unique lit ses données depuis questionsData.js */}
-      <div className="flex-grow flex flex-col items-center justify-center w-full max-w-3xl">
-        {/* key={step} force React à remonter le composant à chaque question,
-            ce qui réinitialise les états (selected, sliderValue, error) */}
+      {/* Question courante */}
+      <div className="flex flex-col items-center w-full max-w-3xl">
         <Question
           key={step}
           data={questions[step - 1]}
@@ -87,16 +91,6 @@ const Questionnaire = () => {
           isLast={step === questions.length}
           direction={direction}
         />
-      </div>
-
-      {/* Bouton Recommencer */}
-      <div className="flex space-x-4 mt-6 mb-6">
-        <button
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-          onClick={handleRestart}
-        >
-          Recommencer
-        </button>
       </div>
     </div>
   );

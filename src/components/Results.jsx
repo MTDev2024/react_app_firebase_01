@@ -116,7 +116,7 @@ const Results = () => {
   }
 
   return (
-    <div className="px-4 mx-30">
+    <div className="px-4 mx-30 pb-24">
       <h2 className="text-4xl text-center pt-8 m-8 text-blue-800 my-6 font-bold">
         Résultats
       </h2>
