@@ -10,6 +10,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
@@ -43,4 +44,16 @@ code {
 .card-fade-in {
   opacity: 0;
   animation: cardFadeIn 0.45s ease-out forwards;
+}
+
+@keyframes scooterRide {
+  0%   { transform: translateX(200px); opacity: 0; }
+  70%  { transform: translateX(-12px); opacity: 1; }
+  85%  { transform: translateX(6px); }
+  100% { transform: translateX(0); }
+}
+
+.scooter-ride {
+  display: inline-block;
+  animation: scooterRide 0.7s ease-out 0.4s both;
 }

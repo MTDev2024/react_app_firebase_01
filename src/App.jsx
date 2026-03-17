@@ -21,6 +21,8 @@ import Results from "./components/Results.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Route protégée
 
 import ArticleDetails from "./components/ArticleDetails"; // Importe le composant
+import NotFound from "./pages/NotFound";
+
 
 // Lazy loading pour les pages
 const Home = lazy(() => import("./pages/Home.jsx"));
@@ -114,6 +116,8 @@ function App() {
             <Route path="/confidentialite" element={<Confidentialite />} />
             <Route path="/articles/:slug" element={<ArticleDetails />} />
             <Route path="/trottinette/:id" element={<TrottinetteDetail />} />
+            <Route path="*" element={<NotFound />} />
+
 
             {/* Routes protégées */}
             <Route
@@ -180,8 +184,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Route fallback */}
-            <Route path="*" element={<div>Page non trouvée</div>} />
           </Routes>
         </Suspense>
       </main>
