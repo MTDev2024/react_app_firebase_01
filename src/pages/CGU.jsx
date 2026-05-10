@@ -10,7 +10,7 @@ const CGU = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Objet du site</h2>
           <p>
-            Trotticomp est un site fournissant des outils de comparaison et des informations liées aux
+            PerfectRide est un site fournissant des outils de comparaison et des informations liées aux
             économies de mobilité durable, comme les calculs liés à l'utilisation de trottinettes électriques
             et de véhicules personnels.
           </p>
@@ -34,7 +34,7 @@ const CGU = () => {
           <h2 className="text-2xl font-semibold mb-4">Modification des CGU</h2>
           <ul className="list-disc pl-6">
             <li>
-              Trotticomp se réserve le droit de modifier ces CGU à tout moment. Les utilisateurs sont invités à
+              PerfectRide se réserve le droit de modifier ces CGU à tout moment. Les utilisateurs sont invités à
               consulter cette page régulièrement.
             </li>
             <li>

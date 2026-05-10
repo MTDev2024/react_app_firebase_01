@@ -9,7 +9,7 @@ const Confidentialite = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Introduction</h2>
           <p>
-            Chez Trotticomp, la protection de vos données personnelles est une priorité. Cette politique de
+            Chez PerfectRide, la protection de vos données personnelles est une priorité. Cette politique de
             confidentialité explique comment nous collectons, utilisons et protégeons vos informations lorsque
             vous utilisez notre site.
           </p>

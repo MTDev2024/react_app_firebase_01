@@ -8,7 +8,7 @@ const MentionsLegales = () => {
 
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Éditeur du site</h2>
-          <p>Nom du site : Trotticomp</p>
+          <p>Nom du site : PerfectRide</p>
           <p>Éditeur : [Votre nom ou le nom de votre entreprise]</p>
           <p>Adresse : [Votre adresse ou celle de votre entreprise]</p>
           <p>E-mail : [Votre adresse e-mail professionnelle]</p>
@@ -29,10 +29,10 @@ const MentionsLegales = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Propriété intellectuelle</h2>
           <p>
-            L'ensemble des contenus présents sur le site Trotticomp (textes, images, graphismes, logo,
-            icônes, etc.) sont la propriété exclusive de Trotticomp ou de leurs auteurs respectifs. Toute
+            L'ensemble des contenus présents sur le site PerfectRide (textes, images, graphismes, logo,
+            icônes, etc.) sont la propriété exclusive de PerfectRide ou de leurs auteurs respectifs. Toute
             reproduction, distribution, modification, adaptation, retransmission ou publication de ces
-            éléments, même partielle, est strictement interdite sans l'accord préalable écrit de Trotticomp.
+            éléments, même partielle, est strictement interdite sans l'accord préalable écrit de PerfectRide.
           </p>
         </section>
 
@@ -64,17 +64,17 @@ const MentionsLegales = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Responsabilité</h2>
           <p>
-            Trotticomp s'efforce de fournir des informations exactes et à jour sur son site. Cependant, nous
+            PerfectRide s'efforce de fournir des informations exactes et à jour sur son site. Cependant, nous
             ne garantissons pas l'exactitude, l'exhaustivité ou la pertinence des informations présentées.
             En conséquence, l'utilisation des informations et contenus disponibles sur l'ensemble du site
-            ne saurait engager la responsabilité de Trotticomp, de quelque manière que ce soit.
+            ne saurait engager la responsabilité de PerfectRide, de quelque manière que ce soit.
           </p>
         </section>
 
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Affiliation et partenariats</h2>
           <p>
-            Le site Trotticomp participe à des programmes d’affiliation qui permettent de percevoir une
+            Le site PerfectRide participe à des programmes d’affiliation qui permettent de percevoir une
             commission sur les ventes générées via certains liens affiliés présents sur le site. Ces commissions
             n’ont aucun impact sur le prix final pour l’utilisateur.
           </p>
@@ -92,7 +92,7 @@ const MentionsLegales = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Données personnelles</h2>
           <p>
-            Conformément au Règlement Général sur la Protection des Données (RGPD), Trotticomp s'engage à
+            Conformément au Règlement Général sur la Protection des Données (RGPD), PerfectRide s'engage à
             protéger les données personnelles des utilisateurs. Les informations collectées via les
             formulaires du site sont destinées exclusivement à des fins internes (amélioration des
             services, communication, statistiques) et ne seront en aucun cas partagées avec des tiers sans
@@ -107,7 +107,7 @@ const MentionsLegales = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Cookies</h2>
           <p>
-            Le site Trotticomp utilise des cookies pour améliorer l'expérience utilisateur et fournir des
+            Le site PerfectRide utilise des cookies pour améliorer l'expérience utilisateur et fournir des
             statistiques de navigation. Vous pouvez configurer votre navigateur pour bloquer ces cookies
             ou être averti de leur présence.
           </p>
@@ -116,7 +116,7 @@ const MentionsLegales = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Liens hypertextes</h2>
           <p>
-            Le site Trotticomp peut contenir des liens vers d'autres sites web. Trotticomp n'assume aucune
+            Le site PerfectRide peut contenir des liens vers d'autres sites web. PerfectRide n'assume aucune
             responsabilité quant au contenu de ces sites tiers.
           </p>
         </section>
@@ -124,7 +124,7 @@ const MentionsLegales = () => {
         <section className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Modification des mentions légales</h2>
           <p>
-            Trotticomp se réserve le droit de modifier les présentes mentions légales à tout moment. Nous
+            PerfectRide se réserve le droit de modifier les présentes mentions légales à tout moment. Nous
             vous invitons à consulter régulièrement cette page pour être informé des éventuelles
             modifications.
           </p>
