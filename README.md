@@ -1,48 +1,71 @@
+# PerfectRide
 
-Il s'agit d'une application web visant à aider les utilisateurs à **choisir la trottinette électrique idéale** en fonction de leurs besoins et préférences.  
-Le projet est actuellement **en développement**, et certaines fonctionnalités restent à implémenter.
+Application web d'aide au choix de trottinettes électriques. L'utilisateur répond à un questionnaire personnalisé et obtient des recommandations adaptées à ses besoins, avec la possibilité de comparer les modèles, de les mettre en favoris et de consulter un blog dédié.
 
-## 🚀 Objectif du projet
+Déployée sur Vercel : [perfectride.vercel.app](https://perfectride.vercel.app)
 
-L'objectif est de fournir un outil interactif permettant de :
-- Trouver des recommandations personnalisées via un **questionnaire dynamique** 🎯
-- Comparer différents modèles de trottinettes électriques 📊
-- Mettre en favori des modèles pour une consultation ultérieure ⭐
-- Accéder à des **fiches détaillées** pour chaque trottinette 📄
+---
 
-## 🛠️ Technologies utilisées
+## Stack technique
 
-- **React.js** ⚛️ → Pour l’interface utilisateur dynamique
-- **Tailwind CSS** 🎨 → Pour un design épuré et responsive
-- **Firebase (Firestore, Auth)** 🔥 → Pour la gestion des utilisateurs et des favoris
-- **React Router** 🔄 → Pour la navigation fluide entre les pages
+- **React** (Create React App)
+- **Tailwind CSS** — design responsive
+- **Firebase** — Firestore, Auth (email + Google), Storage
+- **Zustand** — gestion de l'état global (auth, store)
+- **React Router v6** — navigation
+- **Vercel** — déploiement
 
-## 📌 Fonctionnalités implémentées
+---
 
-✔️ **Questionnaire dynamique** permettant d’affiner les suggestions  
-✔️ **Affichage des résultats** avec tri et filtres  
-✔️ **Page de comparaison** entre plusieurs modèles  
-✔️ **Ajout aux favoris** (sauvegarde locale pour l’instant)  
-✔️ **Interface responsive** adaptée aux mobiles et tablettes  
-✔️ **Authentification complète avec Firebase** (email, Google)  
-✔️ **Gestion avancée des favoris via Firestore**  
-✔️ **Calculateur d’économies** pour comparer l’usage voiture vs trottinette  
-✔️ **Blog** Articles dédiés  
+## Fonctionnalités
 
+- Questionnaire dynamique multi-étapes avec navigation avant/arrière
+- Page de résultats avec tri et filtres (prix, puissance, autonomie, marque)
+- Page de détail par trottinette
+- Comparateur de modèles (jusqu'à 3)
+- Favoris synchronisés avec Firestore
+- Authentification complète (email/password + Google)
+- Blog avec filtres par tags
+- Calculateur d'économies (voiture vs trottinette) avec impact CO₂
+- Page À propos, CGU, Mentions légales, Politique de confidentialité
+- Page 404 animée
+- Navbar responsive avec menu hamburger et liens actifs animés
+- Interface d'administration (gestion des trottinettes, articles, newsletter, utilisateurs)
+- Error Boundary global
 
-## 🚧 Fonctionnalités à venir
-🚀 **Système de notation et avis sur les trottinettes**
-🚀 **Calculateur d'impact carbone**
+---
 
+## Variables d'environnement
 
-## 🔧 Installation et test en local
+Copier `.env.example` en `.env` et renseigner les valeurs depuis la [Firebase Console](https://console.firebase.google.com) :
 
-Si vous souhaitez tester le projet localement, voici les étapes :
-1. Cloner le projet  
-2. Installer les dépendances
-3. npm start
-4. L’application sera accessible sur http://localhost:3000.
+```
+REACT_APP_FIREBASE_API_KEY=
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_PROJECT_ID=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
+REACT_APP_FIREBASE_APP_ID=
+REACT_APP_FIREBASE_MEASUREMENT_ID=
+```
 
-🤝 Feedback
-Le projet étant toujours en cours de développement, tout retour est le bienvenu.
-N’hésitez pas à me contacter pour toute question ou suggestion d’amélioration.
+Ces mêmes variables doivent être ajoutées dans **Vercel → Settings → Environment Variables** pour le déploiement.
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/MTDev2024/react_app_firebase_01.git
+cd react_app_firebase_01
+npm install
+cp .env.example .env   # puis renseigner les valeurs Firebase
+npm start              # http://localhost:3000
+```
+
+---
+
+## À venir
+
+- Système de notation et avis utilisateurs
+- Calculateur d'impact carbone avancé
