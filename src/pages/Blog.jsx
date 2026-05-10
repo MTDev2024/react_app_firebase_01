@@ -1,21 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { fetchArticles } from "../utils/api";
 import ArticleCard from "../components/ArticleCard";
-import EconomyCard from "../components/EconomyCard"; // Import de la card calculateur
+import EconomyCard from "../components/EconomyCard";
 import { useSearchParams } from "react-router-dom";
 
 const Blog = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [availableTags] = useState(["entretien", "comparatif", "avantages"]);
+
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const selectedTags = searchParams.get("tags")
+    ? searchParams.get("tags").split(",")
+    : [];
+
+  const [availableTags] = useState([
+    "entretien",
+    "comparatif",
+    "avantages",
+    "mobilité douce",
+    "trottinette électrique",
+    "environnement",
+    "économies",
+  ]);
 
   const loadArticles = async (page, tags) => {
     setLoading(true);
     const pageSize = 9;
     try {
-      const { articles: newArticles } = await fetchArticles(page, pageSize, tags);
+      const { articles: newArticles } = await fetchArticles(
+        page,
+        pageSize,
+        tags,
+      );
       setArticles(newArticles || []);
     } catch (error) {
       console.error("Erreur lors du chargement des articles :", error);
@@ -27,7 +44,9 @@ const Blog = () => {
 
   useEffect(() => {
     const page = parseInt(searchParams.get("page")) || 1;
-    const tags = searchParams.get("tags") ? searchParams.get("tags").split(",") : [];
+    const tags = searchParams.get("tags")
+      ? searchParams.get("tags").split(",")
+      : [];
     loadArticles(page, tags);
   }, [searchParams]);
 
@@ -44,14 +63,20 @@ const Blog = () => {
       <section
         className="flex flex-col justify-center lg:flex-row max-w-7xl mx-auto py-12 px-4 lg:space-x-16 space-y-8 lg:space-y-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('/assets/backgrounds/couple-with-electric-scooters-outdoors.jpg')", // Chemin mis à jour
+          backgroundImage:
+            "url('/assets/backgrounds/couple-with-electric-scooters-outdoors.jpg')", // Chemin mis à jour
         }}
       >
         <div className="w-full bg-black/20 text-white space-y-4 lg:w-1/2 text-center lg:text-left p-8 mx-auto">
           <h1 className="text-4xl font-bold mb-4">Bienvenue sur notre Blog</h1>
-          <h2 className="text-2xl font-semibold mb-2">Des conseils pour mieux choisir</h2>
+          <h2 className="text-2xl font-semibold mb-2">
+            Des conseils pour mieux choisir
+          </h2>
           <p className="text-base md:text-xl leading-relaxed text-justify mb-4">
-            Découvrez nos derniers articles, guides et astuces pour tout savoir sur les trottinettes électriques et les solutions de mobilité. Que vous soyez novice ou expert, notre blog a été conçu pour répondre à toutes vos questions.
+            Découvrez nos derniers articles, guides et astuces pour tout savoir
+            sur les trottinettes électriques et les solutions de mobilité. Que
+            vous soyez novice ou expert, notre blog a été conçu pour répondre à
+            toutes vos questions.
           </p>
         </div>
       </section>
@@ -66,7 +91,9 @@ const Blog = () => {
             key={tag}
             onClick={() => toggleTag(tag)}
             className={`px-4 py-2 rounded ${
-              selectedTags.includes(tag) ? "bg-blue-800 text-white" : "bg-gray-200 hover:bg-blue-600 hover:text-white"
+              selectedTags.includes(tag)
+                ? "bg-blue-800 text-white"
+                : "bg-gray-200 hover:bg-blue-600 hover:text-white"
             }`}
           >
             {tag}
@@ -77,9 +104,13 @@ const Blog = () => {
       {/* Grille d'articles */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-8">
         {articles.length > 0 ? (
-          articles.map((article) => <ArticleCard key={article.id} article={article} />)
+          articles.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))
         ) : (
-          <p className="text-center col-span-full text-gray-600">Aucun article n'est disponible pour le moment.</p>
+          <p className="text-center col-span-full text-gray-600">
+            Aucun article n'est disponible pour le moment.
+          </p>
         )}
       </div>
 

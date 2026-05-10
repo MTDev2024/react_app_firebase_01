@@ -90,6 +90,22 @@ export default function Favorites() {
     return priceMatch && puissanceMatch && autonomieMatch && marqueMatch;
   });
 
+  if (loading) {
+    return <p className="text-center mt-10">Chargement de vos favoris...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center mt-10 text-red-500">{error}</p>;
+  }
+
+  if (!user) {
+    return (
+      <p className="text-center mt-10 text-gray-600">
+        Connectez-vous pour voir vos favoris.
+      </p>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-4xl font-bold m-6 text-blue-800 text-center">Mes Favoris</h2>

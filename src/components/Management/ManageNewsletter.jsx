@@ -12,7 +12,7 @@ import useStore from "../../store/store";
 
 const ManageNewsletter = () => {
   const { isAdmin } = useStore();
-  const [message, setMessage] = useState("");
+  const [message] = useState("Accès réservé aux administrateurs.");
   const [subscribers, setSubscribers] = useState([]); // Liste des inscrits
   const [newEmail, setNewEmail] = useState(""); // Ajout ou modification
   const [editing, setEditing] = useState(null); // Email en cours de modification
