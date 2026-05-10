@@ -19,9 +19,6 @@ export default function NavBar() {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  
-
-
   const { user, isAdmin } = useStore();
 
   // Ferme le dropdown lorsqu'on clique à l'extérieur
@@ -35,8 +32,6 @@ export default function NavBar() {
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
-
-  
 
   // Gère la déconnexion
   const handleLogout = async () => {
@@ -55,10 +50,10 @@ export default function NavBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-blue-800">
-          Compv3
+          PerfectRide
         </Link>
 
-        {/* Menu hamburger (Mobile) */}
+        {/* Menu hamburger */}
         <button
           className="md:hidden text-gray-700"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -90,10 +85,18 @@ export default function NavBar() {
 
         {/* Navigation Desktop */}
         <nav className="hidden md:flex space-x-8 items-center">
-          <NavLink to="/" end className={navLinkClass}>Accueil</NavLink>
-          <NavLink to="/blog" className={navLinkClass}>Blog</NavLink>
-          <NavLink to="/apropos" className={navLinkClass}>À propos</NavLink>
-          <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+          <NavLink to="/" end className={navLinkClass}>
+            Accueil
+          </NavLink>
+          <NavLink to="/blog" className={navLinkClass}>
+            Blog
+          </NavLink>
+          <NavLink to="/apropos" className={navLinkClass}>
+            À propos
+          </NavLink>
+          <NavLink to="/contact" className={navLinkClass}>
+            Contact
+          </NavLink>
           {isAdmin && (
             <Link
               to="/admin"
@@ -271,7 +274,9 @@ export default function NavBar() {
       )}
 
       {/* Modale d'authentification */}
-      {showModal && <ModaleAuth show={showModal} onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <ModaleAuth show={showModal} onClose={() => setShowModal(false)} />
+      )}
     </header>
   );
 }

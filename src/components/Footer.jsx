@@ -7,20 +7,19 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
         {/* Texte Footer */}
         <div className="text-sm text-center md:text-left">
-          &copy; 2024 Trotticomp. Tous droits réservés.
+          &copy; 2024 PerfectRide. Tous droits réservés.
         </div>
 
         {/* Footer Links */}
         <div className="mt-4 md:mt-0 flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
-        <Link
-         to="/confidentialite"
-         className="text-gray-400 hover:text-white"
-         title="Voir notre politique de confidentialité"
-         aria-label="Voir notre politique de confidentialité"
-        >
-          Politique de confidentialité
-        </Link>
-
+          <Link
+            to="/confidentialite"
+            className="text-gray-400 hover:text-white"
+            title="Voir notre politique de confidentialité"
+            aria-label="Voir notre politique de confidentialité"
+          >
+            Politique de confidentialité
+          </Link>
 
           <Link
             to="/cgu"

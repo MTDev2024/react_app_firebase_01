@@ -26,7 +26,7 @@ const IntroSection = ({ onLaunch }) => {
         <div className="bg-black/10 text-white text-right p-6 space-y-4">
           <h1 className="text-3xl md:text-5xl text-center font-bold">
             Trouvez la trottinette adaptée à{" "}
-            <span className="inline-block animate-bounce-only text-blue-600 font-bold">
+            <span className="inline-block animate-bounce text-blue-600 font-bold">
               vos
             </span>{" "}
             besoins

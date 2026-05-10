@@ -37,7 +37,7 @@ const Results = () => {
   // Méthode pour comparer les trottinettes sélectionnées
   const handleCompare = () => {
     const scootersToCompare = trottinettes.filter((trottinette) =>
-      selectedScooters.includes(trottinette.itemID)
+      selectedScooters.includes(trottinette.itemID),
     );
     navigate("/compare", { state: { selectedScooters: scootersToCompare } });
   };
@@ -68,7 +68,7 @@ const Results = () => {
   let filteredResults = trottinettes.filter((trottinette) => {
     const trajetMatch = answers.type_trajet.length
       ? answers.type_trajet.some((type) =>
-          trottinette.type_trajet.includes(type)
+          trottinette.type_trajet.includes(type),
         )
       : true;
 
@@ -123,9 +123,6 @@ const Results = () => {
 
       {/* Filtres */}
       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-       
-        
-        
         <div>
           <label className="block font-bold mb-2">Trier par</label>
           <select

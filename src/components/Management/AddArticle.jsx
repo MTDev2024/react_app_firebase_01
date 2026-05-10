@@ -17,7 +17,7 @@ const slugify = (text) => {
 };
 
 const AddArticle = () => {
-  // Lecture du store — ProtectedRoute garantit déjà l'accès, mais on garde
+  // Lecture du store - ProtectedRoute garantit déjà l'accès
   // isAdmin pour les cas où AddArticle est rendu en dehors d'une route protégée
   const { isAdmin } = useStore();
   const [message, setMessage] = useState("");
